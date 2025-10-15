@@ -1,0 +1,55 @@
+[
+  {
+    "id": "news_001",
+    "titleAr": "اجتماع تجمع الفاو زاخو الشهري",
+    "titleEn": "Al-Faw Zakhо Gathering Monthly Meeting",
+    "contentAr": "عقد تجمع الفاو زاخو اجتماعه الشهري لمناقشة الاستعدادات للانتخابات القادمة ومراجعة البرنامج الانتخابي.",
+    "contentEn": "Al-Faw Zakhо Gathering held its monthly meeting to discuss preparations for the upcoming elections and review the electoral program.",
+    "imagePath": "assets/images/news/meeting.jpg",
+    "publishDate": "2024-10-01T08:00:00Z",
+    "author": "إدارة التجمع",
+    "category": "اجتماعات",
+    "isBreaking": true,
+    "viewCount": 150
+  },
+  {
+    "id": "news_002",
+    "titleAr": "إطلاق البرنامج الانتخابيyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyuiuiuiuii الجديد",
+    "titleEn": "Launch of New Electoral Program",
+    "contentAr": "تم إطلاق البرنامج الانتخابي المتكامل الذي يركز على التنمية المستدامة وتحسين الخدمات.",
+    "contentEn": "The comprehensive electoral program focusing on sustainable development and service improvement has been launched.",
+    "imagePath": "assets/images/news/program.jpg",
+    "publishDate": "2024-09-28T10:30:00Z",
+    "author": "فريق الإعلام",
+    "category": "إعلانات",
+    "isBreaking": false,
+    "viewCount": 89
+  },
+  {
+    "id": "news_003",
+    "titleAr": "إطلاyyyyuiuiuiuii الجديد",
+    "titleEn": "Launch of New Electoral Program",
+    "contentAr": "تم إطلاق البرنامج الانتخابي المتكامل الذي يركز على التنمية المستدامة وتحسين الخدمات.",
+    "contentEn": "The comprehensive electoral program focusing on sustainable development and service improvement has been launched.",
+    "imagePath": "assets/images/news/program.jpg",
+    "publishDate": "2024-09-28T10:30:00Z",
+    "author": "فريق الإعلام",
+    "category": "إعلانات",
+    "isBreaking": false,
+    "viewCount": 89
+  },
+
+  {
+    "id": "news_004",
+    "titleAr": "إطلاق البرنامج الانتخابيyyالجديد",
+    "titleEn": "Launch of New Electoral Program",
+    "contentAr": "تم إطلاق البرنامج الانتخابي المتكامل الذي يركز على التنمية المستدامة وتحسين الخدمات.",
+    "contentEn": "The comprehensive electoral program focusing on sustainable development and service improvement has been launched.",
+    "imagePath": "assets/images/news/program.jpg",
+    "publishDate": "2024-09-28T10:30:00Z",
+    "author": "فريق الإعلام",
+    "category": "إعلانات",
+    "isBreaking": true,
+    "viewCount": 70
+  }
+]

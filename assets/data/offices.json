@@ -1,0 +1,32 @@
+{
+  "provinces": {
+    "المثنى": {
+      "central": {
+        "id": "muthanna_central",
+        "name_ar": "المكتب المركزي - المثنى",
+        "manager_name_ar": "محمد علي",
+        "address_ar": "السماوة - شارع البلدية",
+        "phone_number": "+9647711111111",
+        "working_hours": "8:00 - 16:00",
+        "province": "المثنى",
+        "is_central": true,
+        "latitude": 31.3141,
+        "longitude": 45.2806
+      }
+    },
+    "بغداد": {
+      "central": {
+        "id": "baghdad_central",
+        "name_ar": "المكتب المركزي - بغداد",
+        "manager_name_ar": "فاطمة حسين",
+        "address_ar": "الكرادة - شارع النضال",
+        "phone_number": "+9647712222222",
+        "working_hours": "8:00 - 15:00",
+        "province": "بغداد",
+        "is_central": true,
+        "latitude": 33.3152,
+        "longitude": 44.3661
+      }
+    }
+  }
+}
