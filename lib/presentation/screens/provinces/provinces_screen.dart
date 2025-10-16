@@ -172,12 +172,11 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
     final borderColor = _getBorderColor(context);
 
     if (_isLoading) {
-      return FZScaffold(
-        appBar: AppBar(
+return FZScaffold(
+  persistentBottom: FZTab.home,        appBar: AppBar(
           title: Text(titleText, style: TextStyle(color: textColor)),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         ),
-        persistentBottom: FZTab.home,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -199,8 +198,8 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
     }
 
     if (_error != null) {
-      return Scaffold(
-        backgroundColor: backgroundColor,
+      return FZScaffold(
+  persistentBottom: FZTab.home,
         appBar: AppBar(
           title: Text(titleText, style: TextStyle(color: textColor)),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -235,8 +234,8 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
+    return FZScaffold(
+  persistentBottom: FZTab.home,
       appBar: AppBar(
         title: Text(titleText, style: TextStyle(color: textColor)),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,

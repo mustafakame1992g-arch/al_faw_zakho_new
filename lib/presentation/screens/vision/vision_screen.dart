@@ -549,7 +549,7 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget buildFloatingActionButton() {
     return FloatingActionButton(
       onPressed: _toggleViewMode,
       tooltip:

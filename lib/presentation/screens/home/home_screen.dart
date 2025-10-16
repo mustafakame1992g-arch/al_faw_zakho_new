@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 // 🧩 مزوّدو الحالة (Providers)
 import 'package:al_faw_zakho/core/providers/app_provider.dart';
 import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
@@ -17,7 +18,6 @@ import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.da
 import 'package:al_faw_zakho/presentation/screens/faq/faq_screen.dart';
 //import 'package:al_faw_zakho/presentation/screens/news/news_list_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/settings/settings_screen.dart';
-import 'package:al_faw_zakho/presentation/screens/about/about_screen.dart';
 import '/presentation/screens/vision/vision_screen.dart';
 
 // 🧱 مكونات واجهة الهوم
@@ -144,7 +144,8 @@ Widget build(BuildContext context) {
     return LoadingWidget(progress: _preloadProgress);
   }
 
-  return Scaffold(
+return FZScaffold(
+  persistentBottom: FZTab.home,
     appBar: HomeAppBar(
       onSettingsTap: () => Navigator.push(
         context,
@@ -179,7 +180,7 @@ Widget build(BuildContext context) {
         );
       },
     ),
-    bottomNavigationBar: NavigationBar(
+    /*bottomNavigationBar: NavigationBar(
       selectedIndex: 0,
       onDestinationSelected: (i) {
         switch (i) {
@@ -208,7 +209,7 @@ Widget build(BuildContext context) {
           label: 'حولة',
         ),
       ],
-    ),
+    ),*/
   );
 }
 
