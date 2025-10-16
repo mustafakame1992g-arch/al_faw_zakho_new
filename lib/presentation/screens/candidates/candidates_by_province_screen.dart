@@ -10,6 +10,8 @@ import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/presentation/screens/candidates/candidate_details_screen.dart';
 import 'dart:developer' as developer;
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class CandidatesByProvinceScreen extends StatefulWidget {
   final String province;
@@ -145,7 +147,7 @@ void dispose() {
     final isArabic = languageCode == 'ar' || languageCode.startsWith('ar');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
+    return FZScaffold(
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,6 +186,7 @@ void dispose() {
           ),
       ],
       ),
+      persistentBottom: FZTab.home,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null

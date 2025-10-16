@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class CandidateDetailsScreen extends StatelessWidget {
   final CandidateModel candidate;
@@ -27,12 +29,14 @@ class CandidateDetailsScreen extends StatelessWidget {
       'province': candidate.province,
     });
 
-    return Scaffold(
-      appBar: AppBar(
+  return FZScaffold(
+        appBar: AppBar(
         title: Text(context.tr('candidate_details')),
         centerTitle: true,
         elevation: 2,
       ),
+      persistentBottom: FZTab.home,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

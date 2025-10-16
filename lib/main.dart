@@ -1,13 +1,16 @@
 // 🎯 main.dart — النسخة النهائية الجاهزة للإطلاق (Release Clean)
 import 'dart:developer' as developer;
 import 'dart:convert';
-
+import 'package:al_faw_zakho/presentation/screens/about/about_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/donate/donate_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/offices/offices_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
 import 'package:al_faw_zakho/core/errors/global_error_handler.dart';
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
@@ -743,6 +746,15 @@ Future<void> _validateRealData() async {
         // ✅ استخدام Directionality لتحديد اتجاه النص
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          
+          child: MultiProvider(
+          providers: [
+            Provider<INavigationService>(
+              create: (_) => NavigationService(),
+            ),
+          ],
+          
+          
           child: MaterialApp(
             title: 'تطبيق تجمع الفاو زاخو',
             debugShowCheckedModeBanner: false,
@@ -758,7 +770,17 @@ Future<void> _validateRealData() async {
             darkTheme: AppTheme.darkTheme,
             themeMode: theme.themeMode,
 
-            home: const HomeScreen(),
+
+ // ✅ إضافة routes هنا
+            routes: {
+              NavigationService.homeRoute: (_) => const HomeScreen(),
+              NavigationService.officesRoute: (_) => const OfficesScreen(),
+              NavigationService.donateRoute: (_) => const DonateScreen(),
+              NavigationService.aboutRoute: (_) => const AboutScreen(),
+            },
+
+            //home: const HomeScreen(),
+          ),
           ),
         );
       },

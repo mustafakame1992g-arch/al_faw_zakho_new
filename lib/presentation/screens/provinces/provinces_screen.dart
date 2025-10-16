@@ -7,6 +7,8 @@ import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/core/utils/province_search_engine.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class ProvincesScreen extends StatefulWidget {
   const ProvincesScreen({super.key});
@@ -170,12 +172,12 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
     final borderColor = _getBorderColor(context);
 
     if (_isLoading) {
-      return Scaffold(
-        backgroundColor: backgroundColor,
+      return FZScaffold(
         appBar: AppBar(
           title: Text(titleText, style: TextStyle(color: textColor)),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         ),
+        persistentBottom: FZTab.home,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -5,6 +5,8 @@ import 'package:al_faw_zakho/data/models/faq_model.dart';
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'dart:developer' as developer;
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -107,10 +109,11 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: Provider.of<LanguageProvider>(context),
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: _buildBody(context),
-      ),
+      child: FZScaffold(
+  appBar: _buildAppBar(context),
+  persistentBottom: FZTab.home,
+  body: _buildBody(context),
+),
     );
   }
 

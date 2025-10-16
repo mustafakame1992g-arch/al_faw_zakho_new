@@ -430,4 +430,20 @@ class AppTheme {
   static LinearGradient getTileGradient(bool isDarkMode) {
     return tileGradient(isDarkMode ? Brightness.dark : Brightness.light);
   }
+
+  // إضافة تدرجات متقدمة وتأثيرات ضوئية
+static LinearGradient get premiumGradient => LinearGradient(
+  colors: [Colors.red.shade700, Colors.green.shade600],
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+);
+
+// إضافة ظلال متقدمة
+static List<BoxShadow> get premiumShadow => [
+  BoxShadow(
+    color: Colors.black.withValues(alpha: .25),
+    blurRadius: 20,
+    offset: Offset(0, 10),
+  ),
+];
 }

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +19,10 @@ class _VisionScreenState extends State<VisionScreen> {
   bool _isLoading = true;
   String? _error;
   bool _isReadingMode = true;
-  
+
   // 🔑 قائمة مفاتيح لكل الأقسام
   List<GlobalKey> _sectionKeys = [];
-  
+
   final ScrollController _scrollController = ScrollController();
   final PageController _pageController = PageController(viewportFraction: 0.9);
   int _currentPage = 0;
@@ -59,7 +61,8 @@ class _VisionScreenState extends State<VisionScreen> {
   void _scrollToSection(int index) {
     if (_isReadingMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (index < _sectionKeys.length && _sectionKeys[index].currentContext != null) {
+        if (index < _sectionKeys.length &&
+            _sectionKeys[index].currentContext != null) {
           Scrollable.ensureVisible(
             _sectionKeys[index].currentContext!,
             duration: const Duration(milliseconds: 600),
@@ -93,26 +96,36 @@ class _VisionScreenState extends State<VisionScreen> {
 
     final content = _visionData?[langCode] ?? _visionData?['ar'];
     final sections = content['sections'] as List<dynamic>? ?? [];
-    
+
     // 🏗️ إنشاء المفاتيح إذا لزم الأمر
     if (_sectionKeys.length != sections.length) {
       _sectionKeys = List.generate(sections.length, (index) => GlobalKey());
     }
 
-    return Scaffold(
+    /* return Scaffold(
+      appBar: _buildAppBar(content['title'] ?? 'الرؤية', brightness, sections),
+      body: _isReadingMode? _buildReadingMode(content, sections, brightness)
+          : _buildPresentationMode(content, sections, brightness),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }*/
+
+    return FZScaffold(
       appBar: _buildAppBar(content['title'] ?? 'الرؤية', brightness, sections),
       body: _isReadingMode
           ? _buildReadingMode(content, sections, brightness)
           : _buildPresentationMode(content, sections, brightness),
-      floatingActionButton: _buildFloatingActionButton(),
+      persistentBottom: FZTab.home,
     );
   }
 
-  AppBar _buildAppBar(String title, Brightness brightness, List<dynamic> sections) {
+  AppBar _buildAppBar(
+      String title, Brightness brightness, List<dynamic> sections) {
     return AppBar(
       title: Text(title),
       flexibleSpace: Container(
-        decoration: BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
+        decoration:
+            BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
       ),
       actions: [
         if (!_isLoading && _error == null) ...[
@@ -140,7 +153,8 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildReadingMode(Map<String, dynamic> content, List<dynamic> sections, Brightness brightness) {
+  Widget _buildReadingMode(Map<String, dynamic> content, List<dynamic> sections,
+      Brightness brightness) {
     return Column(
       children: [
         _buildEnhancedHeader(brightness, content['title'] ?? ''),
@@ -160,7 +174,8 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildPresentationMode(Map<String, dynamic> content, List<dynamic> sections, Brightness brightness) {
+  Widget _buildPresentationMode(Map<String, dynamic> content,
+      List<dynamic> sections, Brightness brightness) {
     return Column(
       children: [
         _buildPresentationHeader(brightness, content['title'] ?? ''),
@@ -170,7 +185,8 @@ class _VisionScreenState extends State<VisionScreen> {
             itemCount: sections.length,
             onPageChanged: (index) => setState(() => _currentPage = index),
             itemBuilder: (context, index) {
-              return _buildVisionPageWithAnimation(sections[index], brightness, index);
+              return _buildVisionPageWithAnimation(
+                  sections[index], brightness, index);
             },
           ),
         ),
@@ -225,7 +241,9 @@ class _VisionScreenState extends State<VisionScreen> {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: brightness == Brightness.dark ? Colors.white : AppTheme.black,
+                    color: brightness == Brightness.dark
+                        ? Colors.white
+                        : AppTheme.black,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -237,7 +255,9 @@ class _VisionScreenState extends State<VisionScreen> {
             child: Text(
               'من الفاو إلى زاخو... وحدة وطنية ورؤية تنموية 🇮🇶',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: brightness == Brightness.dark ? Colors.white70 : Colors.black54,
+                    color: brightness == Brightness.dark
+                        ? Colors.white70
+                        : Colors.black54,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -283,7 +303,8 @@ class _VisionScreenState extends State<VisionScreen> {
   }
 
   // 🃏 بناء كرت القسم مع المفتاح الصحيح
-  Widget _buildAnimatedSectionCard(Map<String, dynamic> section, BuildContext context, int index) {
+  Widget _buildAnimatedSectionCard(
+      Map<String, dynamic> section, BuildContext context, int index) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 400 + (index * 100)),
       curve: Curves.easeInOut,
@@ -295,7 +316,8 @@ class _VisionScreenState extends State<VisionScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: ClipPath(
           clipper: ShapeBorderClipper(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -321,7 +343,8 @@ class _VisionScreenState extends State<VisionScreen> {
                   if (section['bullets'] != null) ...[
                     const SizedBox(height: 16),
                     for (final point in section['bullets'])
-                      _AnimatedSectionBullet(point.toString(), section['bullets'].indexOf(point)),
+                      _AnimatedSectionBullet(
+                          point.toString(), section['bullets'].indexOf(point)),
                   ],
                 ],
               ),
@@ -332,7 +355,8 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildVisionPageWithAnimation(Map<String, dynamic> section, Brightness brightness, int index) {
+  Widget _buildVisionPageWithAnimation(
+      Map<String, dynamic> section, Brightness brightness, int index) {
     return AnimatedBuilder(
       animation: _pageController,
       builder: (context, child) {
@@ -366,10 +390,11 @@ class _VisionScreenState extends State<VisionScreen> {
                   children: [
                     Text(
                       section['heading'] ?? '',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                     ),
                     const SizedBox(height: 16),
                     if (section['text'] != null)
@@ -425,7 +450,8 @@ class _VisionScreenState extends State<VisionScreen> {
       appBar: AppBar(
         title: const Text('رؤية التجمع'),
         flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
+          decoration:
+              BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
         ),
       ),
       body: SingleChildScrollView(
@@ -446,14 +472,17 @@ class _VisionScreenState extends State<VisionScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.grey[300]!, Colors.grey[100]!]),
+        gradient:
+            LinearGradient(colors: [Colors.grey[300]!, Colors.grey[100]!]),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
           Container(
-            width: 80, height: 80,
-            decoration: BoxDecoration(color: Colors.grey[400], shape: BoxShape.circle),
+            width: 80,
+            height: 80,
+            decoration:
+                BoxDecoration(color: Colors.grey[400], shape: BoxShape.circle),
           ),
           const SizedBox(height: 16),
           Container(width: 200, height: 20, color: Colors.grey[400]),
@@ -477,9 +506,11 @@ class _VisionScreenState extends State<VisionScreen> {
         children: [
           Container(width: 150, height: 18, color: Colors.grey[400]),
           const SizedBox(height: 12),
-          Container(width: double.infinity, height: 14, color: Colors.grey[300]),
+          Container(
+              width: double.infinity, height: 14, color: Colors.grey[300]),
           const SizedBox(height: 6),
-          Container(width: double.infinity, height: 14, color: Colors.grey[300]),
+          Container(
+              width: double.infinity, height: 14, color: Colors.grey[300]),
           const SizedBox(height: 6),
           Container(width: 200, height: 14, color: Colors.grey[300]),
         ],
@@ -492,16 +523,20 @@ class _VisionScreenState extends State<VisionScreen> {
       appBar: AppBar(
         title: const Text('رؤية التجمع'),
         flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
+          decoration:
+              BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
         ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            Icon(Icons.error_outline,
+                size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
-            Text(_error!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+            Text(_error!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _loadVisionContent,
@@ -517,7 +552,8 @@ class _VisionScreenState extends State<VisionScreen> {
   Widget _buildFloatingActionButton() {
     return FloatingActionButton(
       onPressed: _toggleViewMode,
-      tooltip: _isReadingMode ? 'التبديل إلى وضع العرض' : 'التبديل إلى وضع القراءة',
+      tooltip:
+          _isReadingMode ? 'التبديل إلى وضع العرض' : 'التبديل إلى وضع القراءة',
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
         child: _isReadingMode
@@ -590,7 +626,8 @@ class _AnimatedSectionBullet extends StatelessWidget {
             AnimatedContainer(
               duration: Duration(milliseconds: 300 + (bulletIndex * 100)),
               curve: Curves.elasticOut,
-              child: const Text('• ', style: TextStyle(fontSize: 22, color: AppTheme.red)),
+              child: const Text('• ',
+                  style: TextStyle(fontSize: 22, color: AppTheme.red)),
             ),
             Expanded(
               child: Text(
