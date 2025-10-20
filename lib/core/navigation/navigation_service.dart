@@ -8,28 +8,46 @@ abstract class INavigationService {
 }
 
 class NavigationService implements INavigationService {
-  static const homeRoute = '/';
-  static const officesRoute = '/offices';
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  static const homeRoute   = '/';
+  static const officesRoute= '/offices';
   static const donateRoute = '/donate';
-  static const aboutRoute = '/about';
+  static const aboutRoute  = '/about';
+
+  bool _isCurrent(BuildContext? ctx, String route) {
+    final routeName = ModalRoute.of(ctx!)?.settings.name;
+    return routeName == route;
+  }
+
+  /// يدفع الوجهة بشرط ألا تكون هي الحالية، ويُبقي الهوم قاعدة الستاك
+  void _goUnique(BuildContext context, String route) {
+    final ctx = navigatorKey.currentContext ?? context;
+    if (_isCurrent(ctx, route)) return;
+
+    final nav = navigatorKey.currentState ?? Navigator.of(context);
+    // نضمن وجود الهوم في القاع، ونزيل أي تكرارات فوقه
+    nav.pushNamedAndRemoveUntil(route, (r) {
+      final n = r.settings.name;
+      return n == homeRoute || r.isFirst;
+    });
+  }
 
   @override
   void goHome(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil(homeRoute, (r) => false);
+    final nav = navigatorKey.currentState ?? Navigator.of(context);
+    final ctx = navigatorKey.currentContext ?? context;
+    if (_isCurrent(ctx, homeRoute)) return;
+    // رجوع إلى جذر الستاك (الهوم الواحد)
+    nav.popUntil((r) => r.isFirst);
   }
 
   @override
-  void goOffices(BuildContext context) {
-    Navigator.of(context).pushNamed(officesRoute);
-  }
+  void goOffices(BuildContext context) => _goUnique(context, officesRoute);
 
   @override
-  void goDonate(BuildContext context) {
-    Navigator.of(context).pushNamed(donateRoute);
-  }
+  void goDonate(BuildContext context) => _goUnique(context, donateRoute);
 
   @override
-  void goAbout(BuildContext context) {
-    Navigator.of(context).pushNamed(aboutRoute);
-  }
+  void goAbout(BuildContext context) => _goUnique(context, aboutRoute);
 }

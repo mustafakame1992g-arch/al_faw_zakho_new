@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:al_faw_zakho/core/constants/app_constants.dart';
 
 /// Manages the application's language and persists the setting locally.
 /// Supported languages are Arabic and English.
@@ -8,7 +9,7 @@ class LanguageProvider with ChangeNotifier {
   static const String arabic = 'ar';
   static const String english = 'en';
   static const List<String> _supportedLanguages = [arabic, english];
-  static const String _prefsKey = 'app_language';
+static const String _prefsKey = AppConstants.languagePreferenceKey; // 'language_code'
 
   Locale _locale = const Locale(arabic);
   bool _isInitialized = false;
@@ -46,9 +47,10 @@ class LanguageProvider with ChangeNotifier {
   /// Changes the application language and saves the choice.
   /// Does nothing if [languageCode] is not supported or already active.
   Future<void> setLanguage(String languageCode) async {
-    if (!_supportedLanguages.contains(languageCode) || _locale.languageCode == languageCode) {
+   /* if (!_supportedLanguages.contains(languageCode) || _locale.languageCode == languageCode) {
       return; // Exit early if invalid or same language.
-    }
+    }*/
+  if (!_supportedLanguages.contains(languageCode)) return;
 
     _locale = Locale(languageCode);
     notifyListeners(); // Update UI immediately

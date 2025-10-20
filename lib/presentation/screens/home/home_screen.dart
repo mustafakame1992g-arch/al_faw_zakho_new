@@ -14,7 +14,6 @@ import 'package:al_faw_zakho/data/local/local_database.dart';
 
 // 🏛️ الشاشات الأخرى
 import 'package:al_faw_zakho/presentation/screens/provinces/provinces_screen.dart';
-import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/faq/faq_screen.dart';
 //import 'package:al_faw_zakho/presentation/screens/news/news_list_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/settings/settings_screen.dart';
@@ -225,8 +224,11 @@ return FZScaffold(
         Navigator.push(context, MaterialPageRoute(builder: (_) => const ProvincesScreen()));
         break;
       case 'offices':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const OfficesScreen()));
-        break;
+  // ✅ بدل فتح صفحة جديدة، استخدم الـ Navigator الداخلي (HomeRoot)
+  if (ModalRoute.of(context)?.settings.name != '/offices') {
+    Navigator.of(context).pushNamed('/offices');
+  }
+  break;
       case 'program':
         Navigator.push(context, MaterialPageRoute(builder: (_) => const VisionScreen()));
         break;

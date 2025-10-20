@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class OfficesScreen extends StatefulWidget {
   const OfficesScreen({super.key});
@@ -176,7 +178,7 @@ class _OfficesScreenState extends State<OfficesScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Scaffold(
+     return FZScaffold(
       appBar: AppBar(
         title: const Text('🏢 مكاتب المحافظات'),
         actions: [
@@ -186,6 +188,8 @@ class _OfficesScreenState extends State<OfficesScreen> {
           ),
         ],
       ),
+  persistentBottom: FZTab.home, // أو about, المهم تمرّر شيء لتفعيل الشريط
+
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(

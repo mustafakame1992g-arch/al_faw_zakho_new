@@ -31,7 +31,7 @@ class AppTheme {
     final colorScheme = ColorScheme(
       brightness: Brightness.light,
       primary: red,
-      onPrimary: white,
+      onPrimary: black,
       primaryContainer: Color(0xFFFFDAD6),
       secondary: green,
       onSecondary: white,

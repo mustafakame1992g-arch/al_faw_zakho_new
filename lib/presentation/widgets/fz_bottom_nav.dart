@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
-
-enum FZTab { home, offices, donate, about }
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+enum FZTab { home,  donate, about }
 
 class FZBottomNav extends StatelessWidget {
   final FZTab active;
@@ -10,9 +10,9 @@ class FZBottomNav extends StatelessWidget {
 
   int _toIndex(FZTab t) => switch (t) {
     FZTab.home => 0,
-    FZTab.offices => 1,
-    FZTab.donate => 2,
-    FZTab.about => 3
+    //FZTab.offices => 3,
+    FZTab.donate => 1,
+    FZTab.about => 2
   };
 
   @override
@@ -21,19 +21,31 @@ class FZBottomNav extends StatelessWidget {
     return NavigationBar(
       selectedIndex: _toIndex(active),
       onDestinationSelected: (i) {
+        
         switch (i) {
           case 0: nav.goHome(context); break;
-          case 1: nav.goOffices(context); break;
-          case 2: nav.goDonate(context); break;
-          case 3: nav.goAbout(context); break;
+         // case 3: nav.goOffices(context); break;
+          case 1: nav.goDonate(context); break;
+          case 2: nav.goAbout(context); break;
         }
       },
-      destinations: const [
-        NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'الرئيسية'),
-        NavigationDestination(icon: Icon(Icons.support_agent_outlined), selectedIcon: Icon(Icons.support_agent), label: 'مكاتبنا'),
-        NavigationDestination(icon: Icon(Icons.volunteer_activism_outlined), selectedIcon: Icon(Icons.volunteer_activism), label: 'تبرع'),
-        NavigationDestination(icon: Icon(Icons.info_outline), selectedIcon: Icon(Icons.info), label: 'حولَة'),
-      ],
+      destinations: [
+        NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: AppLocalizations.of(context).translate('home'),
+        ),
+        NavigationDestination(
+            icon: const Icon(Icons.volunteer_activism_outlined),
+            selectedIcon: const Icon(Icons.volunteer_activism),
+            label: AppLocalizations.of(context).translate('donate'),
+        ),
+        NavigationDestination(
+            icon: const Icon(Icons.info_outline),
+            selectedIcon: const Icon(Icons.info),
+            label: AppLocalizations.of(context).translate('about_app'),
+        ),
+        ],
     );
   }
 }

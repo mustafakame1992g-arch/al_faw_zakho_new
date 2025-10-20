@@ -53,12 +53,21 @@ void main() async {
 
   final themeProvider = ThemeProvider();
   await themeProvider.init(); // تحميل الثيم المحفوظ من SharedPreferences
+
+  // ✅ تهيئة مزود اللغة (الحل الحقيقي)
+  final languageProvider = LanguageProvider();
+  await languageProvider.init();
+
   await _initializeCoreServices();
-  runApp(ChangeNotifierProvider.value(
-    value: themeProvider,
-    child: const FoundationApp(),
-  ),
-);
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
+        ChangeNotifierProvider<LanguageProvider>.value(value: languageProvider),
+      ],
+      child: const FoundationApp(),
+    ),
+  );
 }
 
 /// 🧠 تهيئة أساسية متوازية لجميع الخدمات
@@ -75,7 +84,7 @@ Future<void> _initializeCoreServices() async {
     await LocalDatabase.bootstrapOfficesFromAssets(forceReload: true);
 
     // ✅ تحميل بيانات المكاتب من assets في أول تشغيل فقط
-     //await LocalDatabase.bootstrapOfficesFromAssets();
+    //await LocalDatabase.bootstrapOfficesFromAssets();
 
     // ✅ إصلاح تلقائي لصندوق الأخبار (عند الحاجة فقط)
     await LocalDatabase.migrateAndRepairNewsBox();
@@ -100,33 +109,32 @@ Future<void> _initializeCoreServices() async {
     ]);
 
     // ✅ فحص مباشر لعدد المكاتب بعد التهيئة
-final offices = await LocalDatabase.getAllOffices();
-developer.log('📦 DEBUG: Offices in Hive after init = ${offices.length}', name: 'DEBUG');
-for (final o in offices) {
-  developer.log('➡️ ${o.province} | ${o.nameAr}', name: 'DEBUG');
-}
-
+    final offices = await LocalDatabase.getAllOffices();
+    developer.log('📦 DEBUG: Offices in Hive after init = ${offices.length}',
+        name: 'DEBUG');
+    for (final o in offices) {
+      developer.log('➡️ ${o.province} | ${o.nameAr}', name: 'DEBUG');
+    }
 
     developer.log(
       '[MAIN] ✅ Core services fully initialized in ${stopwatch.elapsedMilliseconds}ms',
       name: 'BOOT',
     );
-
   } catch (e, stack) {
     developer.log('[MAIN] ❌ Core initialization failed: $e',
         name: 'ERROR', error: e, stackTrace: stack);
 
     // 🚨 fallback احتياطي شامل لتأمين الإقلاع حتى لو فشل Hive
-await LocalDatabase.emergencyFallbackInitialization(e);
+    await LocalDatabase.emergencyFallbackInitialization(e);
 
     rethrow;
   } finally {
     stopwatch.stop();
-        developer.log('[MAIN] 🕒 Total initialization time: ${stopwatch.elapsedMilliseconds}ms', name: 'BOOT');
-
+    developer.log(
+        '[MAIN] 🕒 Total initialization time: ${stopwatch.elapsedMilliseconds}ms',
+        name: 'BOOT');
   }
 }
-
 
 /// 🧱 تهيئة Hive مع إعادة المحاولة
 Future<void> _initializeHiveWithRetry() async {
@@ -136,7 +144,7 @@ Future<void> _initializeHiveWithRetry() async {
     try {
       await Hive.initFlutter();
       await LocalDatabase.init();
-      
+
       developer.log('[MAIN] Hive initialized ✅ (attempt $attempt)',
           name: 'BOOT');
       return;
@@ -182,13 +190,12 @@ Future<void> _initializeRealDataSystem() async {
 /// 📊 تهيئة Analytics
 Future<void> _initializeAnalytics() async {
   try {
-     AnalyticsService.initialize();
+    AnalyticsService.initialize();
     developer.log('[MAIN] Analytics initialized ✅', name: 'BOOT');
   } catch (e) {
     developer.log('[MAIN] Analytics init failed: $e', name: 'WARNING');
   }
 }
-
 
 /// 🚀 تحميل مسبق للبيانات الأساسية (نسخة متينة واحترافية)
 Future<void> _preloadEssentialData() async {
@@ -227,7 +234,6 @@ Future<void> _preloadEssentialData() async {
   }
 }
 
-
 // 🏛 التطبيق الجذري
 class FoundationApp extends StatelessWidget {
   const FoundationApp({super.key});
@@ -235,19 +241,19 @@ class FoundationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<ApiClient>(create: (_) => ApiClient()),
-        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProxyProvider<ApiClient, AppProvider>(
-          create: (_) => AppProvider(),
-          update: (_, apiClient, appProvider) =>
-              appProvider!..setApiClient(apiClient),
-        ),
-      ],
-      child: const _AppRoot(),
-    );
+  providers: [
+    Provider<ApiClient>(create: (_) => ApiClient()),
+    ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+    // ✅ لا نعيد إنشاء ThemeProvider أو LanguageProvider هنا
+    ChangeNotifierProxyProvider<ApiClient, AppProvider>(
+      create: (_) => AppProvider(),
+      update: (_, apiClient, appProvider) =>
+          appProvider!..setApiClient(apiClient),
+    ),
+  ],
+  child: const _AppRoot(),
+);
+
   }
 }
 
@@ -405,13 +411,12 @@ class __AppRootState extends State<_AppRoot> {
   }
 
   /// 🔒 تحقق محسن من سلامة البيانات
-Future<void> _validateRealData() async {
-  try {
-    // ✅ جلب البيانات من LocalDatabase
-    final rawCandidates = LocalDatabase.getCandidates();
-    final candidates = rawCandidates.cast<CandidateModel>().toList();
-    final faqs = LocalDatabase.getFAQs();
-
+  Future<void> _validateRealData() async {
+    try {
+      // ✅ جلب البيانات من LocalDatabase
+      final rawCandidates = LocalDatabase.getCandidates();
+      final candidates = rawCandidates.cast<CandidateModel>().toList();
+      final faqs = LocalDatabase.getFAQs();
 
       developer.log(
           '[VALIDATION] Starting validation - Candidates: ${candidates.length}, FAQs: ${faqs.length}',
@@ -449,17 +454,14 @@ Future<void> _validateRealData() async {
 
     // ✅ التحقق من جودة بيانات المرشحين
     for (final candidate in candidates) {
-      if (candidate.nameAr.isEmpty && candidate.nameEn.isEmpty ) {
+      if (candidate.nameAr.isEmpty && candidate.nameEn.isEmpty) {
         throw Exception(
             'بيانات مرشح غير مكتملة: الاسم مفقود للمرشح ${candidate.id}');
       }
-
-
     }
 
     // ✅ التحقق من التكرارات
-    final nonNullIds =
-        candidates.map((c) => c.id).toList();
+    final nonNullIds = candidates.map((c) => c.id).toList();
     final uniqueIds = nonNullIds.toSet();
 
     if (uniqueIds.length != nonNullIds.length) {
@@ -746,47 +748,42 @@ Future<void> _validateRealData() async {
         // ✅ استخدام Directionality لتحديد اتجاه النص
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          
           child: MultiProvider(
-          providers: [
-            Provider<INavigationService>(
-              create: (_) => NavigationService(),
-            ),
-          ],
-          
-          
-          child: MaterialApp(
-            title: 'تطبيق تجمع الفاو زاخو',
-            debugShowCheckedModeBanner: false,
-            locale: language.locale,
-            supportedLocales: const [Locale('ar'), Locale('en')],
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+            providers: [
+              Provider<INavigationService>(
+                create: (_) => NavigationService(),
+              ),
             ],
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: theme.themeMode,
+            child: MaterialApp(
+              onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
+              debugShowCheckedModeBanner: false,
+              locale: language.locale,
+              supportedLocales: const [Locale('ar'), Locale('en')],
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: theme.themeMode,
 
+              // ✅ إضافة routes هنا
+              routes: {
+                NavigationService.homeRoute: (_) => const HomeScreen(),
+                NavigationService.officesRoute: (_) => const OfficesScreen(),
+                NavigationService.donateRoute: (_) => const DonateScreen(),
+                NavigationService.aboutRoute: (_) => const AboutScreen(),
+              },
 
- // ✅ إضافة routes هنا
-            routes: {
-              NavigationService.homeRoute: (_) => const HomeScreen(),
-              NavigationService.officesRoute: (_) => const OfficesScreen(),
-              NavigationService.donateRoute: (_) => const DonateScreen(),
-              NavigationService.aboutRoute: (_) => const AboutScreen(),
-            },
-
-            //home: const HomeScreen(),
-          ),
+              //home: const HomeScreen(),
+            ),
           ),
         );
       },
     );
   }
-
 }
 
 // ✅ إضافة كلاس _Phase المفقود

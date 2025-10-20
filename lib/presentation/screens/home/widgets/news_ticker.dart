@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/core/services/news_service.dart';
 import '/data/models/news_model.dart';
@@ -54,42 +55,40 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
     return code.startsWith('ar') || code.startsWith('fa') || code.startsWith('ur');
   }
 
-  String _tBreaking(BuildContext context) {
-    final code = _lang(context);
-    // إن كان عندك l10n فعّال، استبدل بالسطر التالي:
-    // return AppLocalizations.of(context)!.breaking;
-    return code.startsWith('en') ? 'Breaking' : 'عاجل';
-  }
+    String _tBreaking(BuildContext context) {
+      final t = AppLocalizations.of(context);
+      return t.translate('breaking');
+    }
+   
+    String _tLoading(BuildContext context) {
+    final t = AppLocalizations.of(context);
+   
+      return t.translate('loading_news');
+    }
+   
+    String _tPrev(BuildContext context) {
+      final t = AppLocalizations.of(context);
+      return t.translate('previous_news');
+    }
+   
+    String _tNext(BuildContext context) {
+      final t = AppLocalizations.of(context);
+      return t.translate('next_news');
+    }
+   
+    String _tGenericNews(BuildContext context) {
+      final t = AppLocalizations.of(context);
+      return t.translate('news');
+    }
+   
+    String _tTickerSemantics(BuildContext context, int count) {
+      final t = AppLocalizations.of(context);
+      // مثال بسيط للتجميع: "News ticker, {count} items"
+      final base = t.translate('news_ticker');
+      final unit = t.translate('items'); // أو news_items بالعربي
+      return '$base, $count $unit';
+    }
 
-  String _tLoading(BuildContext context) {
-    final code = _lang(context);
-    // return AppLocalizations.of(context)!.loadingNews;
-    return code.startsWith('en') ? 'Loading news…' : 'جاري تحميل الأخبار...';
-  }
-
-  String _tPrev(BuildContext context) {
-    final code = _lang(context);
-    // return AppLocalizations.of(context)!.previousNews;
-    return code.startsWith('en') ? 'Previous news' : 'الخبر السابق';
-  }
-
-  String _tNext(BuildContext context) {
-    final code = _lang(context);
-    // return AppLocalizations.of(context)!.nextNews;
-    return code.startsWith('en') ? 'Next news' : 'الخبر التالي';
-  }
-
-  String _tGenericNews(BuildContext context) {
-    final code = _lang(context);
-    // return AppLocalizations.of(context)!.news;
-    return code.startsWith('en') ? 'News' : 'خبر';
-  }
-
-  String _tTickerSemantics(BuildContext context, int count) {
-    final code = _lang(context);
-    // return AppLocalizations.of(context)!.newsTickerLabel(count);
-    return code.startsWith('en') ? 'News ticker, $count items' : 'شريط الأخبار، $count خبر';
-  }
   // ===========================================================================
 
   Future<void> _load() async {
@@ -280,8 +279,8 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
                   child: Text(
                     breakingText,
                     style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                      color: Colors.black,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -406,9 +406,9 @@ class _AppInfoDetails extends StatelessWidget {
           const SizedBox(height: 16),
           _InfoRow(icon: Icons.verified, label: context.tr('version'), value: '1.0.0'),
           _InfoRow(icon: Icons.build, label: context.tr('build'), value: '2025.01.01'),
-          _InfoRow(icon: Icons.update, label: 'آخر تحديث', value: 'يناير 2025'),
-          _InfoRow(icon: Icons.security, label: 'الحالة', value: 'مستقر'),
-        ],
+          _InfoRow(icon: Icons.update, label: context.tr('last_update'), value: 'Jan 2025'),
+          _InfoRow(icon: Icons.security, label: context.tr('status'), value: context.tr('stable')),
+   ],
       ),
     );
   }

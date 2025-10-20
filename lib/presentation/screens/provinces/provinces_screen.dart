@@ -188,7 +188,7 @@ return FZScaffold(
               ),
               const SizedBox(height: 16),
               Text(
-                'جاري تحميل بيانات المحافظات...',
+                context.tr('loading_provinces'),
                 style: TextStyle(color: textColor),
               ),
             ],
@@ -226,7 +226,7 @@ return FZScaffold(
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('إعادة المحاولة'),
+                child: Text(context.tr('retry')),
               ),
             ],
           ),
@@ -248,7 +248,7 @@ return FZScaffold(
                 _searchController.clear();
                 setState(() => _filteredProvinces = List.from(_allProvinces));
               },
-              tooltip: 'مسح البحث',
+              tooltip: context.tr('clear_search'),
             ),
         ],
       ),
@@ -262,7 +262,7 @@ return FZScaffold(
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: TextStyle(color: textColor), // 🎨 لون النص
               decoration: InputDecoration(
-                hintText: 'ابحث عن محافظة أو مرشح...',
+                hintText: context.tr('search_province_or_candidate'),
                 hintStyle: TextStyle(color: subtitleColor), // 🎨 لون النص التوضيحي
                 prefixIcon: Icon(Icons.search, color: subtitleColor),
                 suffixIcon: _searchController.text.isNotEmpty
@@ -308,19 +308,21 @@ return FZScaffold(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildStatItem(
-                  'المحافظات', 
+                  context.tr('provinces'), 
+
                   _allProvinces.length.toString(), 
                   Icons.map,
                   context,
                 ),
                 _buildStatItem(
-                  'المرشحين', 
+                  context.tr('candidates'),
+
                   _totalCandidates.toString(), 
                   Icons.people,
                   context,
                 ),
                 _buildStatItem(
-                  'الأعلى', 
+                  context.tr('top'), 
                   _getTopProvince() != null 
                       ? _provinceCandidates[_getTopProvince()]!.length.toString()
                       : '0', 
@@ -339,7 +341,7 @@ return FZScaffold(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'عرض ${_filteredProvinces.length} من ${_allProvinces.length} محافظة',
+                  '${context.tr('showing')} ${_filteredProvinces.length} ${context.tr('of')} ${_allProvinces.length} ${context.tr('provinces')}',
                   style: TextStyle(
                     fontSize: 12, 
                     color: subtitleColor, // 🎨 لون مناسب للوضع المظلم

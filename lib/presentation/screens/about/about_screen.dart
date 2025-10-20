@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -8,7 +10,7 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
 
-    return Scaffold(
+     return FZScaffold(
       appBar: AppBar(
         title: const Text('حول التجمع'),
         flexibleSpace: Container(
@@ -17,6 +19,8 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
       ),
+            persistentBottom: FZTab.about,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

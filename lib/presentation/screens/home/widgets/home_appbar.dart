@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 /// 🧭 AppBar مخصص لشاشة الهوم
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -12,10 +13,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     final brightness = Theme.of(context).brightness;
 
     return AppBar(
-      title: Text(
-        'تجمع الفاو زاخو',
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-      ),
+title: Text(AppLocalizations.of(context).translate('app_title')),
+        
       actions: [
         IconButton(
           icon: const Icon(Icons.settings),
