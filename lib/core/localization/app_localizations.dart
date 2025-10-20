@@ -93,6 +93,16 @@ class AppLocalizations {
     'loading_news': 'جاري تحميل الأخبار...',
     'previous_news': 'الخبر السابق',
     'next_news': 'الخبر التالي',
+
+    "about_title": "حول التجمع",
+  "about_name": "تجمع الفاو زاخو",
+  "about_motto": "من أجل عراق موحَّد، من الجنوب إلى الشمال",
+  "about_intro": "تجمع الفاو زاخو هو مبادرة وطنية تهدف إلى ...",
+  "about_hq": "المقر الرئيسي: البصرة – العراق",
+  "about_founded": "التأسيس: 2024",
+  "about_goal": "الهدف: نشر الوعي الانتخابي ودعم الكفاءات الوطنية",
+  "rights_reserved": "جميع الحقوق محفوظة © {year}\nتجمع الفاو زاخو – الإصدار {version}",
+
   },
 
   'en': {
@@ -160,6 +170,14 @@ class AppLocalizations {
     'loading_news': 'Loading news…',
     'previous_news': 'Previous news',
     'next_news': 'Next news',
+    "about_title": "About the Bloc",
+  "about_name": "Al-Faw Zakho Bloc",
+  "about_motto": "For a unified Iraq, from South to North",
+  "about_intro": "Al-Faw Zakho is a national initiative that aims to ...",
+  "about_hq": "Headquarters: Basra – Iraq",
+  "about_founded": "Founded: 2024",
+  "about_goal": "Goal: Raise electoral awareness and support national competencies",
+  "rights_reserved": "All rights reserved © {year}\nAl-Faw Zakho – version {version}",
   },
 
   };
