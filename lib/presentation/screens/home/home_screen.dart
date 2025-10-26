@@ -179,36 +179,7 @@ return FZScaffold(
         );
       },
     ),
-    /*bottomNavigationBar: NavigationBar(
-      selectedIndex: 0,
-      onDestinationSelected: (i) {
-        switch (i) {
-          case 1:
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const ProvincesScreen()));
-            break;
-          case 2:
-            Navigator.push(context, MaterialPageRoute(builder: (_) => AboutScreen()));
-            break;
-        }
-      },
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
-          label: 'الرئيسية',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.how_to_vote_outlined),
-          selectedIcon: Icon(Icons.how_to_vote),
-          label: 'المحافظات',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.info_outline),
-          selectedIcon: Icon(Icons.info_outline),
-          label: 'حولة',
-        ),
-      ],
-    ),*/
+   
   );
 }
 

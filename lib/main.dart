@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'dart:convert';
 import 'package:al_faw_zakho/presentation/screens/about/about_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/donate/donate_screen.dart';
-import 'package:al_faw_zakho/presentation/screens/offices/offices_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
 import 'package:al_faw_zakho/core/errors/global_error_handler.dart';
@@ -526,7 +526,7 @@ class __AppRootState extends State<_AppRoot> {
           .toList();
 
       if (candidatesList.isEmpty) {
-        throw Exception('قائمة المرشحين فارغة في البيانات الافتراضية');
+        throw Exception('قائمة المرشحين فارغة في البيانالت الافتراضية');
       }
 
       await LocalDatabase.saveCandidates(candidatesList);

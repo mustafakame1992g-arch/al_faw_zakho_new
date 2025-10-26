@@ -3,11 +3,11 @@
     "المثنى": {
       "central": {
         "id": "muthanna_central",
-        "name_ar": "المكتب المركزي - المثنى",
-        "manager_name_ar": "محمد علي",
-        "address_ar": "السماوة - شارع البلدية",
-        "phone_number": "+9647711111111",
-        "working_hours": "8:00 - 16:00",
+        "name_ar": "المثنى",
+        "manager_name_ar": "المهندس مصطفى كامل عبد الزريجاوي ",
+        "address_ar": " لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود ",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
         "province": "المثنى",
         "is_central": true,
         "latitude": 31.3141,
@@ -17,15 +17,239 @@
     "بغداد": {
       "central": {
         "id": "baghdad_central",
-        "name_ar": "المكتب المركزي - بغداد",
-        "manager_name_ar": "فاطمة حسين",
-        "address_ar": "الكرادة - شارع النضال",
-        "phone_number": "+9647712222222",
-        "working_hours": "8:00 - 15:00",
+        "name_ar": "بغداد",
+        "manager_name_ar": " كمال أسماعيل ",
+        "address_ar": "  بامكانك اخذ العنوان عبر تواصل البرنامج تجريب ",
+        "phone_number": "0770 965 3314",
+        "working_hours": "غير محدد",
         "province": "بغداد",
         "is_central": true,
         "latitude": 33.3152,
         "longitude": 44.3661
+      }
+    },
+    "البصرة": {
+      "central": {
+        "id": "basra_central",
+        "name_ar": "البصرة",
+        "manager_name_ar": " عبد الله الاغا",
+        "address_ar": " البصرة القديمة/حي المعلمين/مقابل مجسّر المستشفى الجمهوري",
+        "phone_number": "0773 550 7016",
+        "working_hours": "تواصل باي وقت",
+        "province": "البصرة",
+        "is_central": true,
+        "latitude": 30.5081,
+        "longitude": 47.7835
+      }
+    },
+    "نينوى": {
+      "central": {
+        "id": "nineveh_central",
+        "name_ar": "نينوى",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "نينوى",
+        "is_central": true,
+        "latitude": 36.34,
+        "longitude": 43.13
+      }
+    },
+    "الأنبار": {
+      "central": {
+        "id": "anbar_central",
+        "name_ar": "الأنبار",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "الأنبار",
+        "is_central": true,
+        "latitude": 33.4206,
+        "longitude": 43.3077
+      }
+    },
+    "أربيل": {
+      "central": {
+        "id": "erbil_central",
+        "name_ar": "أربيل",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "أربيل",
+        "is_central": true,
+        "latitude": 36.1911,
+        "longitude": 44.0092
+      }
+    },
+    "السليمانية": {
+      "central": {
+        "id": "sulaymaniyah_central",
+        "name_ar": "السليمانية",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "السليمانية",
+        "is_central": true,
+        "latitude": 35.5619,
+        "longitude": 45.437
+      }
+    },
+    "دهوك": {
+      "central": {
+        "id": "duhok_central",
+        "name_ar": "دهوك",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "دهوك",
+        "is_central": true,
+        "latitude": 36.8665,
+        "longitude": 42.9885
+      }
+    },
+    "كركوك": {
+      "central": {
+        "id": "kirkuk_central",
+        "name_ar": "كركوك",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "كركوك",
+        "is_central": true,
+        "latitude": 35.4676,
+        "longitude": 44.3922
+      }
+    },
+    "ديالى": {
+      "central": {
+        "id": "diyala_central",
+        "name_ar": "ديالى",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "ديالى",
+        "is_central": true,
+        "latitude": 33.746,
+        "longitude": 44.651
+      }
+    },
+    "صلاح الدين": {
+      "central": {
+        "id": "salah_al_din_central",
+        "name_ar": "صلاح الدين",
+        "manager_name_ar": "غير محدد",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165",
+        "working_hours": "تواصل باي وقت",
+        "province": "صلاح الدين",
+        "is_central": true,
+        "latitude": 34.607,
+        "longitude": 43.677
+      }
+    },
+    "واسط": {
+      "central": {
+        "id": "wasit_central",
+        "name_ar": "واسط",
+        "manager_name_ar": " المهندس طارق عريبي الكناني",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0780 203 1218",
+        "working_hours": "تواصل باي وقت",
+        "province": "واسط",
+        "is_central": true,
+        "latitude": 32.512,
+        "longitude": 45.818
+      }
+    },
+    "كربلاء": {
+      "central": {
+        "id": "karbala_central",
+        "name_ar": "كربلاء",
+        "manager_name_ar": " قتيبة مردان التميمي  ",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0780 350 2003",
+        "working_hours": "تواصل باي وقت",
+        "province": "كربلاء",
+        "is_central": true,
+        "latitude": 32.616,
+        "longitude": 44.024
+      }
+    },
+    "النجف": {
+      "central": {
+        "id": "najaf_central",
+        "name_ar": "النجف",
+        "manager_name_ar": " المهندسة سارة مسلم عبد الصحاب الموسوي",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0786 751 7071",
+        "working_hours": "تواصل باي وقت",
+        "province": "النجف",
+        "is_central": true,
+        "latitude": 32.0,
+        "longitude": 44.33
+      }
+    },
+    "بابل": {
+      "central": {
+        "id": "babylon_central",
+        "name_ar": "بابل",
+        "manager_name_ar": " الدكتور غســان نـاظـم الشبيب",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0780 119 5633",
+        "working_hours": "تواصل باي وقت",
+        "province": "بابل",
+        "is_central": true,
+        "latitude": 32.472,
+        "longitude": 44.421
+      }
+    },
+    "القادسية": {
+      "central": {
+        "id": "qadisiyah_central",
+        "name_ar": "القادسية",
+        "manager_name_ar": " المهندس جاسم محمد البيضاني",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0780 107 5929",
+        "working_hours": "تواصل باي وقت",
+        "province": "القادسية",
+        "is_central": true,
+        "latitude": 31.99,
+        "longitude": 44.925
+      }
+    },
+    "ذي قار": {
+      "central": {
+        "id": "dhi_qar_central",
+        "name_ar": "ذي قار",
+        "manager_name_ar": "الاستاذ عبد الكريم قاسم الشريفي ",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "07823014165" ,
+        "working_hours": "تواصل باي وقت",
+        "province": "ذي قار",
+        "is_central": true,
+        "latitude": 31.0429,
+        "longitude": 46.267
+      }
+    },
+    "ميسان": {
+      "central": {
+        "id": "maysan_central",
+        "name_ar": "ميسان",
+        "manager_name_ar": " دكتور علي",
+        "address_ar": "لا يوجد مكتب فقط الكتروني بامكانك التواصل عبر الواتساب من خلال الرقم الموجود",
+        "phone_number": "0780 961 5146",
+        "working_hours": "تواصل باي وقت",
+        "province": "ميسان",
+        "is_central": true,
+        "latitude": 31.845,
+        "longitude": 47.151
       }
     }
   }

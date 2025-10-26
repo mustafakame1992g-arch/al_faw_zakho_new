@@ -24,6 +24,37 @@ class IraqiProvinces {
     'المثنى',
     'حلبجة',
   ];
+    // أسماء العرض بالإنجليزية مقابل الاسم العربي (نحتفظ بالعربي كمفتاح داخلي)
+  static const Map<String, String> arToEn = {
+    'بغداد': 'Baghdad',
+    'البصرة': 'Basra',
+    'نينوى': 'Nineveh',
+    'أربيل': 'Erbil',
+    'السليمانية': 'Sulaymaniyah',
+    'دهوك': 'Duhok',
+    'كركوك': 'Kirkuk',
+    'ديالى': 'Diyala',
+    'الأنبار': 'Anbar',
+    'صلاح الدين': 'Salah al-Din',
+    'بابل': 'Babil',
+    'كربلاء': 'Karbala',
+    'النجف': 'Najaf',
+    'واسط': 'Wasit',
+    'ميسان': 'Maysan',
+    'ذي قار': 'Dhi Qar',
+    'القادسية': 'Al-Qadisiyah',
+    'المثنى': 'Muthanna',
+    'حلبجة': 'Halabja',
+  };
+
+  /// ترجمة اسم المحافظة للعرض فقط حسب كود اللغة ('ar' أو 'en')
+  static String displayName(String arName, String langCode) {
+    if (langCode == 'en') {
+      return arToEn[arName] ?? arName;
+    }
+    return arName;
+  }
+
 
   /// التحقق من صحة المحافظة
   static bool isValidProvince(String province) {

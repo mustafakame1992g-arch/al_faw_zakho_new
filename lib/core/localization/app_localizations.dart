@@ -29,6 +29,31 @@ class AppLocalizations {
   // 🗃️ قاعدة بيانات الترجمة المبسطة للغتين فقط
   static const Map<String, Map<String, String>> _translationDatabase = {
   'ar': {
+
+    'search_candidates': 'بحث المرشحين',
+    'mobile_number': 'رقم الموبايل',
+    'phone_copied': 'تم نسخ رقم الموبايل:',
+    'copy_failed': 'فشل في نسخ الرقم',
+    'refresh_content': 'تحديث المحتوى',
+    'help': 'المساعدة',
+    'news_title': '📰 أخبار تجمع الفاو زاخو',
+    'news_wip': 'صفحة الأخبار قيد التطوير',
+    'offices_title': '🏢 مكاتب تجمع الفاو زاخو',
+    'provincial_offices': '🏢 مكاتب المحافظات',
+    'error_loading_data': 'حدث خطأ أثناء تحميل البيانات',
+    'vision_title': 'رؤية التجمع',
+    'done': 'تم',
+    'support_bloc': 'ادعم تجمع الفاو زاخو',
+    'contribution_thanks': 'مساهمتك تحدث فرقًا حقيقيًا — شكرًا لدعمك!',
+    'donate_via_zaincash': 'التبرع عبر زين كاش',
+    'open_zaincash_and_send_to': 'افتح تطبيق ZainCash ثم أرسل إلى الرقم التالي',
+    'zaincash_details': 'تفاصيل زين كاش',
+    'number_label': 'الرقم',
+    'name_label': 'الاسم',
+    'description_label': 'الوصف',
+    'donation_description': 'تبرع دعم الحملة',
+    'bank_card': 'بطاقة مصرفية',
+    'coming_soon': 'قريبًا — قنوات دفع إضافية.',
     'app_title': 'تطبيق تجمع الفاو زاخو',
     'welcome': 'مرحباً',
     'home': 'الرئيسية',
@@ -102,6 +127,14 @@ class AppLocalizations {
   "about_founded": "التأسيس: 2024",
   "about_goal": "الهدف: نشر الوعي الانتخابي ودعم الكفاءات الوطنية",
   "rights_reserved": "جميع الحقوق محفوظة © {year}\nتجمع الفاو زاخو – الإصدار {version}",
+
+
+
+    'search_within_province': 'ابحث عن اسم المرشح داخل هذه المحافظة...',
+    'candidates_in_province': '🗳️ مرشحونا في المحافظة',
+    'province': 'المحافظة',
+    'unexpected_error': 'حدث خطأ غير متوقع',
+    'check_spelling_or_try_others': 'تأكد من كتابة الاسم بشكل صحيح أو جرّب كلمات بحث أخرى',
 
   },
 
@@ -178,6 +211,41 @@ class AppLocalizations {
   "about_founded": "Founded: 2024",
   "about_goal": "Goal: Raise electoral awareness and support national competencies",
   "rights_reserved": "All rights reserved © {year}\nAl-Faw Zakho – version {version}",
+  
+      'search_candidates': 'Search Candidates',
+    'mobile_number': 'Mobile number',
+    'phone_copied': 'Phone number copied:',
+    'copy_failed': 'Failed to copy number',
+    'refresh_content': 'Refresh Content',
+    'help': 'Help',
+    'news_title': '📰 Al-Faw Zakho News',
+    'news_wip': 'News page is under development',
+    'offices_title': '🏢 Al-Faw Zakho Offices',
+    'provincial_offices': '🏢 Provincial Offices',
+    'error_loading_data': 'An error occurred while loading data',
+    'vision_title': 'Bloc Vision',
+    'done': 'Done',
+    'support_bloc': 'Support Al-Faw Zakho',
+    'contribution_thanks': 'Your contribution makes a real difference — thank you!',
+    'donate_via_zaincash': 'Donate via ZainCash',
+    'open_zaincash_and_send_to': 'Open ZainCash and send to the following number',
+    'zaincash_details': 'ZainCash Details',
+    'number_label': 'Number',
+    'name_label': 'Name',
+    'description_label': 'Description',
+    'donation_description': 'Campaign support donation',
+    'bank_card': 'Bank Card',
+    'coming_soon': 'Coming soon — additional payment channels.',
+
+  
+  
+
+      'search_within_province': 'Search name within this province...',
+    'candidates_in_province': '🗳️ Candidates in the province',
+    'province': 'Province',
+    'unexpected_error': 'Unexpected error',
+    'check_spelling_or_try_others': 'Make sure you spelled the name correctly or try different search terms',
+
   },
 
   };

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class VisionScreen extends StatefulWidget {
   const VisionScreen({super.key});
@@ -448,7 +449,7 @@ class _VisionScreenState extends State<VisionScreen> {
   Widget _buildShimmerLoading(Brightness brightness) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('رؤية التجمع'),
+        title: Text(AppLocalizations.of(context).translate('vision_title')),
         flexibleSpace: Container(
           decoration:
               BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
@@ -521,7 +522,7 @@ class _VisionScreenState extends State<VisionScreen> {
   Widget _buildErrorScreen(Brightness brightness) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('رؤية التجمع'),
+        title: Text(AppLocalizations.of(context).translate('vision_title')),
         flexibleSpace: Container(
           decoration:
               BoxDecoration(gradient: AppTheme.headerGradient(brightness)),
@@ -541,7 +542,7 @@ class _VisionScreenState extends State<VisionScreen> {
             ElevatedButton.icon(
               onPressed: _loadVisionContent,
               icon: const Icon(Icons.refresh),
-              label: const Text('إعادة المحاولة'),
+              label: Text(AppLocalizations.of(context).translate('retry')),
             ),
           ],
         ),

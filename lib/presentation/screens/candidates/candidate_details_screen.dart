@@ -205,14 +205,14 @@ class CandidateDetailsScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.phone, color: Colors.red.shade700, size: 20),
+            Icon(Icons.phone, color: Theme.of(context).colorScheme.primary, size: 20),
             const SizedBox(width: 8),
             Text(
-              'رقم الموبايل',
+              AppLocalizations.of(context).translate('mobile_number'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.shade800,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ],
@@ -255,26 +255,49 @@ class CandidateDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _copyPhoneNumber(BuildContext context, String phone) async {
-    try {
-      await Clipboard.setData(ClipboardData(text: phone));
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('📋 تم نسخ رقم الموبايل: $phone'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-      AnalyticsService.trackEvent('candidate_phone_copied', parameters: {
-        'candidate_id': candidate.id,
-        'phone_number': phone,
-      });
-    } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ فشل في نسخ الرقم')),
-      );
-    }
+ void _copyPhoneNumber(BuildContext context, String phone) async {
+  // نأخذ ما نحتاجه من الـ context قبل أي await
+  final messenger = ScaffoldMessenger.of(context);
+  final tr = AppLocalizations.of(context);
+
+  // تنظيف وتحقق مبكر للمدخل
+  final text = phone.trim();
+  if (text.isEmpty) {
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('❌ ${tr.translate('copy_failed')}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    return;
   }
+
+  try {
+    // العملية غير المتزامنة
+    await Clipboard.setData(ClipboardData(text: text));
+
+    // إظهار الرسالة باستخدام المرجع الملتقط مسبقًا (لا نستخدم context بعد await)
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('${tr.translate('phone_copied')} $text'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+
+    // تتبع الحدث (احتفظت على نفس الباراميترات لديك)
+    AnalyticsService.trackEvent('candidate_phone_copied', parameters: {
+      'candidate_id': candidate.id, // يفترض أن الدالة داخل نفس الكلاس الذي يملك candidate
+      'phone_number': text,
+    });
+  } catch (e) {
+    // في حال الفشل
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('❌ ${tr.translate('copy_failed')}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
     
 }

@@ -1,6 +1,7 @@
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class DonateScreen extends StatelessWidget {
   const DonateScreen({super.key});
@@ -19,7 +20,8 @@ class DonateScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text('ادعم تجمع الفاو زاخو', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text('ادعم تجمع الفاو زاخو',
+                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
                   Text('مساهمتك تحدث فرقًا حقيقيًا — شكرًا لدعمك!'),
                 ],
@@ -30,8 +32,8 @@ class DonateScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('التبرع عبر زين كاش'),
-              subtitle: const Text('افتح تطبيق ZainCash ثم المسح/الإرسال إلى الرقم التالي'),
+              title: Text(AppLocalizations.of(context).translate('donate_via_zaincash')),
+              subtitle: Text(AppLocalizations.of(context).translate('open_zaincash_and_send_to')),
               trailing: const Icon(Icons.qr_code),
               onTap: () {
                 showModalBottomSheet(
@@ -41,13 +43,12 @@ class DonateScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('تفاصيل زين كاش', style: TextStyle(fontWeight: FontWeight.bold)),
+                      children:  [
                         SizedBox(height: 8),
-                        Text('الرقم: 0780-XXX-XXXX'),
-                        Text('الاسم: تجمع الفاو زاخو'),
+                        Text('${AppLocalizations.of(context).translate('number_label')}: 0780-XXX-XXXX'),
+                        Text('${AppLocalizations.of(context).translate('name_label')}: ${AppLocalizations.of(context).translate('about_name')}'),
                         SizedBox(height: 8),
-                        Text('الوصف: تبرع دعم الحملة'),
+                        Text('${AppLocalizations.of(context).translate('description_label')}: ${AppLocalizations.of(context).translate('donation_description')}'),
                       ],
                     ),
                   ),
@@ -59,8 +60,8 @@ class DonateScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.credit_card),
-              title: const Text('بطاقة مصرفية'),
-              subtitle: const Text('قريبًا — قنوات دفع إضافية.'),
+              title: Text(AppLocalizations.of(context).translate('bank_card')),
+              subtitle: Text(AppLocalizations.of(context).translate('coming_soon')),
             ),
           ),
         ],

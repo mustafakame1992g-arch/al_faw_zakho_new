@@ -1,8 +1,10 @@
-// 🏢 offices_main_screen.dart — نسخة موحدة الألوان مع شاشات المرشحين
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class OfficesScreen extends StatefulWidget {
   const OfficesScreen({super.key});
@@ -17,7 +19,7 @@ class _OfficesScreenState extends State<OfficesScreen> {
   List<OfficeModel> _filteredOffices = [];
   bool _loading = true;
 
-  // 🎨 ألوان الفاو زاخو الرسمية
+  // 🎨 ألوان موحدة
   static const Color fawRed = Color(0xFFD32F2F);
   static const Color fawGold = Color(0xFFFFD54F);
   static const Color fawBlack = Color(0xFF1C1C1C);
@@ -26,26 +28,42 @@ class _OfficesScreenState extends State<OfficesScreen> {
   void initState() {
     super.initState();
     _loadOffices();
+    AnalyticsService.trackEvent('offices_screen_opened');
   }
 
-  Future<void> _loadOffices() async {
-    setState(() => _loading = true);
-    final offices = await LocalDatabase.getAllOffices();
-    setState(() {
-      _allOffices = offices;
-      _filteredOffices = offices;
-      _loading = false;
-    });
+Future<void> _loadOffices() async {
+  setState(() => _loading = true);
+
+  var offices = await LocalDatabase.getAllOffices();
+  if (offices.isEmpty) {
+    // لا يوجد بيانات — أعد التحميل من الأصول ثم حاول مجددًا
+    await LocalDatabase.bootstrapOfficesFromAssets(forceReload: true);
+    offices = await LocalDatabase.getAllOffices();
   }
+
+  setState(() {
+    _allOffices = offices;
+    _filteredOffices = offices;
+    _loading = false;
+  });
+}
+
 
   void _onSearchChanged(String query) {
     final q = query.trim().toLowerCase();
     setState(() {
       _filteredOffices = _allOffices.where((o) {
         return o.province.toLowerCase().contains(q) ||
-            o.nameAr.toLowerCase().contains(q) ||
-            o.managerNameAr.toLowerCase().contains(q);
+               o.nameAr.toLowerCase().contains(q) ||
+               o.managerNameAr.toLowerCase().contains(q);
       }).toList();
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+      _filteredOffices = _allOffices;
     });
   }
 
@@ -109,9 +127,17 @@ class _OfficesScreenState extends State<OfficesScreen> {
               _detailRow(Icons.map, 'المحافظة', office.province, textColor),
               const SizedBox(height: 24),
               Center(
-                child: Text(
-                  'تجمع الفاو زاخو',
-                  style: TextStyle(color: titleColor, fontWeight: FontWeight.bold),
+                child: ElevatedButton.icon(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.check_circle_outline),
+                  label: Text(AppLocalizations.of(context).translate('done')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: fawRed,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -130,8 +156,16 @@ class _OfficesScreenState extends State<OfficesScreen> {
           Icon(icon, color: fawGold, size: 22),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              '$label: $value',
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '$label: ',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: value),
+                ],
+              ),
               style: TextStyle(color: textColor, fontSize: 15, height: 1.4),
             ),
           ),
@@ -145,13 +179,18 @@ class _OfficesScreenState extends State<OfficesScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white70 : Colors.black87;
 
-      return FZScaffold(
-      //backgroundColor: backgroundColor,
+    return FZScaffold(
       appBar: AppBar(
         backgroundColor: isDark ? fawBlack : fawRed,
-        title: const Text('🏢 مكاتب تجمع الفاو زاخو'),
+        title: Text(AppLocalizations.of(context).translate('provincial_offices')),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadOffices,
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
@@ -160,14 +199,12 @@ class _OfficesScreenState extends State<OfficesScreen> {
           ),
         ),
       ),
-
-
+      persistentBottom: FZTab.home,
+      
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: fawRed))
           : _filteredOffices.isEmpty
-              ? Center(
-                  child: Text('لا توجد نتائج مطابقة 🔍',
-                      style: TextStyle(color: textColor, fontSize: 18)))
+              ? _buildEmptyState(textColor)
               : ListView.builder(
                   padding: const EdgeInsets.all(10),
                   itemCount: _filteredOffices.length,
@@ -194,10 +231,7 @@ class _OfficesScreenState extends State<OfficesScreen> {
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.clear, color: Colors.grey),
-                onPressed: () => setState(() {
-                  _searchController.clear();
-                  _filteredOffices = _allOffices;
-                }),
+                onPressed: _clearSearch,
               )
             : null,
         border: OutlineInputBorder(
@@ -209,9 +243,7 @@ class _OfficesScreenState extends State<OfficesScreen> {
   }
 
   Widget _buildOfficeCard(OfficeModel office, bool isDark) {
-    final cardColor = isDark ? Colors.grey[900] : Colors.white;
     return Card(
-      color: cardColor,
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -220,15 +252,33 @@ class _OfficesScreenState extends State<OfficesScreen> {
         title: Text(
           '${office.nameAr} (${office.province})',
           style: const TextStyle(
-              color: Color.fromARGB(255, 36, 34, 118), fontWeight: FontWeight.bold, fontSize: 17),
+            color: Color.fromARGB(255, 36, 34, 118), 
+            fontWeight: FontWeight.bold, 
+            fontSize: 17
+          ),
         ),
         subtitle: Text(
           office.addressAr,
           style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black87, fontSize: 14),
+            color: isDark ? Colors.white70 : Colors.black87, 
+            fontSize: 14
+          ),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: fawGold),
         onTap: () => _showOfficeDetails(office),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(Color textColor) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.business_outlined, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          Text('لا توجد مكاتب مطابقة لبحثك', style: TextStyle(color: textColor)),
+        ],
       ),
     );
   }

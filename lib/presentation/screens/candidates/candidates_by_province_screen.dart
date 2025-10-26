@@ -1,6 +1,9 @@
 // lib/presentation/screens/candidates/candidates_by_province_screen.dart
 
 import 'dart:async';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
+import 'package:flutter/services.dart';
 
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
@@ -149,19 +152,30 @@ void dispose() {
 
     return FZScaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+     foregroundColor: Theme.of(context).colorScheme.onPrimary,
+     systemOverlayStyle: SystemUiOverlayStyle.light,
         title: Column(
+     
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'تجمع الفاو زاخو',
+              AppLocalizations.of(context).translate('about_name'),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.white, // 🎨 نص واضح
+              color: Theme.of(context).colorScheme.onPrimary, // وضوح مضمون
               ),
             ),
             Text(
-              widget.province,
+                            IraqiProvinces.displayName(
+           IraqiProvinces.displayName(
+            widget.province,
+              Localizations.localeOf(context).languageCode,
+             ),  
+                           Localizations.localeOf(context).languageCode,
+              ),
+
               style: TextStyle(
                 fontSize: 14,
                 color: isDark ? Colors.grey[300] : Colors.white.withValues(alpha: .7), // 🎨 نص ثانوي واضح
@@ -182,7 +196,7 @@ void dispose() {
                 _filteredCandidates = _allCandidates;
               });
             },
-            tooltip: isArabic ? 'مسح البحث' : 'Clear Search',
+            tooltip: AppLocalizations.of(context).translate('clear_search'),
           ),
       ],
       ),
@@ -205,9 +219,8 @@ void dispose() {
           color: isDark ? Colors.white : Colors.black87, // 🎨 نص واضح
         ),
         decoration: InputDecoration(
-          hintText: isArabic
-              ? 'ابحث عن اسم المرشح داخل هذه المحافظة...'
-              : 'Search name within this province...',
+          
+              hintText: AppLocalizations.of(context).translate('search_within_province'),
           hintStyle: TextStyle(
             color: isDark ? Colors.grey[400] : Colors.grey[600], // 🎨 نص توضيحي واضح
           ),
@@ -240,7 +253,8 @@ void dispose() {
   }
 
   Widget _buildCandidatesList(bool isArabic, bool isDark) {
-      // 🆕 إذا كانت هناك نتائج بحث فارغة، نعرضها داخل الشاشة نفسها
+     
+ // 🆕 إذا كانت هناك نتائج بحث فارغة، نعرضها داخل الشاشة نفسها
     if (_filteredCandidates.isEmpty && _searchController.text.isNotEmpty) {
     return Column(
       children: [
@@ -294,7 +308,7 @@ Widget _buildEmptyStateWithinScreen(bool isDark, bool isArabic) {
           ),
           const SizedBox(height: 20),
           Text(
-            isArabic ? 'لا توجد نتائج مطابقة' : 'No Matching Results',
+            AppLocalizations.of(context).translate('no_matching_results'),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -303,9 +317,7 @@ Widget _buildEmptyStateWithinScreen(bool isDark, bool isArabic) {
           ),
           const SizedBox(height: 12),
           Text(
-            isArabic
-                ? 'بحثك عن "${_searchController.text}" لم يعطِ أي نتائج'
-                : 'Your search for "${_searchController.text}" did not match any candidates',
+           '${AppLocalizations.of(context).translate('no_results_for')} "${_searchController.text}"',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -314,9 +326,7 @@ Widget _buildEmptyStateWithinScreen(bool isDark, bool isArabic) {
           ),
           const SizedBox(height: 8),
           Text(
-            isArabic
-                ? 'تأكد من كتابة الاسم بشكل صحيح أو جرب كلمات بحث أخرى'
-                : 'Make sure you spelled the name correctly or try different search terms',
+            AppLocalizations.of(context).translate('check_spelling_or_try_others'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -408,7 +418,9 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
 
   Widget _buildHeader(bool isDark) {
     final count = _allCandidates.length;
-
+    final langCode = Localizations.localeOf(context).languageCode;
+final isArabic = langCode == 'ar' || langCode.startsWith('ar');
+final displayProvince = IraqiProvinces.displayName(widget.province.trim(), langCode);
     String getLogoPath() {
       final province = widget.province.trim();
       const logoPaths = {
@@ -452,8 +464,10 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
         'صلاح الدين': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها صلاح الدين',
         'حلبجة': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها حلبجة',
       };
-      return specialHeaders[province] ?? 'جميعهم دخلو باسم تجمع الفاو زاخو وعددهم $count';
-    }
+return specialHeaders[province] ??
+    (isArabic
+      ? 'جميعهم دخلو باسم ${AppLocalizations.of(context).translate('about_name')} وعددهم $count'
+      : 'All of them joined under ${AppLocalizations.of(context).translate('about_name')} — total $count');    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -487,7 +501,7 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
           ),
           const SizedBox(height: 12),
           Text(
-            '🗳️ مرشحونا في المحافظة',
+           AppLocalizations.of(context).translate('candidates_in_province'),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -505,7 +519,8 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
           ),
           const SizedBox(height: 8),
           Text(
-            'محافظة ${widget.province}',
+             '${AppLocalizations.of(context).translate('province')}: $displayProvince',
+
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -524,7 +539,8 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
             Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              _error ?? 'حدث خطأ غير متوقع',
+              _error ?? AppLocalizations.of(context).translate('unexpected_error'),
+
               style: TextStyle(
                 fontSize: 16, 
                 color: isDark ? Colors.white : Colors.red, // 🎨 نص خطأ واضح
@@ -533,8 +549,7 @@ Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadCandidates,
-              child: const Text('إعادة المحاولة'),
-            ),
+              child: Text(AppLocalizations.of(context).translate('retry')),            ),
           ],
         ),
       );
@@ -591,7 +606,8 @@ class _CandidateCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              candidate.listName ?? 'تجمع الفاو زاخو',
+              candidate.listName ?? AppLocalizations.of(context).translate('about_name'),
+
               style: TextStyle(
                 fontSize: 12,
                 color: isDark ? Colors.grey[300] : Colors.black54, // 🎨 نص واضح

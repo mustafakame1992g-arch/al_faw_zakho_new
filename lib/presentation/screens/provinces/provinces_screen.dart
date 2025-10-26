@@ -459,7 +459,7 @@ return FZScaffold(
                 backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('عرض جميع المحافظات'),
+              child: Text(AppLocalizations.of(context).translate('show_all_provinces')),
             ),
           ],
         ),
@@ -494,7 +494,11 @@ return FZScaffold(
           ),
         ),
         title: Text(
-          province,
+                    IraqiProvinces.displayName(
+            province,
+            Localizations.localeOf(context).languageCode,
+          ),
+
           style: TextStyle(
             fontWeight: FontWeight.w600, 
             fontSize: 16,

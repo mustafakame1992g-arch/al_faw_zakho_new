@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String error;
@@ -24,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onRetry,
-              child: const Text('إعادة المحاولة'),
+              child: Text(AppLocalizations.of(context).translate('retry')),
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class LoadingScreen extends StatelessWidget {
   final double progress;
@@ -14,7 +15,7 @@ class LoadingScreen extends StatelessWidget {
           children: [
             CircularProgressIndicator(value: progress > 0 ? progress : null),
             const SizedBox(height: 20),
-            Text('جاري التحميل... ${(progress * 100).toStringAsFixed(0)}%'),
+            Text('${AppLocalizations.of(context).translate('loading')}... ${(progress * 100).toStringAsFixed(0)}%'),
           ],
         ),
       ),

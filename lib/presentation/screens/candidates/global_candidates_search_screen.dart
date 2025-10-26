@@ -11,6 +11,7 @@ import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/presentation/screens/candidates/candidate_details_screen.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'dart:developer' as developer;
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class GlobalCandidatesSearchScreen extends StatefulWidget {
   const GlobalCandidatesSearchScreen({super.key});
@@ -130,15 +131,15 @@ class _GlobalCandidatesSearchScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isArabic ? 'بحث المرشحين' : 'Search Candidates'),
-        centerTitle: true,
+       title: Text(AppLocalizations.of(context).translate('search_candidates')),        centerTitle: true,
         elevation: 2,
         actions: [
           if (_searchController.text.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.clear),
               onPressed: _clearSearch,
-              tooltip: isArabic ? 'مسح البحث' : 'Clear search',
+              //tooltip: isArabic ? 'مسح البحث' : 'Clear search',
+              tooltip: AppLocalizations.of(context).translate('clear_search'),
             ),
         ],
       ),

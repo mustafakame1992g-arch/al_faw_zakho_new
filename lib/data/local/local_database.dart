@@ -1113,7 +1113,16 @@ static Future<void> bootstrapOfficesFromAssets({bool forceReload = false}) async
     await _ensureInitialized();
 
     final box = await _openOffices();
-    final existing = box.get('all');
+    //final existing = box.get('all');
+final existing = box.get(_officesKey) ?? box.get('all'); // دعم النسخة القديمة أيضًا
+
+// ترحيل (هجرة) إن وجدنا بيانات على المفتاح القديم فقط
+if (existing == null) {
+  final legacy = box.get('all');
+  if (legacy != null) {
+    await box.put(_officesKey, legacy);
+  }
+}
 
     // لا نعيد التحميل إلا إذا كانت البيانات ناقصة أو طلب المستخدم فرض إعادة التحميل
     if (existing != null && !forceReload && (existing as List).isNotEmpty) {
@@ -1143,7 +1152,11 @@ static Future<void> bootstrapOfficesFromAssets({bool forceReload = false}) async
     });
 
     await box.clear();
-    await box.put('all', allOffices);
+    //await box.put('all', allOffices);
+await box.clear();
+await box.put(_officesKey, allOffices);
+// (اختياري لدعم إصدارات أقدم تقرأ 'all')
+await box.put('all', allOffices);
 
     AnalyticsService.trackEvent('Offices_Loaded_From_Assets',
         parameters: {'count': allOffices.length});
@@ -1162,9 +1175,12 @@ static Future<List<OfficeModel>> getAllOffices() async {
   dynamic raw;
   try {
     final box = await _openOffices();
-    raw = box.get('all');
+    //raw = box.get('all');
+    raw = box.get(_officesKey) ?? box.get('all');
+
   } catch (_) {
     raw = _getFromSharedPrefsFallback(_officesKey);
+    
   }
 
   if (raw == null) return [];

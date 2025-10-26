@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 /// 🗳️ شبكة أقسام الشاشة الرئيسية
 ///
@@ -19,12 +20,10 @@ class HomeGrid extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
 
     final items = [
-      {'id': 'candidates', 'title': 'مرشحونا', 'icon': Icons.how_to_vote},
-      {'id': 'offices', 'title': 'مكاتبنا', 'icon': Icons.account_balance},
-      {'id': 'faq', 'title': 'الأسئلة الشائعة', 'icon': Icons.help_outline},
-      {'id': 'program', 'title': 'البرنامج الانتخابي', 'icon': Icons.auto_stories},
-      //{'id': 'news', 'title': 'الأخبار', 'icon': Icons.article},
-      //{'id': 'about', 'title': 'حولة', 'icon': Icons.adb_outlined},
+{'id': 'candidates', 'title': AppLocalizations.of(context).translate('candidates'), 'icon': Icons.how_to_vote},
+{'id': 'offices', 'title': AppLocalizations.of(context).translate('offices'), 'icon': Icons.account_balance},
+{'id': 'faq', 'title': AppLocalizations.of(context).translate('faq'), 'icon': Icons.help_outline},
+{'id': 'program', 'title': AppLocalizations.of(context).translate('program'), 'icon': Icons.auto_stories},
     ];
 
     return GridView.builder(

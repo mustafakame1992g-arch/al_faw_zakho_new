@@ -7,6 +7,7 @@ import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'dart:developer' as developer;
 import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -118,11 +119,10 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final langProvider = Provider.of<LanguageProvider>(context);
-    final isArabic = langProvider.languageCode == 'ar';
+    Provider.of<LanguageProvider>(context);
 
     return AppBar(
-      title: Text(isArabic ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'),
+      title: Text(AppLocalizations.of(context).translate('faq')),
       centerTitle: true,
       actions: [
         _buildRefreshButton(),
@@ -481,7 +481,7 @@ class _EmptyView extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onRefresh,
                 icon: const Icon(Icons.refresh_rounded),
-                label: Text(isArabic ? 'تحديث المحتوى' : 'Refresh Content'),
+                label: Text(AppLocalizations.of(context).translate('refresh_content')),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -567,7 +567,7 @@ class _ErrorView extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: onRetry,
                     icon: const Icon(Icons.refresh_rounded),
-                    label: Text(isArabic ? 'إعادة المحاولة' : 'Retry'),
+                    label: Text(AppLocalizations.of(context).translate('retry')),
                     style: FilledButton.styleFrom(
                       backgroundColor: theme.colorScheme.error,
                       foregroundColor: theme.colorScheme.onError,
@@ -610,7 +610,7 @@ class _ErrorView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(isArabic ? 'حسناً' : 'OK'),
+            child: Text(AppLocalizations.of(context).translate('ok')),
           ),
         ],
       ),

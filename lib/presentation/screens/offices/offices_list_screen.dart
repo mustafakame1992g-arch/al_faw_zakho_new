@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class OfficesListScreen extends StatefulWidget {
   const OfficesListScreen({super.key});
@@ -89,7 +90,7 @@ final offices = raw
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('🏢 مكاتب تجمع الفاو زاخو'),
+        title: Text(AppLocalizations.of(context).translate('offices_title')),
         backgroundColor: isDark ? fawBlack : fawRed,
         centerTitle: true,
         elevation: 0,
@@ -110,13 +111,13 @@ final offices = raw
 
           if (snapshot.hasError) {
             return Center(
-              child: Text('حدث خطأ أثناء تحميل البيانات 😔', style: TextStyle(color: textColor)),
+              child: Text(AppLocalizations.of(context).translate('error_loading_data'),),
             );
           }
 
           if (_filteredOffices.isEmpty) {
             return Center(
-              child: Text('لا توجد نتائج مطابقة 🔍', style: TextStyle(color: textColor, fontSize: 18)),
+              child: Text(AppLocalizations.of(context).translate('no_matching_results'),),
             );
           }
 
