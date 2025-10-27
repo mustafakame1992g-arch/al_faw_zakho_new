@@ -165,9 +165,15 @@ Stack: ${stack ?? 'No stack trace'}
   // 🔒 تحديد شدة الخطأ حسب الكلمات المفتاحية
   static ErrorSeverity _determineSeverity(Object error) {
     final msg = error.toString().toLowerCase();
-    if (msg.contains('fatal') || msg.contains('crash')) return ErrorSeverity.critical;
-    if (msg.contains('database') || msg.contains('timeout')) return ErrorSeverity.high;
-    if (msg.contains('network') || msg.contains('socket')) return ErrorSeverity.medium;
+    if (msg.contains('fatal') || msg.contains('crash')) {
+      return ErrorSeverity.critical;
+    }
+    if (msg.contains('database') || msg.contains('timeout')) {
+      return ErrorSeverity.high;
+    }
+    if (msg.contains('network') || msg.contains('socket')) {
+      return ErrorSeverity.medium;
+    }
     return ErrorSeverity.low;
   }
 
@@ -262,8 +268,7 @@ Stack: ${stack ?? 'No stack trace'}
     }
   }
 
-
-    // 🌍 دالة عامة آمنة يمكن استدعاؤها من أي مكان لتسجيل خطأ يدوي
+  // 🌍 دالة عامة آمنة يمكن استدعاؤها من أي مكان لتسجيل خطأ يدوي
   static Future<void> capture(
     Object error,
     StackTrace? stack, {
@@ -285,5 +290,4 @@ Stack: ${stack ?? 'No stack trace'}
           name: 'ERROR_SYS', error: e, stackTrace: st);
     }
   }
-
 }

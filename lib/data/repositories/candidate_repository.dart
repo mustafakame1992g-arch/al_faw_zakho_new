@@ -24,10 +24,10 @@ class CandidateRepository {
     try {
       final box = await _openBox();
       final candidates = box.values.toList();
-      
+
       // ترتيب حسب آخر تحديث (الأحدث أولاً)
       candidates.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-      
+
       return candidates;
     } catch (e) {
       AnalyticsService.trackError('getAllCandidates', e, StackTrace.current);
@@ -43,7 +43,8 @@ class CandidateRepository {
           .where((candidate) => candidate.province == province)
           .toList();
     } catch (e) {
-      AnalyticsService.trackError('getCandidatesByProvince', e, StackTrace.current);
+      AnalyticsService.trackError(
+          'getCandidatesByProvince', e, StackTrace.current);
       rethrow;
     }
   }
@@ -53,13 +54,13 @@ class CandidateRepository {
     try {
       final allCandidates = await getAllCandidates();
       final normalizedQuery = query.toLowerCase().trim();
-      
+
       return allCandidates.where((candidate) {
         return candidate.nameAr.toLowerCase().contains(normalizedQuery) ||
-               candidate.nameEn.toLowerCase().contains(normalizedQuery) ||
-               candidate.nicknameAr.toLowerCase().contains(normalizedQuery) ||
-               candidate.positionAr.toLowerCase().contains(normalizedQuery) ||
-               candidate.province.toLowerCase().contains(normalizedQuery);
+            candidate.nameEn.toLowerCase().contains(normalizedQuery) ||
+            candidate.nicknameAr.toLowerCase().contains(normalizedQuery) ||
+            candidate.positionAr.toLowerCase().contains(normalizedQuery) ||
+            candidate.province.toLowerCase().contains(normalizedQuery);
       }).toList();
     } catch (e) {
       AnalyticsService.trackError('searchCandidates', e, StackTrace.current);
@@ -73,7 +74,7 @@ class CandidateRepository {
       candidate.validate();
       final box = await _openBox();
       await box.put(candidate.id, candidate);
-      
+
       AnalyticsService.trackEvent('candidate_added', parameters: {
         'candidate_id': candidate.id,
         'province': candidate.province,
@@ -89,14 +90,14 @@ class CandidateRepository {
     try {
       final box = await _openBox();
       final Map<String, CandidateModel> candidatesMap = {};
-      
+
       for (final candidate in candidates) {
         candidate.validate();
         candidatesMap[candidate.id] = candidate;
       }
-      
+
       await box.putAll(candidatesMap);
-      
+
       AnalyticsService.trackEvent('candidates_batch_added', parameters: {
         'count': candidates.length,
       });
@@ -113,7 +114,7 @@ class CandidateRepository {
       final updatedCandidate = candidate.copyWith(updatedAt: DateTime.now());
       final box = await _openBox();
       await box.put(updatedCandidate.id, updatedCandidate);
-      
+
       AnalyticsService.trackEvent('candidate_updated', parameters: {
         'candidate_id': candidate.id,
       });
@@ -128,7 +129,7 @@ class CandidateRepository {
     try {
       final box = await _openBox();
       await box.delete(candidateId);
-      
+
       AnalyticsService.trackEvent('candidate_deleted', parameters: {
         'candidate_id': candidateId,
       });
@@ -154,20 +155,20 @@ class CandidateRepository {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final candidatesDir = Directory('${directory.path}/candidates');
-      
+
       if (!await candidatesDir.exists()) {
         await candidatesDir.create(recursive: true);
       }
-      
+
       final String newFileName = '${_uuid.v4()}.jpg';
       final String newPath = '${candidatesDir.path}/$newFileName';
-      
+
       final savedFile = await imageFile.copy(newPath);
-      
+
       AnalyticsService.trackEvent('candidate_image_saved', parameters: {
         'file_path': newPath,
       });
-      
+
       return savedFile.path;
     } catch (e) {
       AnalyticsService.trackError('saveCandidateImage', e, StackTrace.current);
@@ -180,7 +181,7 @@ class CandidateRepository {
     try {
       final candidates = await getAllCandidates();
       final provinces = <String, int>{};
-      
+
       for (final candidate in candidates) {
         provinces.update(
           candidate.province,
@@ -188,7 +189,7 @@ class CandidateRepository {
           ifAbsent: () => 1,
         );
       }
-      
+
       return {
         'total_candidates': candidates.length,
         'provinces_distribution': provinces,
@@ -212,12 +213,12 @@ class CandidateRepository {
       final box = await _openBox();
       final candidates = box.values.toList();
       final cutoffDate = DateTime.now().subtract(const Duration(days: 365));
-      
+
       final oldCandidates = candidates
           .where((candidate) => candidate.updatedAt.isBefore(cutoffDate))
           .map((candidate) => candidate.id)
           .toList();
-      
+
       if (oldCandidates.isNotEmpty) {
         await box.deleteAll(oldCandidates);
         AnalyticsService.trackEvent('old_data_cleaned', parameters: {
@@ -244,7 +245,7 @@ class CandidateRepository {
     try {
       final box = await _openBox();
       await box.clear();
-      
+
       AnalyticsService.trackEvent('candidates_cleared_all');
     } catch (e) {
       AnalyticsService.trackError('clearAll', e, StackTrace.current);

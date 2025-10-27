@@ -24,7 +24,7 @@ class GlobalCandidatesSearchScreen extends StatefulWidget {
 class _GlobalCandidatesSearchScreenState
     extends State<GlobalCandidatesSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-    Timer? _debounceTimer; // 🆕 مؤقت Debouncing
+  Timer? _debounceTimer; // 🆕 مؤقت Debouncing
 
   List<CandidateModel> _allCandidates = [];
   List<CandidateModel> _filteredCandidates = [];
@@ -76,11 +76,11 @@ class _GlobalCandidatesSearchScreenState
     if (_debounceTimer?.isActive ?? false) {
       _debounceTimer!.cancel();
     }
-    
+
     // 🆕 إنشاء مؤقت جديد
     _debounceTimer = Timer(const Duration(milliseconds: 300), () {
       final query = _searchController.text.trim().toLowerCase();
-      
+
       setState(() {
         _hasSearched = query.isNotEmpty;
       });
@@ -131,7 +131,9 @@ class _GlobalCandidatesSearchScreenState
 
     return Scaffold(
       appBar: AppBar(
-       title: Text(AppLocalizations.of(context).translate('search_candidates')),        centerTitle: true,
+        title:
+            Text(AppLocalizations.of(context).translate('search_candidates')),
+        centerTitle: true,
         elevation: 2,
         actions: [
           if (_searchController.text.isNotEmpty)
@@ -156,7 +158,7 @@ class _GlobalCandidatesSearchScreenState
 
   Widget _buildSearchField(BuildContext context, bool isArabic) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: TextField(
@@ -172,11 +174,12 @@ class _GlobalCandidatesSearchScreenState
           hintStyle: TextStyle(
             color: isDark ? Colors.grey[400] : Colors.grey[600],
           ),
-          prefixIcon: Icon(Icons.search, 
+          prefixIcon: Icon(Icons.search,
               color: isDark ? Colors.grey[400] : Colors.grey[600]),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
-                  icon: Icon(Icons.clear, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  icon: Icon(Icons.clear,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600]),
                   onPressed: _clearSearch,
                 )
               : null,
@@ -226,7 +229,8 @@ class _GlobalCandidatesSearchScreenState
   }
 
   // 🆕 بناء واجهة الحالة الأولية (قبل البحث)
-  Widget _buildInitialState(bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
+  Widget _buildInitialState(
+      bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -249,7 +253,7 @@ class _GlobalCandidatesSearchScreenState
           ),
           const SizedBox(height: 12),
           Text(
-            isArabic 
+            isArabic
                 ? 'ابحث باستخدام:\n• اسم المرشح\n• اللقب\n• اسم المحافظة'
                 : 'Search by:\n• Candidate name\n• Nickname\n• Province name',
             style: TextStyle(
@@ -297,7 +301,8 @@ class _GlobalCandidatesSearchScreenState
   }
 
   // 🆕 بناء واجهة عدم وجود نتائج
-  Widget _buildNoResultsState(bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
+  Widget _buildNoResultsState(
+      bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -402,7 +407,7 @@ class _GlobalCandidatesSearchScreenState
             ],
           ),
         ),
-        
+
         // قائمة النتائج
         Expanded(
           child: ListView.builder(
@@ -418,7 +423,8 @@ class _GlobalCandidatesSearchScreenState
   }
 
   // 🆕 بناء رقاقة اقتراح
-  Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool isDark) {
+  Widget _buildSuggestionChip(
+      String text, IconData icon, VoidCallback onTap, bool isDark) {
     return ActionChip(
       avatar: Icon(icon, size: 16),
       label: Text(text),
@@ -433,7 +439,8 @@ class _GlobalCandidatesSearchScreenState
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Timer?>('_debounceTimer', _debounceTimer));
+    properties
+        .add(DiagnosticsProperty<Timer?>('_debounceTimer', _debounceTimer));
   }
 }
 
@@ -475,15 +482,14 @@ class _CandidateSearchCard extends StatelessWidget {
             Text(
               candidate.province,
               style: TextStyle(
-                color: isDark ? Colors.grey[400] : Colors.grey[600], 
-                fontSize: 12
-              ),
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  fontSize: 12),
             ),
           ],
         ),
         trailing: Icon(
-          Icons.arrow_forward_ios, 
-          size: 16, 
+          Icons.arrow_forward_ios,
+          size: 16,
           color: isDark ? Colors.grey[400] : Colors.grey[600],
         ),
         onTap: () {

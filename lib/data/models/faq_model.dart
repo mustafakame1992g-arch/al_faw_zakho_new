@@ -5,16 +5,26 @@ part 'faq_model.g.dart';
 /// ❓ FAQModel (ar/en only) - Enhanced Version
 @HiveType(typeId: 4)
 class FaqModel {
-  @HiveField(0) final String id;
-  @HiveField(1) final String questionAr;
-  @HiveField(2) final String questionEn;
-  @HiveField(3) final String answerAr;
-  @HiveField(4) final String answerEn;
-  @HiveField(5) final String category;
-  @HiveField(6) final int importance;
-  @HiveField(7) final List<String> tags;
-  @HiveField(8) final DateTime createdAt;
-  @HiveField(9) final int viewCount;
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String questionAr;
+  @HiveField(2)
+  final String questionEn;
+  @HiveField(3)
+  final String answerAr;
+  @HiveField(4)
+  final String answerEn;
+  @HiveField(5)
+  final String category;
+  @HiveField(6)
+  final int importance;
+  @HiveField(7)
+  final List<String> tags;
+  @HiveField(8)
+  final DateTime createdAt;
+  @HiveField(9)
+  final int viewCount;
 
   const FaqModel({
     required this.id,
@@ -32,7 +42,8 @@ class FaqModel {
   // 🚀 Enhanced JSON Parser with maximum flexibility
   factory FaqModel.fromJson(Map<String, dynamic> json) {
     // Helper function for safe parsing with multiple key support
-    T getValue<T>(List<String> keys, T defaultValue, T Function(dynamic) parser) {
+    T getValue<T>(
+        List<String> keys, T defaultValue, T Function(dynamic) parser) {
       try {
         for (final key in keys) {
           if (json.containsKey(key)) {
@@ -70,7 +81,7 @@ class FaqModel {
             // Try multiple date formats
             final dateTime = DateTime.tryParse(v);
             if (dateTime != null) return dateTime;
-            
+
             // Try milliseconds since epoch string
             final milliseconds = int.tryParse(v);
             if (milliseconds != null) {
@@ -88,26 +99,35 @@ class FaqModel {
           }
           if (v is String) {
             // Handle comma-separated strings
-            return v.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+            return v
+                .split(',')
+                .map((e) => e.trim())
+                .where((e) => e.isNotEmpty)
+                .toList();
           }
           return const <String>[];
         });
 
     return FaqModel(
       id: parseString(['id', 'ID', '_id'], ''),
-      
+
       // Support for both camelCase and snake_case with multiple variations
-      questionAr: parseString(['question_ar', 'questionAr', 'question_ar', 'question_arabic']),
-      questionEn: parseString(['question_en', 'questionEn', 'question_en', 'question_english']),
-      answerAr: parseString(['answer_ar', 'answerAr', 'answer_ar', 'answer_arabic']),
-      answerEn: parseString(['answer_en', 'answerEn', 'answer_en', 'answer_english']),
-      
+      questionAr: parseString(
+          ['question_ar', 'questionAr', 'question_ar', 'question_arabic']),
+      questionEn: parseString(
+          ['question_en', 'questionEn', 'question_en', 'question_english']),
+      answerAr:
+          parseString(['answer_ar', 'answerAr', 'answer_ar', 'answer_arabic']),
+      answerEn:
+          parseString(['answer_en', 'answerEn', 'answer_en', 'answer_english']),
+
       category: parseString(['category', 'cat', 'type'], 'عام'),
       importance: parseInt(['importance', 'priority', 'weight'], 1).clamp(1, 5),
-      
+
       tags: parseStringList(['tags', 'tag', 'keywords']),
-      
-      createdAt: parseDateTime(['created_at', 'createdAt', 'created', 'timestamp']),
+
+      createdAt:
+          parseDateTime(['created_at', 'createdAt', 'created', 'timestamp']),
       viewCount: parseInt(['view_count', 'viewCount', 'views', 'view_count']),
     );
   }
@@ -128,17 +148,23 @@ class FaqModel {
   // 🌍 Smart localization helpers
   String getQuestion(String languageCode) {
     switch (languageCode.toLowerCase()) {
-      case 'en': return questionEn.isNotEmpty ? questionEn : questionAr;
-      case 'ar': return questionAr.isNotEmpty ? questionAr : questionEn;
-      default: return questionEn.isNotEmpty ? questionEn : questionAr;
+      case 'en':
+        return questionEn.isNotEmpty ? questionEn : questionAr;
+      case 'ar':
+        return questionAr.isNotEmpty ? questionAr : questionEn;
+      default:
+        return questionEn.isNotEmpty ? questionEn : questionAr;
     }
   }
 
   String getAnswer(String languageCode) {
     switch (languageCode.toLowerCase()) {
-      case 'en': return answerEn.isNotEmpty ? answerEn : answerAr;
-      case 'ar': return answerAr.isNotEmpty ? answerAr : answerEn;
-      default: return answerEn.isNotEmpty ? answerEn : answerAr;
+      case 'en':
+        return answerEn.isNotEmpty ? answerEn : answerAr;
+      case 'ar':
+        return answerAr.isNotEmpty ? answerAr : answerEn;
+      default:
+        return answerEn.isNotEmpty ? answerEn : answerAr;
     }
   }
 
@@ -177,7 +203,7 @@ class FaqModel {
 
   // 📦 Conversion helpers
   Map<String, dynamic> toMap() => toJson();
-  
+
   factory FaqModel.fromMap(Map<String, dynamic> map) => FaqModel.fromJson(map);
 
   // 🔍 Comparison operators
@@ -195,8 +221,8 @@ class FaqModel {
           importance == other.importance &&
           tags.length == other.tags.length &&
           tags.every((tag) => other.tags.contains(tag)) &&
-          createdAt.millisecondsSinceEpoch ~/ 1000 == 
-          other.createdAt.millisecondsSinceEpoch ~/ 1000 &&
+          createdAt.millisecondsSinceEpoch ~/ 1000 ==
+              other.createdAt.millisecondsSinceEpoch ~/ 1000 &&
           viewCount == other.viewCount);
 
   @override

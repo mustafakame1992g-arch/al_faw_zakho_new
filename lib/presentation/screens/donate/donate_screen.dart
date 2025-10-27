@@ -21,7 +21,8 @@ class DonateScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text('ادعم تجمع الفاو زاخو',
-                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
                   Text('مساهمتك تحدث فرقًا حقيقيًا — شكرًا لدعمك!'),
                 ],
@@ -32,8 +33,10 @@ class DonateScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: Text(AppLocalizations.of(context).translate('donate_via_zaincash')),
-              subtitle: Text(AppLocalizations.of(context).translate('open_zaincash_and_send_to')),
+              title: Text(AppLocalizations.of(context)
+                  .translate('donate_via_zaincash')),
+              subtitle: Text(AppLocalizations.of(context)
+                  .translate('open_zaincash_and_send_to')),
               trailing: const Icon(Icons.qr_code),
               onTap: () {
                 showModalBottomSheet(
@@ -43,12 +46,15 @@ class DonateScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:  [
+                      children: [
                         SizedBox(height: 8),
-                        Text('${AppLocalizations.of(context).translate('number_label')}: 0780-XXX-XXXX'),
-                        Text('${AppLocalizations.of(context).translate('name_label')}: ${AppLocalizations.of(context).translate('about_name')}'),
+                        Text(
+                            '${AppLocalizations.of(context).translate('number_label')}: 0780-XXX-XXXX'),
+                        Text(
+                            '${AppLocalizations.of(context).translate('name_label')}: ${AppLocalizations.of(context).translate('about_name')}'),
                         SizedBox(height: 8),
-                        Text('${AppLocalizations.of(context).translate('description_label')}: ${AppLocalizations.of(context).translate('donation_description')}'),
+                        Text(
+                            '${AppLocalizations.of(context).translate('description_label')}: ${AppLocalizations.of(context).translate('donation_description')}'),
                       ],
                     ),
                   ),
@@ -61,7 +67,8 @@ class DonateScreen extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.credit_card),
               title: Text(AppLocalizations.of(context).translate('bank_card')),
-              subtitle: Text(AppLocalizations.of(context).translate('coming_soon')),
+              subtitle:
+                  Text(AppLocalizations.of(context).translate('coming_soon')),
             ),
           ),
         ],

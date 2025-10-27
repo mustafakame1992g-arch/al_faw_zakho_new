@@ -21,7 +21,10 @@ class FZScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final resolvedAppBar = appBar ??
         (title == null ? null : AppBar(title: Text(title!), actions: actions));
-    final bottom = persistentBottom == null ? null : FZBottomNav(active: persistentBottom!);
-    return Scaffold(appBar: resolvedAppBar, body: body, bottomNavigationBar: bottom);
+    final bottom = persistentBottom == null
+        ? null
+        : FZBottomNav(active: persistentBottom!);
+    return Scaffold(
+        appBar: resolvedAppBar, body: body, bottomNavigationBar: bottom);
   }
 }

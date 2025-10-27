@@ -16,7 +16,8 @@ class FAQScreen extends StatefulWidget {
   State<FAQScreen> createState() => _FAQScreenState();
 }
 
-class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMixin {
+class _FAQScreenState extends State<FAQScreen>
+    with SingleTickerProviderStateMixin {
   late Future<List<FaqModel>> _faqsFuture;
   final _expansionNotifier = ValueNotifier<int?>(null);
   final _scrollController = ScrollController();
@@ -45,13 +46,15 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
       await Future.delayed(const Duration(milliseconds: 250));
       final repo = FAQRepositoryImpl();
       await repo.initialize(); // ✅ يفتح الصندوق مرة واحدة
-      final faqs = await repo.getFAQs();      
-      final valid = faqs.where((f) =>
-       f.questionAr.trim().isNotEmpty &&
-       //f.questionEn.trim().isNotEmpty &&
-       f.answerAr.trim().isNotEmpty  
-     //  f.answerEn.trim().isNotEmpty
-      ).toList();
+      final faqs = await repo.getFAQs();
+      final valid = faqs
+          .where((f) =>
+                  f.questionAr.trim().isNotEmpty &&
+                  //f.questionEn.trim().isNotEmpty &&
+                  f.answerAr.trim().isNotEmpty
+              //  f.answerEn.trim().isNotEmpty
+              )
+          .toList();
 
       /* if (valid.isEmpty) {
          throw Exception('لم يتم العثور على أسئلة صالحة للعرض. تحقق من مفاتيح JSON.');
@@ -64,20 +67,23 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
     }
   }*/
 
+      if (valid.isEmpty) {
+        developer.log(
+            '⚠️ ملف faqs.json تم تحميله لكن فارغ أو المفاتيح غير متطابقة',
+            name: 'FAQ_SCREEN');
+        throw Exception(
+            'لم يتم العثور على أسئلة صالحة للعرض. تحقق من JSON أو المفاتيح.');
+      }
 
-  if (valid.isEmpty) {
-      developer.log('⚠️ ملف faqs.json تم تحميله لكن فارغ أو المفاتيح غير متطابقة', name: 'FAQ_SCREEN');
-      throw Exception('لم يتم العثور على أسئلة صالحة للعرض. تحقق من JSON أو المفاتيح.');
+      developer.log('✅ Loaded ${valid.length} FAQs into screen',
+          name: 'FAQ_SCREEN');
+      return valid;
+    } catch (e, st) {
+      developer.log('❌ Error loading FAQs: $e',
+          name: 'FAQ_SCREEN', error: e, stackTrace: st);
+      throw Exception('فشل في تحميل الأسئلة الشائعة: ${e.toString()}');
     }
-
-    developer.log('✅ Loaded ${valid.length} FAQs into screen', name: 'FAQ_SCREEN');
-    return valid;
-  } catch (e, st) {
-    developer.log('❌ Error loading FAQs: $e', name: 'FAQ_SCREEN', error: e, stackTrace: st);
-    throw Exception('فشل في تحميل الأسئلة الشائعة: ${e.toString()}');
   }
-}
-
 
   Future<void> _refreshData() async {
     AnalyticsService.trackEvent('faq_screen_refreshed');
@@ -88,9 +94,10 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
 
   void _onExpansionChanged(int? index, BuildContext context) {
     _expansionNotifier.value = _expansionNotifier.value == index ? null : index;
-    
+
     if (index != null) {
-      final langProvider = Provider.of<LanguageProvider>(context, listen: false);
+      final langProvider =
+          Provider.of<LanguageProvider>(context, listen: false);
       AnalyticsService.trackEvent('faq_expanded', parameters: {
         'index': index,
         'language': langProvider.languageCode,
@@ -111,10 +118,10 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
     return ChangeNotifierProvider.value(
       value: Provider.of<LanguageProvider>(context),
       child: FZScaffold(
-  appBar: _buildAppBar(context),
-  persistentBottom: FZTab.home,
-  body: _buildBody(context),
-),
+        appBar: _buildAppBar(context),
+        persistentBottom: FZTab.home,
+        body: _buildBody(context),
+      ),
     );
   }
 
@@ -129,7 +136,6 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
       ],
     );
   }
-
 
   Widget _buildRefreshButton() {
     return RotationTransition(
@@ -161,9 +167,10 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildContent(BuildContext context, AsyncSnapshot<List<FaqModel>> snapshot) {
+  Widget _buildContent(
+      BuildContext context, AsyncSnapshot<List<FaqModel>> snapshot) {
     final connectionState = snapshot.connectionState;
-    
+
     if (connectionState == ConnectionState.waiting && !snapshot.hasData) {
       return const _ShimmerLoadingView();
     }
@@ -176,7 +183,7 @@ class _FAQScreenState extends State<FAQScreen> with SingleTickerProviderStateMix
     }
 
     final faqs = snapshot.data ?? const <FaqModel>[];
-    
+
     if (faqs.isEmpty) {
       return _EmptyView(
         onRefresh: _loadFAQs,
@@ -223,7 +230,7 @@ class _FAQItem extends StatelessWidget {
     final theme = Theme.of(context);
     final langProvider = Provider.of<LanguageProvider>(context);
     final isArabic = langProvider.languageCode == 'ar';
-    
+
     final question = faq.getQuestion(langProvider.languageCode);
     final answer = faq.getAnswer(langProvider.languageCode);
 
@@ -234,7 +241,7 @@ class _FAQItem extends StatelessWidget {
           child: Material(
             elevation: isExpanded ? 4 : 1,
             borderRadius: BorderRadius.circular(20),
-            color: isExpanded 
+            color: isExpanded
                 ? theme.colorScheme.surfaceContainerHighest
                 : theme.colorScheme.surface,
             shadowColor: theme.colorScheme.shadow.withValues(alpha: .1),
@@ -248,26 +255,32 @@ class _FAQItem extends StatelessWidget {
                 curve: Curves.fastEaseInToSlowEaseOut,
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  crossAxisAlignment: isArabic
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
                     // Header
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      textDirection:
+                          isArabic ? TextDirection.rtl : TextDirection.ltr,
                       children: [
                         Container(
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: isExpanded 
+                            color: isExpanded
                                 ? theme.colorScheme.primaryContainer
-                                : theme.colorScheme.surfaceContainerHighest, // ✅ تم التصحيح
+                                : theme.colorScheme
+                                    .surfaceContainerHighest, // ✅ تم التصحيح
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            isExpanded ? Icons.help_rounded : Icons.help_outline_rounded,
+                            isExpanded
+                                ? Icons.help_rounded
+                                : Icons.help_outline_rounded,
                             size: 20,
-                            color: isExpanded 
+                            color: isExpanded
                                 ? theme.colorScheme.onPrimaryContainer
                                 : theme.colorScheme.onSurfaceVariant,
                           ),
@@ -281,7 +294,8 @@ class _FAQItem extends StatelessWidget {
                               height: 1.5,
                               color: theme.colorScheme.onSurface,
                             ),
-                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                            textAlign:
+                                isArabic ? TextAlign.right : TextAlign.left,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -299,7 +313,7 @@ class _FAQItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     // Expanded Content
                     if (isExpanded) ...[
                       const SizedBox(height: 20),
@@ -312,7 +326,8 @@ class _FAQItem extends StatelessWidget {
                       const SizedBox(height: 20),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        textDirection:
+                            isArabic ? TextDirection.rtl : TextDirection.ltr,
                         children: [
                           Container(
                             width: 40,
@@ -335,9 +350,11 @@ class _FAQItem extends StatelessWidget {
                                 answer,
                                 style: theme.textTheme.bodyLarge?.copyWith(
                                   height: 1.8,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: .8),
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: .8),
                                 ),
-                                textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                                textAlign:
+                                    isArabic ? TextAlign.right : TextAlign.left,
                               ),
                             ),
                           ),
@@ -470,7 +487,9 @@ class _EmptyView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                isArabic ? 'سيتم إضافة الأسئلة الشائعة قريباً' : 'We will add new questions soon',
+                isArabic
+                    ? 'سيتم إضافة الأسئلة الشائعة قريباً'
+                    : 'We will add new questions soon',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: .6),
                   height: 1.5,
@@ -481,9 +500,11 @@ class _EmptyView extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onRefresh,
                 icon: const Icon(Icons.refresh_rounded),
-                label: Text(AppLocalizations.of(context).translate('refresh_content')),
+                label: Text(
+                    AppLocalizations.of(context).translate('refresh_content')),
                 style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -543,7 +564,9 @@ class _ErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                isArabic ? 'حدث خطأ أثناء تحميل البيانات' : 'An error occurred while loading data',
+                isArabic
+                    ? 'حدث خطأ أثناء تحميل البيانات'
+                    : 'An error occurred while loading data',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurface,
                   height: 1.5,
@@ -567,7 +590,8 @@ class _ErrorView extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: onRetry,
                     icon: const Icon(Icons.refresh_rounded),
-                    label: Text(AppLocalizations.of(context).translate('retry')),
+                    label:
+                        Text(AppLocalizations.of(context).translate('retry')),
                     style: FilledButton.styleFrom(
                       backgroundColor: theme.colorScheme.error,
                       foregroundColor: theme.colorScheme.onError,
@@ -604,7 +628,7 @@ class _ErrorView extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(isArabic ? 'المساعدة' : 'Help'),
-        content: Text(isArabic 
+        content: Text(isArabic
             ? 'إذا استمرت المشكلة، يرجى التأكد من اتصالك بالإنترنت أو التواصل مع الدعم الفني.'
             : 'If the problem persists, please check your internet connection or contact technical support.'),
         actions: [

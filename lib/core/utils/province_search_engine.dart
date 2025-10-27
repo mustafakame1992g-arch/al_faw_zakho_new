@@ -12,11 +12,11 @@ class ProvinceSearchEngine {
 
   void _buildSearchIndex() {
     _searchIndex = {};
-    
+
     _provinceCandidates.forEach((province, candidates) {
       // إضافة المحافظة
       _addToIndex(province.toLowerCase(), province);
-      
+
       // إضافة المرشحين
       for (final candidate in candidates) {
         _addCandidateToIndex(candidate, province);
@@ -35,7 +35,7 @@ class ProvinceSearchEngine {
         _addToIndex(field.toLowerCase(), province);
       }
     }
-    
+
     addField(candidate.nameAr);
     addField(candidate.nameEn);
     addField(candidate.nicknameAr);

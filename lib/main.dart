@@ -241,19 +241,18 @@ class FoundationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-  providers: [
-    Provider<ApiClient>(create: (_) => ApiClient()),
-    ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
-    // ✅ لا نعيد إنشاء ThemeProvider أو LanguageProvider هنا
-    ChangeNotifierProxyProvider<ApiClient, AppProvider>(
-      create: (_) => AppProvider(),
-      update: (_, apiClient, appProvider) =>
-          appProvider!..setApiClient(apiClient),
-    ),
-  ],
-  child: const _AppRoot(),
-);
-
+      providers: [
+        Provider<ApiClient>(create: (_) => ApiClient()),
+        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+        // ✅ لا نعيد إنشاء ThemeProvider أو LanguageProvider هنا
+        ChangeNotifierProxyProvider<ApiClient, AppProvider>(
+          create: (_) => AppProvider(),
+          update: (_, apiClient, appProvider) =>
+              appProvider!..setApiClient(apiClient),
+        ),
+      ],
+      child: const _AppRoot(),
+    );
   }
 }
 

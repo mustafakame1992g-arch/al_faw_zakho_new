@@ -2,10 +2,10 @@
 
 /// 🎯 أنواع أخطاء تحميل البيانات
 enum DataLoadErrorType {
-  timeout,    // انتهاء المهلة
-  format,     // خطأ في تنسيق البيانات
+  timeout, // انتهاء المهلة
+  format, // خطأ في تنسيق البيانات
   validation, // خطأ في التحقق من الصحة
-  generic,    // خطأ عام
+  generic, // خطأ عام
 }
 
 /// 📊 نموذج لنتائج تحميل البيانات
@@ -35,26 +35,24 @@ class DataLoadResult {
     required int candidatesCount,
     required int faqsCount,
     required int newsCount,
-  }) => DataLoadResult._(
-    isSuccess: true,
-    elapsedMs: elapsedMs,
-    candidatesCount: candidatesCount,
-    faqsCount: faqsCount,
-    newsCount: newsCount,
-  );
+  }) =>
+      DataLoadResult._(
+        isSuccess: true,
+        elapsedMs: elapsedMs,
+        candidatesCount: candidatesCount,
+        faqsCount: faqsCount,
+        newsCount: newsCount,
+      );
 
   factory DataLoadResult.failure({
     required DataLoadErrorType errorType,
     required String message,
     String? details,
-  }) => DataLoadResult._(
-    isSuccess: false,
-    errorType: errorType,
-    message: message,
-    details: details,
-  );
+  }) =>
+      DataLoadResult._(
+        isSuccess: false,
+        errorType: errorType,
+        message: message,
+        details: details,
+      );
 }
-  
-
-
-

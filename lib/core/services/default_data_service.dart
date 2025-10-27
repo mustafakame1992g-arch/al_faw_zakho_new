@@ -23,12 +23,11 @@ class DefaultDataService {
     'news': 'assets/data/news.json',
   };
 
-
   /// ✅ تحميل البيانات الافتراضية مع إدارة كاملة للأخطاء
-    Future<DataLoadResult> loadDefaultData(BuildContext context) async {
-    developer.log('[BOOTSTRAP] Starting offline data initialization...', 
+  Future<DataLoadResult> loadDefaultData(BuildContext context) async {
+    developer.log('[BOOTSTRAP] Starting offline data initialization...',
         name: 'DATA');
-    
+
     final stopwatch = Stopwatch()..start();
     DataLoadResult result;
 
@@ -61,7 +60,6 @@ class DefaultDataService {
         faqsCount: processedData.faqs.length,
         newsCount: processedData.news.length,
       );
-
     } on TimeoutException catch (e, stack) {
       result = _handleTimeoutError(e, stack);
     } on FormatException catch (e, stack) {
@@ -79,12 +77,10 @@ class DefaultDataService {
     return result;
   }
 
-  
-
   /// 🧹 مسح البيانات القديمة بشكل متوازي
   Future<void> _clearExistingData() async {
     developer.log('[BOOTSTRAP] Clearing existing data...', name: 'DATA');
-    
+
     await Future.wait([
       LocalDatabase.clearCandidates(),
       LocalDatabase.clearFAQs(),
@@ -93,24 +89,21 @@ class DefaultDataService {
   }
 
   /// ⚡ تحميل متوازي لجميع الملفات
-   Future<Map<String, String>> _loadAllAssetsInParallel() async {
+  Future<Map<String, String>> _loadAllAssetsInParallel() async {
     final loadFutures = _assetPaths.map((key, path) => MapEntry(
-      key,
-      rootBundle.loadString(path).timeout(
-        const Duration(seconds: _timeoutSeconds),
-        onTimeout: () => throw TimeoutException('Timeout loading $key')
-      )
-    ));
+        key,
+        rootBundle.loadString(path).timeout(
+            const Duration(seconds: _timeoutSeconds),
+            onTimeout: () => throw TimeoutException('Timeout loading $key'))));
 
     final results = await Future.wait(loadFutures.values, eagerError: true);
-    
+
     return Map.fromIterables(loadFutures.keys, results);
   }
 
   /// 🔍 معالجة والتحقق من صحة البيانات
-   Future<ProcessedData> _processAndValidateData(
+  Future<ProcessedData> _processAndValidateData(
       Map<String, String> rawData) async {
-    
     // فك الترميز بشكل متوازي
     final decodeResults = await Future.wait([
       _decodeJsonWithValidation(rawData['candidates']!, 'candidates'),
@@ -151,9 +144,7 @@ class DefaultDataService {
   }
 
   /// ✅ التحقق من أن البيانات غير فارغة
-  static void _validateNonEmptyData(
-      List candidates, List faqs, List news) {
-    
+  static void _validateNonEmptyData(List candidates, List faqs, List news) {
     if (candidates.isEmpty) {
       throw DataValidationException('candidates', 'قائمة المرشحين فارغة');
     }
@@ -176,96 +167,80 @@ class DefaultDataService {
   static List<FaqModel> _processFaqs(List faqsJson) {
     return faqsJson
         .map((e) => FaqModel.fromJson(Map<String, dynamic>.from(e)))
-        .where((faq) => 
-        (faq.questionAr.isNotEmpty == true)||
-        (faq.questionEn.isNotEmpty == true))
+        .where((faq) =>
+            (faq.questionAr.isNotEmpty == true) ||
+            (faq.questionEn.isNotEmpty == true))
         .toList();
   }
 
   /// 📰 معالجة الأخبار
   static List<NewsModel> _processNews(List newsJson) {
-    
     return newsJson
-   .map((e) => NewsModel.fromJson(Map<String, dynamic>.from(e)))
-      .where((news) => news.titleAr.isNotEmpty || news.titleEn.isNotEmpty) // ✅ تحقق من وجود عنوان عربي أو إنجليزي
-      .toList();
-}
-
-
-
-/// 🔎 فحص جودة متقدم للبيانات - النسخة النهائية المصححة
-static void _performQualityChecks(
-    List<CandidateModel> candidates,
-    List<FaqModel> faqs,
-    List<NewsModel> news) {
-  
-  developer.log('[BOOTSTRAP] Performing quality checks...', name: 'VALIDATION');
-
-  // 1. فحص المرشحين
-  for (final candidate in candidates) {
-    
-    if (candidate.nameAr.isEmpty && candidate.nameEn.isEmpty) {
-      throw DataValidationException(
-        'candidates', 
-        'المرشح ${candidate.id} لا يحتوي على اسم عربي أو إنجليزي'
-      );
-    }
+        .map((e) => NewsModel.fromJson(Map<String, dynamic>.from(e)))
+        .where((news) =>
+            news.titleAr.isNotEmpty ||
+            news.titleEn.isNotEmpty) // ✅ تحقق من وجود عنوان عربي أو إنجليزي
+        .toList();
   }
 
-  // 2. فحص الأسئلة الشائعة
-  for (final faq in faqs) {
-    if (faq.questionAr.isEmpty == true) {
-      throw DataValidationException(
-        'faqs',
-        'يوجد سؤال بدون نص في الأسئلة الشائعة'
-      );
+  /// 🔎 فحص جودة متقدم للبيانات - النسخة النهائية المصححة
+  static void _performQualityChecks(List<CandidateModel> candidates,
+      List<FaqModel> faqs, List<NewsModel> news) {
+    developer.log('[BOOTSTRAP] Performing quality checks...',
+        name: 'VALIDATION');
+
+    // 1. فحص المرشحين
+    for (final candidate in candidates) {
+      if (candidate.nameAr.isEmpty && candidate.nameEn.isEmpty) {
+        throw DataValidationException('candidates',
+            'المرشح ${candidate.id} لا يحتوي على اسم عربي أو إنجليزي');
+      }
     }
+
+    // 2. فحص الأسئلة الشائعة
+    for (final faq in faqs) {
+      if (faq.questionAr.isEmpty == true) {
+        throw DataValidationException(
+            'faqs', 'يوجد سؤال بدون نص في الأسئلة الشائعة');
+      }
+    }
+
+    // 3. فحص الأخبار - ✅ التصحيح هنا
+    for (final newsItem in news) {
+      // التحقق من وجود عنوان
+      if (newsItem.titleAr.isEmpty && newsItem.titleEn.isEmpty) {
+        throw DataValidationException(
+            'news', 'خبر ${newsItem.id} لا يحتوي على عنوان عربي أو إنجليزي');
+      }
+
+      // تحقق إضافي من المحتوى
+      if (newsItem.contentAr.isEmpty && newsItem.contentEn.isEmpty) {
+        developer.log(
+            '[BOOTSTRAP] Warning: News item ${newsItem.id} has no content in both languages',
+            name: 'VALIDATION');
+      }
+
+      // فحص التواريخ - ✅ الآن داخل الـ loop الصحيح
+      final now = DateTime.now();
+      if (newsItem.publishDate.isAfter(now.add(const Duration(days: 1)))) {
+        developer.log(
+            '[BOOTSTRAP] Warning: News item ${newsItem.id} has future date (${newsItem.publishDate})',
+            name: 'VALIDATION');
+      }
+
+      // فحص إضافي للصورة إن أردت
+      if (newsItem.imagePath.isEmpty) {
+        developer.log('[BOOTSTRAP] Info: News item ${newsItem.id} has no image',
+            name: 'VALIDATION');
+      }
+    }
+
+    developer.log('[BOOTSTRAP] Quality checks completed successfully',
+        name: 'VALIDATION');
   }
-
-  // 3. فحص الأخبار - ✅ التصحيح هنا
-  for (final newsItem in news) {
-    // التحقق من وجود عنوان
-    if (newsItem.titleAr.isEmpty && newsItem.titleEn.isEmpty) {
-      throw DataValidationException(
-        'news',
-        'خبر ${newsItem.id} لا يحتوي على عنوان عربي أو إنجليزي'
-      );
-    }
-    
-    // تحقق إضافي من المحتوى
-    if (newsItem.contentAr.isEmpty && newsItem.contentEn.isEmpty) {
-      developer.log(
-        '[BOOTSTRAP] Warning: News item ${newsItem.id} has no content in both languages',
-        name: 'VALIDATION'
-      );
-    }
-    
-    // فحص التواريخ - ✅ الآن داخل الـ loop الصحيح
-    final now = DateTime.now();
-    if (newsItem.publishDate.isAfter(now.add(const Duration(days: 1)))) {
-      developer.log(
-        '[BOOTSTRAP] Warning: News item ${newsItem.id} has future date (${newsItem.publishDate})',
-        name: 'VALIDATION'
-      );
-    }
-    
-    // فحص إضافي للصورة إن أردت
-    if (newsItem.imagePath.isEmpty) {
-      developer.log(
-        '[BOOTSTRAP] Info: News item ${newsItem.id} has no image',
-        name: 'VALIDATION'
-      );
-    }
-  }
-  
-  developer.log('[BOOTSTRAP] Quality checks completed successfully', name: 'VALIDATION');
-}
-
-
-   
 
   /// 💾 حفظ جميع البيانات بشكل متوازي
- Future<void> _saveAllData(ProcessedData data) async {
+  Future<void> _saveAllData(ProcessedData data) async {
     await Future.wait([
       LocalDatabase.saveCandidates(data.candidates),
       LocalDatabase.saveFAQs(data.faqs),
@@ -274,23 +249,16 @@ static void _performQualityChecks(
   }
 
   /// 🕒 تحديث وقت آخر تعديل
-static Future<void> _updateLastModifiedTime() async {
+  static Future<void> _updateLastModifiedTime() async {
     await LocalDatabase.saveAppData(
-      'last_data_update', 
-      DateTime.now().toIso8601String()
-    );
+        'last_data_update', DateTime.now().toIso8601String());
   }
 
-
-
-
-
   /// ⏰ معالجة أخطاء المهلة
-   DataLoadResult _handleTimeoutError(
-      TimeoutException e, StackTrace stack) {
-    developer.log('[BOOTSTRAP] Timeout while loading data ❌', 
+  DataLoadResult _handleTimeoutError(TimeoutException e, StackTrace stack) {
+    developer.log('[BOOTSTRAP] Timeout while loading data ❌',
         name: 'ERROR', error: e, stackTrace: stack);
-    
+
     GlobalErrorHandler.capture(
       e,
       stack,
@@ -305,11 +273,10 @@ static Future<void> _updateLastModifiedTime() async {
   }
 
   /// 🏗️ معالجة أخطاء التنسيق
-   DataLoadResult _handleFormatError(
-      FormatException e, StackTrace stack) {
-    developer.log('[BOOTSTRAP] JSON format error ❌', 
+  DataLoadResult _handleFormatError(FormatException e, StackTrace stack) {
+    developer.log('[BOOTSTRAP] JSON format error ❌',
         name: 'ERROR', error: e, stackTrace: stack);
-    
+
     GlobalErrorHandler.capture(e, stack, hint: 'JSON format error');
 
     return DataLoadResult.failure(
@@ -320,11 +287,11 @@ static Future<void> _updateLastModifiedTime() async {
   }
 
   /// ✅ معالجة أخطاء التحقق من الصحة
-   DataLoadResult _handleValidationError(
+  DataLoadResult _handleValidationError(
       DataValidationException e, StackTrace stack) {
-    developer.log('[BOOTSTRAP] Data validation failed ❌', 
+    developer.log('[BOOTSTRAP] Data validation failed ❌',
         name: 'ERROR', error: e, stackTrace: stack);
-    
+
     GlobalErrorHandler.capture(e, stack, hint: 'Data validation failed');
 
     return DataLoadResult.failure(
@@ -335,11 +302,10 @@ static Future<void> _updateLastModifiedTime() async {
   }
 
   /// ❌ معالجة الأخطاء العامة
-   DataLoadResult _handleGenericError(
-      Object e, StackTrace stack) {
-    developer.log('[BOOTSTRAP] Unexpected error: $e ❌', 
+  DataLoadResult _handleGenericError(Object e, StackTrace stack) {
+    developer.log('[BOOTSTRAP] Unexpected error: $e ❌',
         name: 'ERROR', error: e, stackTrace: stack);
-    
+
     GlobalErrorHandler.capture(e, stack, hint: 'Offline bootstrap failure');
 
     return DataLoadResult.failure(
@@ -350,24 +316,21 @@ static Future<void> _updateLastModifiedTime() async {
   }
 
   /// 📊 تسجيل نتائج التحميل
-   void _logDataLoadResult(DataLoadResult result) {
+  void _logDataLoadResult(DataLoadResult result) {
     if (result.isSuccess) {
       developer.log(
-        '[BOOTSTRAP] Data load completed: '
-        '${result.candidatesCount} candidates, '
-        '${result.faqsCount} FAQs, '
-        '${result.newsCount} news articles',
-        name: 'SUCCESS'
-      );
+          '[BOOTSTRAP] Data load completed: '
+          '${result.candidatesCount} candidates, '
+          '${result.faqsCount} FAQs, '
+          '${result.newsCount} news articles',
+          name: 'SUCCESS');
     } else {
       developer.log(
-        '[BOOTSTRAP] Data load failed: ${result.errorType} - ${result.message}',
-        name: 'FAILURE'
-      );
+          '[BOOTSTRAP] Data load failed: ${result.errorType} - ${result.message}',
+          name: 'FAILURE');
     }
-    
-  }}
-
+  }
+}
 
 /// 🎯 استخدام الخدمة في الـ UI
 Future<void> loadDefaultDataWithUI(BuildContext context) async {

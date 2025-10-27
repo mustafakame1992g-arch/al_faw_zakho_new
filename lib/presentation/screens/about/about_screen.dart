@@ -58,7 +58,8 @@ class AboutScreen extends StatelessWidget {
               ),
               elevation: 0,
               // إن كانت لديك Flutter قديمة ولا تدعم withValues استعمل withOpacity(0.08)
-              color: Theme.of(context).colorScheme.surface.withValues(alpha: .08),
+              color:
+                  Theme.of(context).colorScheme.surface.withValues(alpha: .08),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
@@ -146,7 +147,8 @@ class _IconRound extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.08),
+            color:
+                Theme.of(context).colorScheme.surface.withValues(alpha: 0.08),
           ),
           child: Icon(icon, size: 22),
         ),

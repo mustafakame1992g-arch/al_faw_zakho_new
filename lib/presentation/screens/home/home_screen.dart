@@ -32,8 +32,6 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-
-  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -69,13 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   Future<void> _executeParallelPreloading() async {
     const totalSteps = 4;
     int completed = 0;
 
     final tasks = [
-      _preloadCandidates().then((_) => _updateProgress(++completed, totalSteps)),
+      _preloadCandidates()
+          .then((_) => _updateProgress(++completed, totalSteps)),
       _preloadOffices().then((_) => _updateProgress(++completed, totalSteps)),
       _preloadFAQs().then((_) => _updateProgress(++completed, totalSteps)),
       _preloadNews().then((_) => _updateProgress(++completed, totalSteps)),
@@ -137,74 +135,77 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
   // 🎨 واجهة المستخدم
   // ============================================================
-@override
-Widget build(BuildContext context) {
-  if (_isPreloadingData) {
-    return LoadingWidget(progress: _preloadProgress);
-  }
+  @override
+  Widget build(BuildContext context) {
+    if (_isPreloadingData) {
+      return LoadingWidget(progress: _preloadProgress);
+    }
 
-return FZScaffold(
-  persistentBottom: FZTab.home,
-    appBar: HomeAppBar(
-      onSettingsTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const SettingsScreen()),
+    return FZScaffold(
+      persistentBottom: FZTab.home,
+      appBar: HomeAppBar(
+        onSettingsTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SettingsScreen()),
+        ),
       ),
-    ),
-    body: Consumer<ConnectivityProvider>(
-      builder: (context, connectivity, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ✅ الشريط العلوي ثابت ولا يتحرك مع التمرير
-            const NewsTicker(),
-            const SizedBox(height: 10),
+      body: Consumer<ConnectivityProvider>(
+        builder: (context, connectivity, _) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // ✅ الشريط العلوي ثابت ولا يتحرك مع التمرير
+              const NewsTicker(),
+              const SizedBox(height: 10),
 
-            // بقية الصفحة قابلة للتمرير كالمعتاد
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (!connectivity.isOnline) const ConnectionIndicator(),
-                    const WelcomeBanner(),
-                    const SizedBox(height: 10),
-                    HomeGrid(onTap: (id) => _handleCategoryTap(id, context)),
-                  ],
+              // بقية الصفحة قابلة للتمرير كالمعتاد
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (!connectivity.isOnline) const ConnectionIndicator(),
+                      const WelcomeBanner(),
+                      const SizedBox(height: 10),
+                      HomeGrid(onTap: (id) => _handleCategoryTap(id, context)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      },
-    ),
-   
-  );
-}
-
+            ],
+          );
+        },
+      ),
+    );
+  }
 
   // ============================================================
   // 🔁 التعامل مع الضغط على الأقسام
   // ============================================================
   void _handleCategoryTap(String category, BuildContext context) {
-    AnalyticsService.trackEvent('home_category_tapped', parameters: {'category': category});
+    AnalyticsService.trackEvent('home_category_tapped',
+        parameters: {'category': category});
 
     switch (category) {
       case 'candidates':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProvincesScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const ProvincesScreen()));
         break;
       case 'offices':
-  // ✅ بدل فتح صفحة جديدة، استخدم الـ Navigator الداخلي (HomeRoot)
-  if (ModalRoute.of(context)?.settings.name != '/offices') {
-    Navigator.of(context).pushNamed('/offices');
-  }
-  break;
+        // ✅ بدل فتح صفحة جديدة، استخدم الـ Navigator الداخلي (HomeRoot)
+        if (ModalRoute.of(context)?.settings.name != '/offices') {
+          Navigator.of(context).pushNamed('/offices');
+        }
+        break;
       case 'program':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const VisionScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const VisionScreen()));
         break;
       case 'faq':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const FAQScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const FAQScreen()));
         break;
       /*case 'news':
         Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsListScreen()));

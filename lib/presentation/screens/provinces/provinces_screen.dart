@@ -20,12 +20,12 @@ class ProvincesScreen extends StatefulWidget {
 class _ProvincesScreenState extends State<ProvincesScreen> {
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
-  
+
   List<String> _allProvinces = [];
   List<String> _filteredProvinces = [];
   Map<String, List<CandidateModel>> _provinceCandidates = {};
-final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
-  
+  final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
+
   bool _isLoading = true;
   String? _error;
   int _totalCandidates = 0;
@@ -59,7 +59,7 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
 
       final Map<String, List<CandidateModel>> provinceMap = {};
       int totalCandidates = 0;
-      
+
       for (final province in provinces) {
         final provinceCandidates = allCandidates
             .where((c) => c.province.trim() == province.trim())
@@ -87,14 +87,14 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
         _error = 'فشل تحميل البيانات: ${e.toString()}';
         _isLoading = false;
       });
-      
+
       AnalyticsService.trackError('load_provinces', e, StackTrace.current);
     }
   }
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    
+
     _debounce = Timer(const Duration(milliseconds: 300), () {
       final query = _searchController.text.trim();
 
@@ -117,7 +117,7 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
 
   String? _getTopProvince() {
     if (_provinceCandidates.isEmpty) return null;
-    
+
     return _provinceCandidates.entries
         .reduce((a, b) => a.value.length > b.value.length ? a : b)
         .key;
@@ -172,8 +172,9 @@ final ProvinceSearchEngine _searchEngine = ProvinceSearchEngine();
     final borderColor = _getBorderColor(context);
 
     if (_isLoading) {
-return FZScaffold(
-  persistentBottom: FZTab.home,        appBar: AppBar(
+      return FZScaffold(
+        persistentBottom: FZTab.home,
+        appBar: AppBar(
           title: Text(titleText, style: TextStyle(color: textColor)),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         ),
@@ -199,7 +200,7 @@ return FZScaffold(
 
     if (_error != null) {
       return FZScaffold(
-  persistentBottom: FZTab.home,
+        persistentBottom: FZTab.home,
         appBar: AppBar(
           title: Text(titleText, style: TextStyle(color: textColor)),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -235,7 +236,7 @@ return FZScaffold(
     }
 
     return FZScaffold(
-  persistentBottom: FZTab.home,
+      persistentBottom: FZTab.home,
       appBar: AppBar(
         title: Text(titleText, style: TextStyle(color: textColor)),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -263,7 +264,8 @@ return FZScaffold(
               style: TextStyle(color: textColor), // 🎨 لون النص
               decoration: InputDecoration(
                 hintText: context.tr('search_province_or_candidate'),
-                hintStyle: TextStyle(color: subtitleColor), // 🎨 لون النص التوضيحي
+                hintStyle:
+                    TextStyle(color: subtitleColor), // 🎨 لون النص التوضيحي
                 prefixIcon: Icon(Icons.search, color: subtitleColor),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -308,24 +310,24 @@ return FZScaffold(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildStatItem(
-                  context.tr('provinces'), 
-
-                  _allProvinces.length.toString(), 
+                  context.tr('provinces'),
+                  _allProvinces.length.toString(),
                   Icons.map,
                   context,
                 ),
                 _buildStatItem(
                   context.tr('candidates'),
-
-                  _totalCandidates.toString(), 
+                  _totalCandidates.toString(),
                   Icons.people,
                   context,
                 ),
                 _buildStatItem(
-                  context.tr('top'), 
-                  _getTopProvince() != null 
-                      ? _provinceCandidates[_getTopProvince()]!.length.toString()
-                      : '0', 
+                  context.tr('top'),
+                  _getTopProvince() != null
+                      ? _provinceCandidates[_getTopProvince()]!
+                          .length
+                          .toString()
+                      : '0',
                   Icons.star,
                   context,
                   _getTopProvince(),
@@ -343,7 +345,7 @@ return FZScaffold(
                 Text(
                   '${context.tr('showing')} ${_filteredProvinces.length} ${context.tr('of')} ${_allProvinces.length} ${context.tr('provinces')}',
                   style: TextStyle(
-                    fontSize: 12, 
+                    fontSize: 12,
                     color: subtitleColor, // 🎨 لون مناسب للوضع المظلم
                   ),
                 ),
@@ -351,7 +353,7 @@ return FZScaffold(
                   Text(
                     '$_totalCandidates مرشح متاح للبحث',
                     style: TextStyle(
-                      fontSize: 12, 
+                      fontSize: 12,
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
@@ -375,8 +377,8 @@ return FZScaffold(
                       final count = candidates.length;
 
                       return _buildProvinceItem(
-                        province, 
-                        count, 
+                        province,
+                        count,
                         context,
                         cardColor,
                         textColor,
@@ -390,7 +392,9 @@ return FZScaffold(
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, BuildContext context, [String? tooltip]) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, BuildContext context,
+      [String? tooltip]) {
     final iconColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.blue[200]
         : Colors.blue[700];
@@ -403,17 +407,17 @@ return FZScaffold(
           Icon(icon, size: 20, color: iconColor),
           const SizedBox(height: 4),
           Text(
-            value, 
+            value,
             style: TextStyle(
-              fontWeight: FontWeight.bold, 
+              fontWeight: FontWeight.bold,
               fontSize: 14,
               color: textColor,
             ),
           ),
           Text(
-            label, 
+            label,
             style: TextStyle(
-              fontSize: 10, 
+              fontSize: 10,
               color: _getSubtitleColor(context),
             ),
           ),
@@ -422,7 +426,8 @@ return FZScaffold(
     );
   }
 
-  Widget _buildEmptyState(Color textColor, Color subtitleColor, Color backgroundColor) {
+  Widget _buildEmptyState(
+      Color textColor, Color subtitleColor, Color backgroundColor) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -438,7 +443,7 @@ return FZScaffold(
             Text(
               'لا توجد نتائج مطابقة',
               style: TextStyle(
-                fontSize: 18, 
+                fontSize: 18,
                 color: textColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -459,7 +464,8 @@ return FZScaffold(
                 backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,
               ),
-              child: Text(AppLocalizations.of(context).translate('show_all_provinces')),
+              child: Text(
+                  AppLocalizations.of(context).translate('show_all_provinces')),
             ),
           ],
         ),
@@ -468,8 +474,8 @@ return FZScaffold(
   }
 
   Widget _buildProvinceItem(
-    String province, 
-    int count, 
+    String province,
+    int count,
     BuildContext context,
     Color cardColor,
     Color textColor,
@@ -494,13 +500,12 @@ return FZScaffold(
           ),
         ),
         title: Text(
-                    IraqiProvinces.displayName(
+          IraqiProvinces.displayName(
             province,
             Localizations.localeOf(context).languageCode,
           ),
-
           style: TextStyle(
-            fontWeight: FontWeight.w600, 
+            fontWeight: FontWeight.w600,
             fontSize: 16,
             color: textColor, // 🎨 لون النص الرئيسي
           ),
@@ -511,9 +516,8 @@ return FZScaffold(
             Text(
               count > 0 ? 'عدد المرشحين: $count' : 'لا يوجد مرشحين مسجلين',
               style: TextStyle(
-                color: count > 0 
-                    ? _getCountColor(count, context) 
-                    : subtitleColor,
+                color:
+                    count > 0 ? _getCountColor(count, context) : subtitleColor,
                 fontSize: 12,
               ),
             ),
@@ -531,8 +535,8 @@ return FZScaffold(
           ],
         ),
         trailing: Icon(
-          Icons.arrow_forward_ios, 
-          size: 16, 
+          Icons.arrow_forward_ios,
+          size: 16,
           color: subtitleColor, // 🎨 لون السهم مناسب للوضع المظلم
         ),
         onTap: () {

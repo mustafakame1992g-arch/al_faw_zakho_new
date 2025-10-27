@@ -4,7 +4,7 @@ import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 class ErrorScreen extends StatelessWidget {
   final String error;
   final VoidCallback onRetry;
-  
+
   const ErrorScreen({super.key, required this.error, required this.onRetry});
 
   @override

@@ -21,12 +21,12 @@ class LiveDataUpdater {
 
     try {
       _isRunning = true;
-      
+
       // بدء التحديث الدوري كل 30 ثانية
       _startPeriodicUpdates();
-      
-      developer.log('[LiveDataUpdater] ✅ Started with 30s intervals', name: 'LIVE');
-      
+
+      developer.log('[LiveDataUpdater] ✅ Started with 30s intervals',
+          name: 'LIVE');
     } catch (e, stack) {
       developer.log('[LiveDataUpdater] ❌ Failed to start: $e',
           name: 'ERROR', error: e, stackTrace: stack);
@@ -49,7 +49,7 @@ class LiveDataUpdater {
       try {
         await _performLiveUpdate();
       } catch (e) {
-        developer.log('[LiveDataUpdater] Periodic update failed: $e', 
+        developer.log('[LiveDataUpdater] Periodic update failed: $e',
             name: 'WARNING');
       }
     });
@@ -58,12 +58,13 @@ class LiveDataUpdater {
   /// 📡 تنفيذ تحديث حي
   static Future<void> _performLiveUpdate() async {
     try {
-      developer.log('[LiveDataUpdater] Performing live update...', name: 'LIVE');
-      
+      developer.log('[LiveDataUpdater] Performing live update...',
+          name: 'LIVE');
+
       // - تحديث بيانات المرشحين
       // - التحقق من الأخبار الجديدة
       // - تحديث الإحصاءات
-      
+
       developer.log('[LiveDataUpdater] Live update completed', name: 'LIVE');
     } catch (e, stack) {
       developer.log('[LiveDataUpdater] Update failed: $e',

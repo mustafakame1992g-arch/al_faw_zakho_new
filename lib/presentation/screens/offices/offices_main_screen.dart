@@ -31,31 +31,30 @@ class _OfficesScreenState extends State<OfficesScreen> {
     AnalyticsService.trackEvent('offices_screen_opened');
   }
 
-Future<void> _loadOffices() async {
-  setState(() => _loading = true);
+  Future<void> _loadOffices() async {
+    setState(() => _loading = true);
 
-  var offices = await LocalDatabase.getAllOffices();
-  if (offices.isEmpty) {
-    // لا يوجد بيانات — أعد التحميل من الأصول ثم حاول مجددًا
-    await LocalDatabase.bootstrapOfficesFromAssets(forceReload: true);
-    offices = await LocalDatabase.getAllOffices();
+    var offices = await LocalDatabase.getAllOffices();
+    if (offices.isEmpty) {
+      // لا يوجد بيانات — أعد التحميل من الأصول ثم حاول مجددًا
+      await LocalDatabase.bootstrapOfficesFromAssets(forceReload: true);
+      offices = await LocalDatabase.getAllOffices();
+    }
+
+    setState(() {
+      _allOffices = offices;
+      _filteredOffices = offices;
+      _loading = false;
+    });
   }
-
-  setState(() {
-    _allOffices = offices;
-    _filteredOffices = offices;
-    _loading = false;
-  });
-}
-
 
   void _onSearchChanged(String query) {
     final q = query.trim().toLowerCase();
     setState(() {
       _filteredOffices = _allOffices.where((o) {
         return o.province.toLowerCase().contains(q) ||
-               o.nameAr.toLowerCase().contains(q) ||
-               o.managerNameAr.toLowerCase().contains(q);
+            o.nameAr.toLowerCase().contains(q) ||
+            o.managerNameAr.toLowerCase().contains(q);
       }).toList();
     });
   }
@@ -118,12 +117,16 @@ Future<void> _loadOffices() async {
               const SizedBox(height: 14),
               const Divider(),
               const SizedBox(height: 10),
-              _detailRow(Icons.location_on, 'العنوان', office.addressAr, textColor),
-              _detailRow(Icons.person, 'المدير', office.managerNameAr, textColor),
+              _detailRow(
+                  Icons.location_on, 'العنوان', office.addressAr, textColor),
+              _detailRow(
+                  Icons.person, 'المدير', office.managerNameAr, textColor),
               _detailRow(Icons.phone, 'الهاتف', office.phoneNumber, textColor),
-              _detailRow(Icons.access_time, 'ساعات العمل', office.workingHours, textColor),
+              _detailRow(Icons.access_time, 'ساعات العمل', office.workingHours,
+                  textColor),
               if (office.email.isNotEmpty)
-                _detailRow(Icons.email_outlined, 'البريد الإلكتروني', office.email, textColor),
+                _detailRow(Icons.email_outlined, 'البريد الإلكتروني',
+                    office.email, textColor),
               _detailRow(Icons.map, 'المحافظة', office.province, textColor),
               const SizedBox(height: 24),
               Center(
@@ -147,7 +150,8 @@ Future<void> _loadOffices() async {
     );
   }
 
-  Widget _detailRow(IconData icon, String label, String value, Color textColor) {
+  Widget _detailRow(
+      IconData icon, String label, String value, Color textColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -182,7 +186,8 @@ Future<void> _loadOffices() async {
     return FZScaffold(
       appBar: AppBar(
         backgroundColor: isDark ? fawBlack : fawRed,
-        title: Text(AppLocalizations.of(context).translate('provincial_offices')),
+        title:
+            Text(AppLocalizations.of(context).translate('provincial_offices')),
         centerTitle: true,
         elevation: 0,
         actions: [
@@ -200,7 +205,6 @@ Future<void> _loadOffices() async {
         ),
       ),
       persistentBottom: FZTab.home,
-      
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: fawRed))
           : _filteredOffices.isEmpty
@@ -224,7 +228,8 @@ Future<void> _loadOffices() async {
       style: TextStyle(color: textColor),
       decoration: InputDecoration(
         filled: true,
-        fillColor: isDark ? Colors.grey[850] : Colors.white.withValues(alpha: .95),
+        fillColor:
+            isDark ? Colors.grey[850] : Colors.white.withValues(alpha: .95),
         hintText: 'ابحث عن مكتب أو مدير أو محافظة...',
         hintStyle: TextStyle(color: Colors.grey[600]),
         prefixIcon: const Icon(Icons.search, color: fawRed),
@@ -248,21 +253,19 @@ Future<void> _loadOffices() async {
       margin: const EdgeInsets.only(bottom: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: const Icon(Icons.business, color: Color.fromARGB(255, 52, 25, 72), size: 30),
+        leading: const Icon(Icons.business,
+            color: Color.fromARGB(255, 52, 25, 72), size: 30),
         title: Text(
           '${office.nameAr} (${office.province})',
           style: const TextStyle(
-            color: Color.fromARGB(255, 36, 34, 118), 
-            fontWeight: FontWeight.bold, 
-            fontSize: 17
-          ),
+              color: Color.fromARGB(255, 36, 34, 118),
+              fontWeight: FontWeight.bold,
+              fontSize: 17),
         ),
         subtitle: Text(
           office.addressAr,
           style: TextStyle(
-            color: isDark ? Colors.white70 : Colors.black87, 
-            fontSize: 14
-          ),
+              color: isDark ? Colors.white70 : Colors.black87, fontSize: 14),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: fawGold),
         onTap: () => _showOfficeDetails(office),
@@ -277,7 +280,8 @@ Future<void> _loadOffices() async {
         children: [
           const Icon(Icons.business_outlined, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text('لا توجد مكاتب مطابقة لبحثك', style: TextStyle(color: textColor)),
+          Text('لا توجد مكاتب مطابقة لبحثك',
+              style: TextStyle(color: textColor)),
         ],
       ),
     );

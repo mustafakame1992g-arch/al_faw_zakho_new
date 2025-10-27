@@ -22,10 +22,10 @@ class MemoryManager {
 
       await _instance._setupMemoryMonitoring(enableMonitoring);
       _instance._isInitialized = true;
-      
+
       developer.log('[$_tag] ✅ Initialized successfully', name: 'PERF');
     } catch (e, stack) {
-      developer.log('[$_tag] ❌ Initialization failed: $e', 
+      developer.log('[$_tag] ❌ Initialization failed: $e',
           name: 'ERROR', error: e, stackTrace: stack);
       rethrow;
     }
@@ -41,7 +41,8 @@ class MemoryManager {
     int freedBytes = 0;
 
     try {
-      developer.log('[$_tag] Starting cleanup (aggressive: $aggressive, priority: $priority)', 
+      developer.log(
+          '[$_tag] Starting cleanup (aggressive: $aggressive, priority: $priority)',
           name: 'PERF');
 
       // 📸 تنظيف ذاكرة الصور
@@ -73,11 +74,10 @@ class MemoryManager {
 
       developer.log('[$_tag] ✅ Cleanup completed: $result', name: 'PERF');
       return result;
-
     } catch (e, stack) {
-      developer.log('[$_tag] ❌ Cleanup failed: $e', 
+      developer.log('[$_tag] ❌ Cleanup failed: $e',
           name: 'ERROR', error: e, stackTrace: stack);
-      
+
       return MemoryCleanupResult(
         success: false,
         error: e.toString(),
@@ -96,11 +96,11 @@ class MemoryManager {
   }) async {
     try {
       final imageCache = PaintingBinding.instance.imageCache;
-      
+
       if (lowEnd) {
         imageCache.maximumSize = customImageCount ?? 50;
         imageCache.maximumSizeBytes = (customCacheSizeMB ?? 20) << 20;
-        
+
         // ✅ التصحيح: استخدام الطريقة الحديثة بدلاً من renderView المهمل
         _disableSystemUiAutoAdjustment();
       } else {
@@ -108,10 +108,10 @@ class MemoryManager {
         imageCache.maximumSizeBytes = (customCacheSizeMB ?? 50) << 20;
       }
 
-      developer.log('[$_tag] Image cache tuned: ${imageCache.maximumSize} images, '
-          '${imageCache.maximumSizeBytes ~/ (1024 * 1024)}MB (lowEnd: $lowEnd)', 
+      developer.log(
+          '[$_tag] Image cache tuned: ${imageCache.maximumSize} images, '
+          '${imageCache.maximumSizeBytes ~/ (1024 * 1024)}MB (lowEnd: $lowEnd)',
           name: 'PERF');
-          
     } catch (e, stack) {
       developer.log('[$_tag] Image cache tuning failed: $e',
           name: 'WARNING', error: e, stackTrace: stack);
@@ -121,10 +121,9 @@ class MemoryManager {
   /// 🎯 تعطيل التعديل التلقائي لواجهة النظام (بدون تحذيرات)
   static void _disableSystemUiAutoAdjustment() {
     try {
-      
       // يمكن إضافة إعدادات واجهة النظام هنا إذا لزم الأمر
-      developer.log('[$_tag] System UI auto-adjustment disabled', name: 'DEBUG');
-      
+      developer.log('[$_tag] System UI auto-adjustment disabled',
+          name: 'DEBUG');
     } catch (e, stack) {
       developer.log('[$_tag] Failed to disable system UI adjustment: $e',
           name: 'INFO', error: e, stackTrace: stack);
@@ -135,7 +134,7 @@ class MemoryManager {
   static MemoryStatus getMemoryStatus() {
     try {
       final imageCache = PaintingBinding.instance.imageCache;
-      
+
       return MemoryStatus(
         currentImageCount: imageCache.currentSize,
         maxImageCount: imageCache.maximumSize,
@@ -154,7 +153,7 @@ class MemoryManager {
   static Future<CleanupResult> _cleanImageCache(bool aggressive) async {
     final imageCache = PaintingBinding.instance.imageCache;
     final beforeSize = imageCache.currentSize;
-    
+
     try {
       if (aggressive) {
         // تنظيف قوي - إفراغ كامل
@@ -168,8 +167,9 @@ class MemoryManager {
       final freedItems = beforeSize - imageCache.currentSize;
       final freedBytes = _estimateFreedBytes(freedItems);
 
-      developer.log('[$_tag] Image cache cleaned: $freedItems images', name: 'PERF');
-      
+      developer.log('[$_tag] Image cache cleaned: $freedItems images',
+          name: 'PERF');
+
       return CleanupResult(freedItems, freedBytes);
     } catch (e) {
       developer.log('[$_tag] Image cache cleaning failed: $e', name: 'WARNING');
@@ -185,13 +185,14 @@ class MemoryManager {
     try {
       // تنظيف صناديق Hive المؤقتة
       await _cleanHiveTempBoxes();
-      
+
       // تنظيف الذاكرة المؤقتة حسب الأولوية
       if (priority == CleanupPriority.aggressive) {
         freedItems += await _cleanExpiredCache();
       }
 
-      developer.log('[$_tag] App data cleaned: $freedItems items', name: 'PERF');
+      developer.log('[$_tag] App data cleaned: $freedItems items',
+          name: 'PERF');
       return CleanupResult(freedItems, freedBytes);
     } catch (e) {
       developer.log('[$_tag] App data cleaning failed: $e', name: 'WARNING');
@@ -204,11 +205,12 @@ class MemoryManager {
     try {
       // إجبار GC على العمل (إن أمكن)
       await _triggerGarbageCollection();
-      
+
       developer.log('[$_tag] Memory cache cleaned', name: 'PERF');
       return CleanupResult(0, 0); // يصعب قياس الذاكرة المحررة
     } catch (e) {
-      developer.log('[$_tag] Memory cache cleaning failed: $e', name: 'WARNING');
+      developer.log('[$_tag] Memory cache cleaning failed: $e',
+          name: 'WARNING');
       return CleanupResult(0, 0);
     }
   }
@@ -223,7 +225,8 @@ class MemoryManager {
         cache.clear();
       }
     } catch (e) {
-      developer.log('[$_tag] Least used images cleaning failed: $e', name: 'WARNING');
+      developer.log('[$_tag] Least used images cleaning failed: $e',
+          name: 'WARNING');
     }
   }
 
@@ -233,7 +236,8 @@ class MemoryManager {
       // يمكن إضافة صناديق مؤقتة محددة تحتاج تنظيف
       // await Hive.box('temp_cache').clear();
     } catch (e) {
-      developer.log('[$_tag] Hive temp boxes cleaning failed: $e', name: 'WARNING');
+      developer.log('[$_tag] Hive temp boxes cleaning failed: $e',
+          name: 'WARNING');
     }
   }
 
@@ -244,7 +248,8 @@ class MemoryManager {
       // منطق تنظيف البيانات المنتهية الصلاحية
       // يمكن التكامل مع نظام الكاش الخاص بالتطبيق
     } catch (e) {
-      developer.log('[$_tag] Expired cache cleaning failed: $e', name: 'WARNING');
+      developer.log('[$_tag] Expired cache cleaning failed: $e',
+          name: 'WARNING');
     }
     return cleanedItems;
   }
@@ -292,9 +297,9 @@ class MemoryManager {
 
 /// 🎯 أولويات التنظيف
 enum CleanupPriority {
-  standard,    // تنظيف أساسي
-  aggressive,  // تنظيف مكثف
-  minimal      // الحد الأدنى
+  standard, // تنظيف أساسي
+  aggressive, // تنظيف مكثف
+  minimal // الحد الأدنى
 }
 
 /// 📊 نتيجة عملية التنظيف
@@ -318,7 +323,7 @@ class MemoryCleanupResult {
   @override
   String toString() {
     if (!success) return 'Cleanup failed: $error';
-    
+
     final sizeMB = freedBytes ~/ (1024 * 1024);
     return 'Freed $freedItems items (${sizeMB}MB) in ${duration}ms';
   }

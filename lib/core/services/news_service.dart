@@ -14,9 +14,13 @@ class NewsService {
   }
 
   /// أفضل مصدر للشريط: عاجل أولاً ثم الأحدث، بحد أقصى [limit]
-  static Future<List<NewsModel>> getTopTickerNews({int limit = 10, bool forceRefresh = false}) async {
+  static Future<List<NewsModel>> getTopTickerNews(
+      {int limit = 10, bool forceRefresh = false}) async {
     final now = DateTime.now();
-    if (!forceRefresh && _cache != null && _lastAt != null && now.difference(_lastAt!) < _ttl) {
+    if (!forceRefresh &&
+        _cache != null &&
+        _lastAt != null &&
+        now.difference(_lastAt!) < _ttl) {
       return _cache!.take(limit).toList();
     }
 

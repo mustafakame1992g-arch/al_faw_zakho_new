@@ -245,14 +245,11 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
-                  color:Colors.orange),
-              SizedBox(width: 4),
-              Text(
-                'عرض بيانات تجريبية',
-                style: TextStyle(fontSize: 12, color: Colors.orange),
+                Icon(Icons.info_outline, size: 16, color: Colors.orange),
+                SizedBox(width: 4),
+                Text(
+                  'عرض بيانات تجريبية',
+                  style: TextStyle(fontSize: 12, color: Colors.orange),
                 ),
               ],
             ),

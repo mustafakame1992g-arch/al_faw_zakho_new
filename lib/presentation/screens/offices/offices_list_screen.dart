@@ -32,10 +32,11 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
 
   Future<List<OfficeModel>> _loadOffices() async {
     try {
-final raw = LocalDatabase.getOffices();
-final offices = raw
-    .map((e) => OfficeModel.fromJson(Map<String, dynamic>.from(e as Map<String, dynamic>)))
-    .toList();
+      final raw = LocalDatabase.getOffices();
+      final offices = raw
+          .map((e) => OfficeModel.fromJson(
+              Map<String, dynamic>.from(e as Map<String, dynamic>)))
+          .toList();
       offices.sort((a, b) => a.province.compareTo(b.province));
       _allOffices = offices;
       _filteredOffices = offices;
@@ -106,18 +107,23 @@ final offices = raw
         future: _officesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: fawRed));
+            return const Center(
+                child: CircularProgressIndicator(color: fawRed));
           }
 
           if (snapshot.hasError) {
             return Center(
-              child: Text(AppLocalizations.of(context).translate('error_loading_data'),),
+              child: Text(
+                AppLocalizations.of(context).translate('error_loading_data'),
+              ),
             );
           }
 
           if (_filteredOffices.isEmpty) {
             return Center(
-              child: Text(AppLocalizations.of(context).translate('no_matching_results'),),
+              child: Text(
+                AppLocalizations.of(context).translate('no_matching_results'),
+              ),
             );
           }
 
@@ -126,7 +132,8 @@ final offices = raw
             itemCount: _filteredOffices.length,
             itemBuilder: (context, index) {
               final office = _filteredOffices[index];
-              return _buildOfficeCard(context, office, titleColor, textColor, isDark);
+              return _buildOfficeCard(
+                  context, office, titleColor, textColor, isDark);
             },
           );
         },
@@ -160,17 +167,20 @@ final offices = raw
     );
   }
 
-  Widget _buildOfficeCard(BuildContext context, OfficeModel office, Color titleColor, Color textColor, bool isDark) {
+  Widget _buildOfficeCard(BuildContext context, OfficeModel office,
+      Color titleColor, Color textColor, bool isDark) {
     return Card(
       color: isDark ? Colors.grey[900] : Colors.white,
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: const Icon(Icons.location_city, color: Color(0xFFD32F2F), size: 30),
+        leading:
+            const Icon(Icons.location_city, color: Color(0xFFD32F2F), size: 30),
         title: Text(
           '${office.nameAr} (${office.province})',
-          style: TextStyle(color: titleColor, fontWeight: FontWeight.bold, fontSize: 17),
+          style: TextStyle(
+              color: titleColor, fontWeight: FontWeight.bold, fontSize: 17),
         ),
         subtitle: Text(
           office.addressAr,
@@ -208,7 +218,8 @@ class OfficeDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: isDark ? Colors.black : fawRed,
-        title: Text(office.nameAr, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(office.nameAr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -218,16 +229,24 @@ class OfficeDetailsScreen extends StatelessWidget {
           _infoTile('📍 العنوان', office.addressAr, textColor, titleColor),
           _infoTile('🧭 المحافظة', office.province, textColor, titleColor),
           _infoTile('📞 الهاتف', office.phoneNumber, textColor, titleColor),
-          if (office.secondaryPhone != null && office.secondaryPhone!.isNotEmpty)
-            _infoTile('📱 رقم إضافي', office.secondaryPhone!, textColor, titleColor),
-          _infoTile('✉️ البريد الإلكتروني', office.email, textColor, titleColor),
-          _infoTile('👤 مدير المكتب', office.managerNameAr, textColor, titleColor),
-          _infoTile('🕒 أوقات العمل', office.workingHours, textColor, titleColor),
+          if (office.secondaryPhone != null &&
+              office.secondaryPhone!.isNotEmpty)
+            _infoTile(
+                '📱 رقم إضافي', office.secondaryPhone!, textColor, titleColor),
+          _infoTile(
+              '✉️ البريد الإلكتروني', office.email, textColor, titleColor),
+          _infoTile(
+              '👤 مدير المكتب', office.managerNameAr, textColor, titleColor),
+          _infoTile(
+              '🕒 أوقات العمل', office.workingHours, textColor, titleColor),
           if (office.workingDays != null)
-            _infoTile('📅 أيام العمل', office.workingDays!, textColor, titleColor),
+            _infoTile(
+                '📅 أيام العمل', office.workingDays!, textColor, titleColor),
           if (office.services.isNotEmpty)
-            _infoTile('🔧 الخدمات المتوفرة', office.services.join('، '), textColor, titleColor),
-          _infoTile('💪 الطاقة الاستيعابية', '${office.capacity} شخص', textColor, titleColor),
+            _infoTile('🔧 الخدمات المتوفرة', office.services.join('، '),
+                textColor, titleColor),
+          _infoTile('💪 الطاقة الاستيعابية', '${office.capacity} شخص',
+              textColor, titleColor),
           if (office.notes != null && office.notes!.isNotEmpty)
             _infoTile('🗒️ ملاحظات', office.notes!, textColor, titleColor),
         ],
@@ -235,16 +254,21 @@ class OfficeDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoTile(String title, String value, Color textColor, Color titleColor) {
+  Widget _infoTile(
+      String title, String value, Color textColor, Color titleColor) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: TextStyle(color: titleColor, fontWeight: FontWeight.bold, fontSize: 16)),
+              style: TextStyle(
+                  color: titleColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16)),
           const SizedBox(height: 4),
-          Text(value, style: TextStyle(color: textColor, fontSize: 15, height: 1.4)),
+          Text(value,
+              style: TextStyle(color: textColor, fontSize: 15, height: 1.4)),
         ],
       ),
     );

@@ -5,18 +5,29 @@ part 'news_model.g.dart';
 /// 📰 NewsModel — تصميم متين ومرن للـJSON (camel/snake)
 @HiveType(typeId: 1)
 class NewsModel {
-  @HiveField(0)  final String id;
-  @HiveField(1)  final String titleAr;
-  @HiveField(2)  final String titleEn;
-  @HiveField(3)  final String contentAr;
-  @HiveField(4)  final String contentEn;
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String titleAr;
+  @HiveField(2)
+  final String titleEn;
+  @HiveField(3)
+  final String contentAr;
+  @HiveField(4)
+  final String contentEn;
 
-  @HiveField(5)  final String imagePath;   // ملاحظة: اسم الحقل داخليًا imagePath
-  @HiveField(6)  final DateTime publishDate;
-  @HiveField(7)  final String author;
-  @HiveField(8)  final String category;
-  @HiveField(9)  final bool isBreaking;
-  @HiveField(10) final int viewCount;
+  @HiveField(5)
+  final String imagePath; // ملاحظة: اسم الحقل داخليًا imagePath
+  @HiveField(6)
+  final DateTime publishDate;
+  @HiveField(7)
+  final String author;
+  @HiveField(8)
+  final String category;
+  @HiveField(9)
+  final bool isBreaking;
+  @HiveField(10)
+  final int viewCount;
 
   const NewsModel({
     required this.id,
@@ -70,13 +81,12 @@ class NewsModel {
   // ---------------------------------------
   factory NewsModel.fromJson(Map<String, dynamic> j) {
     final id = _S(j['id']);
-    final titleAr   = _S(j['title_ar'] ?? j['titleAr'] ?? j['title']);
-    final titleEn   = _S(j['title_en'] ?? j['titleEn'] ?? j['title']);
+    final titleAr = _S(j['title_ar'] ?? j['titleAr'] ?? j['title']);
+    final titleEn = _S(j['title_en'] ?? j['titleEn'] ?? j['title']);
 
     final contentAr = _S(j['content_ar'] ?? j['contentAr'] ?? j['content']);
     final contentEn = _S(j['content_en'] ?? j['contentEn'] ?? j['content']);
-    final imagePath = _S(j['image_url']  ?? j['imagePath']  ?? j['image']);
-
+    final imagePath = _S(j['image_url'] ?? j['imagePath'] ?? j['image']);
 
     final publishDate = _D(j['publish_date'] ?? j['publishDate']);
     final author = _S(j['author']);
@@ -105,7 +115,7 @@ class NewsModel {
         'title_en': titleEn,
         'content_ar': contentAr,
         'content_en': contentEn,
-        'image_url': imagePath,                      // نُخرج snake_case
+        'image_url': imagePath, // نُخرج snake_case
         'publish_date': publishDate.toIso8601String(),
         'author': author,
         'category': category,
@@ -155,8 +165,8 @@ class NewsModel {
     String? titleEn,
     String? contentAr,
     String? contentEn,
-    String? imagePath,       // الاسم الصحيح المتوافق مع الحقل
-    String? imageUrl,        // متوافق للخلفية (سوف يُستَخدم إن لم يُمرّر imagePath)
+    String? imagePath, // الاسم الصحيح المتوافق مع الحقل
+    String? imageUrl, // متوافق للخلفية (سوف يُستَخدم إن لم يُمرّر imagePath)
     DateTime? publishDate,
     String? author,
     String? category,
@@ -180,7 +190,8 @@ class NewsModel {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is NewsModel && other.id == id);
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is NewsModel && other.id == id);
 
   @override
   int get hashCode => id.hashCode;

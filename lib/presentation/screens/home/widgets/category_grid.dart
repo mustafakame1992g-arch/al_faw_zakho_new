@@ -4,31 +4,34 @@ import 'package:al_faw_zakho/core/providers/language_provider.dart';
 
 class CategoryGrid extends StatelessWidget {
   final Function(String) onCategorySelected;
-  
+
   const CategoryGrid({super.key, required this.onCategorySelected});
 
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
-    
+
     final categories = [
       {
         'id': 'candidates',
         'icon': Icons.people,
         'color': Colors.blue,
-        'title': _getCategoryTitle('candidates', languageProvider.locale.languageCode),
+        'title': _getCategoryTitle(
+            'candidates', languageProvider.locale.languageCode),
       },
       {
         'id': 'offices',
         'icon': Icons.business,
         'color': Colors.green,
-        'title': _getCategoryTitle('offices', languageProvider.locale.languageCode),
+        'title':
+            _getCategoryTitle('offices', languageProvider.locale.languageCode),
       },
       {
         'id': 'program',
         'icon': Icons.article,
         'color': Colors.orange,
-        'title': _getCategoryTitle('program', languageProvider.locale.languageCode),
+        'title':
+            _getCategoryTitle('program', languageProvider.locale.languageCode),
       },
       {
         'id': 'faq',
@@ -40,13 +43,15 @@ class CategoryGrid extends StatelessWidget {
         'id': 'news',
         'icon': Icons.newspaper,
         'color': Colors.red,
-        'title': _getCategoryTitle('news', languageProvider.locale.languageCode),
+        'title':
+            _getCategoryTitle('news', languageProvider.locale.languageCode),
       },
       {
         'id': 'settings',
         'icon': Icons.settings,
         'color': Colors.grey,
-        'title': _getCategoryTitle('settings', languageProvider.locale.languageCode),
+        'title':
+            _getCategoryTitle('settings', languageProvider.locale.languageCode),
       },
     ];
 
@@ -65,7 +70,8 @@ class CategoryGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, Map<String, dynamic> category) {
+  Widget _buildCategoryCard(
+      BuildContext context, Map<String, dynamic> category) {
     return Card(
       elevation: 2,
       child: InkWell(
@@ -80,7 +86,8 @@ class CategoryGrid extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 category['title'],
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -94,15 +101,31 @@ class CategoryGrid extends StatelessWidget {
 
   String _getCategoryTitle(String category, String languageCode) {
     final titles = {
-      'candidates': {'ar': 'المرشحين','en': 'Candidates',
-},
-      'offices': {'ar': 'المكاتب','en': 'Offices',},
-      'program': {'ar': 'البرنامج','en': 'Program',},
-      'faq': {'ar': 'الأسئلة','en': 'FAQ',},
-      'news': {'ar': 'الأخبار', 'en': 'News',},
+      'candidates': {
+        'ar': 'المرشحين',
+        'en': 'Candidates',
+      },
+      'offices': {
+        'ar': 'المكاتب',
+        'en': 'Offices',
+      },
+      'program': {
+        'ar': 'البرنامج',
+        'en': 'Program',
+      },
+      'faq': {
+        'ar': 'الأسئلة',
+        'en': 'FAQ',
+      },
+      'news': {
+        'ar': 'الأخبار',
+        'en': 'News',
+      },
       'settings': {'ar': 'الإعدادات', 'en': 'Settings'},
     };
-    
-    return titles[category]?[languageCode] ?? titles[category]?['ar'] ?? category;
+
+    return titles[category]?[languageCode] ??
+        titles[category]?['ar'] ??
+        category;
   }
 }

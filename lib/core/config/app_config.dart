@@ -25,7 +25,7 @@ class AppConfig {
   // --------------------------------------------------
   // المدة القصوى المسموح بها لكل مرحلة من مراحل التهيئة
   static const Map<String, int> phaseTimeouts = {
-    'Core Providers': 15,         // ثوانٍ
+    'Core Providers': 15, // ثوانٍ
     'Connectivity Check': 10,
     'Data Loading': 30,
     'Data Validation': 20,
@@ -35,10 +35,10 @@ class AppConfig {
   // --------------------------------------------------
   // ⚙️ إعدادات الأداء
   // --------------------------------------------------
-  static const int imageCacheMaxCount = 100;         // عدد الصور في الكاش
-  static const int imageCacheMaxBytes = 50 << 20;    // 50MB
-  static const bool useLowEndMode = true;            // تفعيل نمط الأجهزة الضعيفة
-  static const bool enablePrecache = true;           // تحميل مسبق للأصول
+  static const int imageCacheMaxCount = 100; // عدد الصور في الكاش
+  static const int imageCacheMaxBytes = 50 << 20; // 50MB
+  static const bool useLowEndMode = true; // تفعيل نمط الأجهزة الضعيفة
+  static const bool enablePrecache = true; // تحميل مسبق للأصول
 
   // --------------------------------------------------
   // 📦 إعدادات البيانات المحلية
@@ -63,13 +63,14 @@ class AppConfig {
   // 🛡️ إعدادات الأمان (للمستقبل)
   // --------------------------------------------------
   static const bool enableDataChecksum = true; // للتحقق من سلامة البيانات
-  static const String encryptionKey = 'FawZakho_2025_Key'; // مفتاح تشفير افتراضي
+  static const String encryptionKey =
+      'FawZakho_2025_Key'; // مفتاح تشفير افتراضي
 
   // --------------------------------------------------
   // 🪵 إعدادات السجلات (Logs)
   // --------------------------------------------------
   static const bool enableDebugLogs = kDebugMode; // فعالة في التطوير فقط
-  static const int maxLogLength = 2000;           // الطول الأقصى لرسالة log
+  static const int maxLogLength = 2000; // الطول الأقصى لرسالة log
   static const String logTag = 'FAW_APP_LOG';
 
   // --------------------------------------------------

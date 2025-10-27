@@ -25,7 +25,6 @@ class FAQRepositoryImpl implements FAQRepository {
   static const Duration _cacheDuration = Duration(hours: 24);
   static const int _maxRetryAttempts = 2;
 
-
 // ✅ الصندوق المفتوح مسبقاً
   late final Box _faqBox;
   bool _isInitialized = false;
@@ -39,13 +38,12 @@ class FAQRepositoryImpl implements FAQRepository {
     }
   }
 
-    // ✅ التحقق من التهيئة قبل الاستخدام
+  // ✅ التحقق من التهيئة قبل الاستخدام
   Future<void> _ensureInitialized() async {
     if (!_isInitialized) {
       await initialize();
     }
   }
-
 
   // ===========================================================
   // 🚀 دالة الجلب العامة — تستخدم أذكى تسلسل ممكن
@@ -61,16 +59,19 @@ class FAQRepositoryImpl implements FAQRepository {
       // 1️⃣ محاولة من JSON المحلي (assets)
       final localFAQs = await _loadFromAssets();
       if (localFAQs.isNotEmpty) {
-        developer.log('✅ Loaded ${localFAQs.length} FAQs from assets', name: 'FAQ_REPOSITORY');
+        developer.log('✅ Loaded ${localFAQs.length} FAQs from assets',
+            name: 'FAQ_REPOSITORY');
         await cacheFAQs(localFAQs);
         return localFAQs;
       }
 
       // 2️⃣ محاولة من الكاش المحلي (Hive)
-      developer.log('⚠️ No local FAQs found, trying cache...', name: 'FAQ_REPOSITORY');
+      developer.log('⚠️ No local FAQs found, trying cache...',
+          name: 'FAQ_REPOSITORY');
       final cachedFAQs = await getCachedFAQs();
       if (cachedFAQs.isNotEmpty) {
-        developer.log('✅ Loaded ${cachedFAQs.length} FAQs from cache', name: 'FAQ_REPOSITORY');
+        developer.log('✅ Loaded ${cachedFAQs.length} FAQs from cache',
+            name: 'FAQ_REPOSITORY');
         return cachedFAQs;
       }
 
@@ -88,9 +89,11 @@ class FAQRepositoryImpl implements FAQRepository {
   Future<List<FaqModel>> _loadFromAssets() async {
     for (int attempt = 1; attempt <= _maxRetryAttempts; attempt++) {
       try {
-        developer.log('📁 Loading FAQs from assets (attempt $attempt)...', name: 'FAQ_REPOSITORY');
+        developer.log('📁 Loading FAQs from assets (attempt $attempt)...',
+            name: 'FAQ_REPOSITORY');
 
-        final String response = await rootBundle.loadString('assets/data/faqs.json');
+        final String response =
+            await rootBundle.loadString('assets/data/faqs.json');
         final List<dynamic> data = json.decode(response);
 
         /*if (data.isEmpty) {
@@ -99,21 +102,29 @@ class FAQRepositoryImpl implements FAQRepository {
         }*/
 
         // ✅ تحقق أكثر شمولاً
-if ( data.isEmpty) {
-  developer.log('❌ Invalid or empty FAQs data structure', name: 'FAQ_REPOSITORY');
-  throw Exception('هيكل بيانات الأسئلة غير صالح');
-}
+        if (data.isEmpty) {
+          developer.log('❌ Invalid or empty FAQs data structure',
+              name: 'FAQ_REPOSITORY');
+          throw Exception('هيكل بيانات الأسئلة غير صالح');
+        }
 
-        final faqs = data.map((json) {
-          try {
-            return FaqModel.fromJson(Map<String, dynamic>.from(json));
-          } catch (e) {
-            developer.log('⚠️ Failed to parse FAQ item: $e', name: 'FAQ_REPOSITORY');
-            return null;
-          }
-        }).where((faq) => faq != null).cast<FaqModel>().toList();
+        final faqs = data
+            .map((json) {
+              try {
+                return FaqModel.fromJson(Map<String, dynamic>.from(json));
+              } catch (e) {
+                developer.log('⚠️ Failed to parse FAQ item: $e',
+                    name: 'FAQ_REPOSITORY');
+                return null;
+              }
+            })
+            .where((faq) => faq != null)
+            .cast<FaqModel>()
+            .toList();
 
-        developer.log('✅ Parsed ${faqs.length}/${data.length} FAQ items successfully', name: 'FAQ_REPOSITORY');
+        developer.log(
+            '✅ Parsed ${faqs.length}/${data.length} FAQ items successfully',
+            name: 'FAQ_REPOSITORY');
         return faqs;
       } catch (e) {
         developer.log('❌ Attempt $attempt failed: $e', name: 'FAQ_REPOSITORY');
@@ -132,7 +143,8 @@ if ( data.isEmpty) {
     if (faqs.isEmpty) return;
 
     try {
-      developer.log('💾 Caching ${faqs.length} FAQs...', name: 'FAQ_REPOSITORY');
+      developer.log('💾 Caching ${faqs.length} FAQs...',
+          name: 'FAQ_REPOSITORY');
 
       final box = await Hive.openBox(_faqBoxName);
       final cacheData = {
@@ -154,12 +166,11 @@ if ( data.isEmpty) {
   // ===========================================================
   // 🔍 جلب البيانات من الكاش Hive
   // ===========================================================
-  
-    
+
   @override
   Future<List<FaqModel>> getCachedFAQs() async {
     await _ensureInitialized(); // ✅ التأكد من التهيئة
-    
+
     try {
       developer.log('🔍 Retrieving cached FAQs...', name: 'FAQ_REPOSITORY');
 
@@ -175,22 +186,29 @@ if ( data.isEmpty) {
       final age = DateTime.now().difference(timestamp);
 
       if (age > _cacheDuration) {
-        developer.log('🕒 Cache expired (${age.inHours}h old)', name: 'FAQ_REPOSITORY');
+        developer.log('🕒 Cache expired (${age.inHours}h old)',
+            name: 'FAQ_REPOSITORY');
         await _faqBox.delete(_faqListKey);
         return [];
       }
 
       final List<dynamic> data = cachedData['data'];
-      final faqs = data.map((json) {
-        try {
-          return FaqModel.fromJson(Map<String, dynamic>.from(json));
-        } catch (e) {
-          developer.log('⚠️ Failed to parse cached FAQ: $e', name: 'FAQ_REPOSITORY');
-          return null;
-        }
-      }).where((faq) => faq != null).cast<FaqModel>().toList();
+      final faqs = data
+          .map((json) {
+            try {
+              return FaqModel.fromJson(Map<String, dynamic>.from(json));
+            } catch (e) {
+              developer.log('⚠️ Failed to parse cached FAQ: $e',
+                  name: 'FAQ_REPOSITORY');
+              return null;
+            }
+          })
+          .where((faq) => faq != null)
+          .cast<FaqModel>()
+          .toList();
 
-      developer.log('✅ Retrieved ${faqs.length} FAQs from cache', name: 'FAQ_REPOSITORY');
+      developer.log('✅ Retrieved ${faqs.length} FAQs from cache',
+          name: 'FAQ_REPOSITORY');
       return faqs;
     } catch (e) {
       developer.log('❌ Cache retrieval failed: $e', name: 'FAQ_REPOSITORY');
@@ -207,16 +225,14 @@ if ( data.isEmpty) {
     }
   }
 
- 
-      
-
   // ===========================================================
   // 👀 تحديث عداد المشاهدات محليًا داخل الكاش
   // ===========================================================
   @override
   Future<void> incrementViewCount(String faqId) async {
     try {
-      developer.log('👁️ Incrementing view count for FAQ: $faqId', name: 'FAQ_REPOSITORY');
+      developer.log('👁️ Incrementing view count for FAQ: $faqId',
+          name: 'FAQ_REPOSITORY');
 
       final box = await Hive.openBox(_faqBoxName);
       final cachedData = box.get(_faqListKey);
@@ -231,19 +247,21 @@ if ( data.isEmpty) {
             final currentCount = (map['view_count'] ?? 0) as int;
             map['view_count'] = currentCount + 1;
             updated = true;
-            developer.log('✅ View count incremented to ${currentCount + 1}', name: 'FAQ_REPOSITORY');
+            developer.log('✅ View count incremented to ${currentCount + 1}',
+                name: 'FAQ_REPOSITORY');
           }
           return map;
         }).toList();
 
         if (updated) {
-          await box.put(_faqListKey, { ...cachedData, 'data': updatedData });
+          await box.put(_faqListKey, {...cachedData, 'data': updatedData});
         }
       }
 
       await box.close();
     } catch (e) {
-      developer.log('⚠️ Failed to increment view count: $e', name: 'FAQ_REPOSITORY');
+      developer.log('⚠️ Failed to increment view count: $e',
+          name: 'FAQ_REPOSITORY');
     }
   }
 
@@ -253,12 +271,14 @@ if ( data.isEmpty) {
   @override
   Future<List<FaqModel>> getFAQsByCategory(String category) async {
     try {
-      developer.log('🏷️ Filtering FAQs by category: $category', name: 'FAQ_REPOSITORY');
+      developer.log('🏷️ Filtering FAQs by category: $category',
+          name: 'FAQ_REPOSITORY');
 
       final allFAQs = await getFAQs();
       final filtered = allFAQs.where((f) => f.category == category).toList();
 
-      developer.log('✅ Found ${filtered.length} FAQs in category "$category"', name: 'FAQ_REPOSITORY');
+      developer.log('✅ Found ${filtered.length} FAQs in category "$category"',
+          name: 'FAQ_REPOSITORY');
       return filtered;
     } catch (e) {
       developer.log('❌ Category filter failed: $e', name: 'FAQ_REPOSITORY');
@@ -279,15 +299,17 @@ if ( data.isEmpty) {
       final allFAQs = await getFAQs();
       final q = query.toLowerCase();
 
-      final results = allFAQs.where((f) =>
-        f.questionAr.toLowerCase().contains(q) ||
-        f.questionEn.toLowerCase().contains(q) ||
-        f.answerAr.toLowerCase().contains(q) ||
-        f.answerEn.toLowerCase().contains(q) ||
-        f.tags.any((tag) => tag.toLowerCase().contains(q))
-      ).toList();
+      final results = allFAQs
+          .where((f) =>
+              f.questionAr.toLowerCase().contains(q) ||
+              f.questionEn.toLowerCase().contains(q) ||
+              f.answerAr.toLowerCase().contains(q) ||
+              f.answerEn.toLowerCase().contains(q) ||
+              f.tags.any((tag) => tag.toLowerCase().contains(q)))
+          .toList();
 
-      developer.log('✅ Search found ${results.length} results', name: 'FAQ_REPOSITORY');
+      developer.log('✅ Search found ${results.length} results',
+          name: 'FAQ_REPOSITORY');
       return results;
     } catch (e) {
       developer.log('❌ Search failed: $e', name: 'FAQ_REPOSITORY');
@@ -302,10 +324,11 @@ if ( data.isEmpty) {
   Future<List<String>> getAvailableCategories() async {
     try {
       final allFAQs = await getFAQs();
-      final categories = allFAQs.map((f) => f.category)
-        .where((c) => c.isNotEmpty)
-        .toSet()
-        .toList()
+      final categories = allFAQs
+          .map((f) => f.category)
+          .where((c) => c.isNotEmpty)
+          .toSet()
+          .toList()
         ..sort();
       return categories;
     } catch (e) {

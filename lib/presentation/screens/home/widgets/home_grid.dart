@@ -20,10 +20,26 @@ class HomeGrid extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
 
     final items = [
-{'id': 'candidates', 'title': AppLocalizations.of(context).translate('candidates'), 'icon': Icons.how_to_vote},
-{'id': 'offices', 'title': AppLocalizations.of(context).translate('offices'), 'icon': Icons.account_balance},
-{'id': 'faq', 'title': AppLocalizations.of(context).translate('faq'), 'icon': Icons.help_outline},
-{'id': 'program', 'title': AppLocalizations.of(context).translate('program'), 'icon': Icons.auto_stories},
+      {
+        'id': 'candidates',
+        'title': AppLocalizations.of(context).translate('candidates'),
+        'icon': Icons.how_to_vote
+      },
+      {
+        'id': 'offices',
+        'title': AppLocalizations.of(context).translate('offices'),
+        'icon': Icons.account_balance
+      },
+      {
+        'id': 'faq',
+        'title': AppLocalizations.of(context).translate('faq'),
+        'icon': Icons.help_outline
+      },
+      {
+        'id': 'program',
+        'title': AppLocalizations.of(context).translate('program'),
+        'icon': Icons.auto_stories
+      },
     ];
 
     return GridView.builder(
@@ -48,7 +64,8 @@ class HomeGrid extends StatelessWidget {
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1), // ✅ بديل معتمد لـ withOpacity
+                  color: Colors.black
+                      .withValues(alpha: 0.1), // ✅ بديل معتمد لـ withOpacity
                   blurRadius: 4,
                   offset: const Offset(1, 2),
                 ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
@@ -15,18 +14,17 @@ class ThemeProvider with ChangeNotifier {
 
   Future<void> init() async {
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedTheme = prefs.getString(AppConstants.themePreferenceKey);
-      
+
       _themeMode = _parseThemeMode(savedTheme);
       _isInitialized = true;
       _retryCount = 0;
-      
+
       AnalyticsService.trackInitialization('ThemeProvider', success: true);
       debugPrint('✅ ThemeProvider initialized with theme: $_themeMode');
-      
     } catch (e, stackTrace) {
       _handleInitializationError(e, stackTrace);
     } finally {
@@ -59,8 +57,9 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(AppConstants.themePreferenceKey, _themeModeToString(newTheme));
-      
+      await prefs.setString(
+          AppConstants.themePreferenceKey, _themeModeToString(newTheme));
+
       AnalyticsService.trackEvent(
         'theme_changed',
         parameters: {
@@ -69,43 +68,47 @@ class ThemeProvider with ChangeNotifier {
         },
         category: 'ui',
       );
-      
-      debugPrint('🎨 Theme changed: ${_themeModeToString(previousTheme)} → ${_themeModeToString(newTheme)}');
+
+      debugPrint(
+          '🎨 Theme changed: ${_themeModeToString(previousTheme)} → ${_themeModeToString(newTheme)}');
     } catch (e, stackTrace) {
       // Fallback: التراجع عن التغيير
       _themeMode = previousTheme;
       AnalyticsService.trackError('ThemeChange', e, stackTrace);
-      debugPrint('⚠️ Failed to save theme preference, reverted to previous theme');
+      debugPrint(
+          '⚠️ Failed to save theme preference, reverted to previous theme');
     }
-    
+
     notifyListeners();
   }
 
   void toggleTheme() {
-    final newTheme = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    final newTheme =
+        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     setTheme(newTheme);
   }
 
   void _handleInitializationError(dynamic error, StackTrace stackTrace) {
     _retryCount++;
-    
+
     if (_retryCount <= AppConstants.maxRetryAttempts) {
       final retryDelay = AppConstants.retryDelay * _retryCount;
-      debugPrint('🔄 Retrying ThemeProvider initialization in ${retryDelay.inSeconds}s');
+      debugPrint(
+          '🔄 Retrying ThemeProvider initialization in ${retryDelay.inSeconds}s');
       Future.delayed(retryDelay, init);
     } else {
       _themeMode = AppConstants.defaultTheme;
       _isInitialized = true;
-      
+
       AnalyticsService.trackInitialization(
         'ThemeProvider',
         success: false,
         error: 'Fallback to default theme after $_retryCount attempts',
       );
-      
+
       debugPrint('🛡️ ThemeProvider fallback activated - using default theme');
     }
-    
+
     AnalyticsService.trackError('ThemeProvider_Init', error, stackTrace);
   }
 }

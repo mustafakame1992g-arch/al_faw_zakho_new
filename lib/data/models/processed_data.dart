@@ -7,5 +7,6 @@ class ProcessedData {
   final List<CandidateModel> candidates;
   final List<FaqModel> faqs;
   final List<NewsModel> news;
-  ProcessedData({required this.candidates, required this.faqs, required this.news});
+  ProcessedData(
+      {required this.candidates, required this.faqs, required this.news});
 }

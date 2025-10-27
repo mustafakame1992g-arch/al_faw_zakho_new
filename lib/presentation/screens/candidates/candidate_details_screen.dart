@@ -29,14 +29,13 @@ class CandidateDetailsScreen extends StatelessWidget {
       'province': candidate.province,
     });
 
-  return FZScaffold(
-        appBar: AppBar(
+    return FZScaffold(
+      appBar: AppBar(
         title: Text(context.tr('candidate_details')),
         centerTitle: true,
         elevation: 2,
       ),
       persistentBottom: FZTab.home,
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -44,16 +43,12 @@ class CandidateDetailsScreen extends StatelessWidget {
           children: [
             _buildCandidatePhoto(context),
             const SizedBox(height: 24),
-
             _buildCandidateName(currentLanguage),
             const SizedBox(height: 16),
-
-           _buildCandidateNickname(currentLanguage),
-           const SizedBox(height: 24),
-
+            _buildCandidateNickname(currentLanguage),
+            const SizedBox(height: 24),
             _buildCandidateBio(currentLanguage),
             const SizedBox(height: 24),
-
             _buildCandidatePhone(context),
           ],
         ),
@@ -68,9 +63,11 @@ class CandidateDetailsScreen extends StatelessWidget {
 
     Widget image;
     if (path.isNotEmpty && path.startsWith('http')) {
-      image = Image.network(path, height: 300, width: double.infinity, fit: BoxFit.cover);
+      image = Image.network(path,
+          height: 300, width: double.infinity, fit: BoxFit.cover);
     } else if (path.isNotEmpty) {
-      image = Image.asset(path, height: 200, width: double.infinity, fit: BoxFit.contain);
+      image = Image.asset(path,
+          height: 200, width: double.infinity, fit: BoxFit.contain);
     } else {
       image = Image.asset('assets/images/logo.png',
           height: 100, width: 100, fit: BoxFit.contain);
@@ -188,7 +185,8 @@ class CandidateDetailsScreen extends StatelessWidget {
           ),
           child: Text(
             languageCode == 'en' ? candidate.bioEn : candidate.bioAr,
-            style: TextStyle(fontSize: 16, height: 1.6, color: Colors.grey.shade700),
+            style: TextStyle(
+                fontSize: 16, height: 1.6, color: Colors.grey.shade700),
             textAlign: TextAlign.justify,
           ),
         ),
@@ -200,12 +198,13 @@ class CandidateDetailsScreen extends StatelessWidget {
   Widget _buildCandidatePhone(BuildContext context) {
     final phone = candidate.phoneNumber.trim();
     if (phone.isEmpty) return const SizedBox.shrink();
- return Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(Icons.phone, color: Theme.of(context).colorScheme.primary, size: 20),
+            Icon(Icons.phone,
+                color: Theme.of(context).colorScheme.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).translate('mobile_number'),
@@ -255,49 +254,49 @@ class CandidateDetailsScreen extends StatelessWidget {
     );
   }
 
- void _copyPhoneNumber(BuildContext context, String phone) async {
-  // نأخذ ما نحتاجه من الـ context قبل أي await
-  final messenger = ScaffoldMessenger.of(context);
-  final tr = AppLocalizations.of(context);
+  void _copyPhoneNumber(BuildContext context, String phone) async {
+    // نأخذ ما نحتاجه من الـ context قبل أي await
+    final messenger = ScaffoldMessenger.of(context);
+    final tr = AppLocalizations.of(context);
 
-  // تنظيف وتحقق مبكر للمدخل
-  final text = phone.trim();
-  if (text.isEmpty) {
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text('❌ ${tr.translate('copy_failed')}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-    return;
+    // تنظيف وتحقق مبكر للمدخل
+    final text = phone.trim();
+    if (text.isEmpty) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('❌ ${tr.translate('copy_failed')}'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    try {
+      // العملية غير المتزامنة
+      await Clipboard.setData(ClipboardData(text: text));
+
+      // إظهار الرسالة باستخدام المرجع الملتقط مسبقًا (لا نستخدم context بعد await)
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('${tr.translate('phone_copied')} $text'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // تتبع الحدث (احتفظت على نفس الباراميترات لديك)
+      AnalyticsService.trackEvent('candidate_phone_copied', parameters: {
+        'candidate_id':
+            candidate.id, // يفترض أن الدالة داخل نفس الكلاس الذي يملك candidate
+        'phone_number': text,
+      });
+    } catch (e) {
+      // في حال الفشل
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('❌ ${tr.translate('copy_failed')}'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
-
-  try {
-    // العملية غير المتزامنة
-    await Clipboard.setData(ClipboardData(text: text));
-
-    // إظهار الرسالة باستخدام المرجع الملتقط مسبقًا (لا نستخدم context بعد await)
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text('${tr.translate('phone_copied')} $text'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-
-    // تتبع الحدث (احتفظت على نفس الباراميترات لديك)
-    AnalyticsService.trackEvent('candidate_phone_copied', parameters: {
-      'candidate_id': candidate.id, // يفترض أن الدالة داخل نفس الكلاس الذي يملك candidate
-      'phone_number': text,
-    });
-  } catch (e) {
-    // في حال الفشل
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text('❌ ${tr.translate('copy_failed')}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-}
-    
 }

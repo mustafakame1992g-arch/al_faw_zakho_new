@@ -9,7 +9,8 @@ class LanguageProvider with ChangeNotifier {
   static const String arabic = 'ar';
   static const String english = 'en';
   static const List<String> _supportedLanguages = [arabic, english];
-static const String _prefsKey = AppConstants.languagePreferenceKey; // 'language_code'
+  static const String _prefsKey =
+      AppConstants.languagePreferenceKey; // 'language_code'
 
   Locale _locale = const Locale(arabic);
   bool _isInitialized = false;
@@ -31,7 +32,8 @@ static const String _prefsKey = AppConstants.languagePreferenceKey; // 'language
       _prefs = await SharedPreferences.getInstance();
       final savedLanguageCode = _prefs?.getString(_prefsKey);
 
-      if (savedLanguageCode != null && _supportedLanguages.contains(savedLanguageCode)) {
+      if (savedLanguageCode != null &&
+          _supportedLanguages.contains(savedLanguageCode)) {
         _locale = Locale(savedLanguageCode);
       }
       // If nothing is saved, the default ('ar') is already set.
@@ -47,10 +49,10 @@ static const String _prefsKey = AppConstants.languagePreferenceKey; // 'language
   /// Changes the application language and saves the choice.
   /// Does nothing if [languageCode] is not supported or already active.
   Future<void> setLanguage(String languageCode) async {
-   /* if (!_supportedLanguages.contains(languageCode) || _locale.languageCode == languageCode) {
+    /* if (!_supportedLanguages.contains(languageCode) || _locale.languageCode == languageCode) {
       return; // Exit early if invalid or same language.
     }*/
-  if (!_supportedLanguages.contains(languageCode)) return;
+    if (!_supportedLanguages.contains(languageCode)) return;
 
     _locale = Locale(languageCode);
     notifyListeners(); // Update UI immediately
@@ -72,7 +74,7 @@ static const String _prefsKey = AppConstants.languagePreferenceKey; // 'language
 
   /// Returns the display name for a given language code.
   String getLanguageName(String code) {
-    final nameMap = { arabic: 'العربية', english: 'English' };
+    final nameMap = {arabic: 'العربية', english: 'English'};
     return nameMap[code] ?? code;
   }
 }

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 /// دمج المزايا من الكودين مع تصحيح الأخطاء وتحسين الأداء
 class AppTheme {
   // 🇮🇶 ألوان العلم العراقي - بلمسة عصرية
-  static const Color red = Color(0xFFB22222);    // اللون الأحمر الأساسي
-  static const Color green = Color(0xFF2E7D32);  // اللون الأخضر الثانوي
-  static const Color black = Color(0xFF121212);  // الأسود للوضع الليلي
-  static const Color white = Color(0xFFFAFAFA);  // الأبيض للوضع النهاري
+  static const Color red = Color(0xFFB22222); // اللون الأحمر الأساسي
+  static const Color green = Color(0xFF2E7D32); // اللون الأخضر الثانوي
+  static const Color black = Color(0xFF121212); // الأسود للوضع الليلي
+  static const Color white = Color(0xFFFAFAFA); // الأبيض للوضع النهاري
 
   // 🎨 درجات الرمادي المحسنة
   static const Color grey900 = Color(0xFF1E1E1E); // الخلفية الداكنة
@@ -51,10 +51,10 @@ class AppTheme {
       brightness: Brightness.light,
       colorScheme: colorScheme,
       fontFamily: fontFamily,
-      
+
       // 🎯 الخلفية الرئيسية
       scaffoldBackgroundColor: white,
-      
+
       // 🔝 شريط التطبيق
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -69,7 +69,7 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: black, size: 24),
       ),
-      
+
       // 🃏 بطاقات
       cardTheme: CardThemeData(
         color: white,
@@ -80,7 +80,7 @@ class AppTheme {
         ),
         surfaceTintColor: Colors.transparent,
       ),
-      
+
       // ⌨️ حقول الإدخال
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -109,7 +109,7 @@ class AppTheme {
         labelStyle: TextStyle(color: Colors.black87),
         floatingLabelStyle: TextStyle(color: red),
       ),
-      
+
       // 📝 النصوص
       textTheme: TextTheme(
         displayLarge: TextStyle(
@@ -155,13 +155,13 @@ class AppTheme {
           color: black,
         ),
       ),
-      
+
       // 🎨 الأيقونات
       iconTheme: IconThemeData(
         size: 24,
         color: Colors.black87,
       ),
-      
+
       // 🔘 الأزرار
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -179,7 +179,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: red,
@@ -195,7 +195,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // 📱 تأثيرات اللمس
       splashColor: red.withValues(alpha: .1),
       highlightColor: red.withValues(alpha: .05),
@@ -229,10 +229,10 @@ class AppTheme {
       brightness: Brightness.dark,
       colorScheme: colorScheme,
       fontFamily: fontFamily,
-      
+
       // 🎯 الخلفية الرئيسية
       scaffoldBackgroundColor: black,
-      
+
       // 🔝 شريط التطبيق
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -247,9 +247,9 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: white, size: 24),
       ),
-      
+
       // 🃏 بطاقات
-      
+
       cardTheme: CardThemeData(
         color: grey900,
         elevation: 2,
@@ -259,7 +259,7 @@ class AppTheme {
         ),
         surfaceTintColor: Colors.transparent,
       ),
-      
+
       // ⌨️ حقول الإدخال
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -288,7 +288,7 @@ class AppTheme {
         labelStyle: TextStyle(color: Colors.white70),
         floatingLabelStyle: TextStyle(color: green),
       ),
-      
+
       // 📝 النصوص
       textTheme: TextTheme(
         displayLarge: TextStyle(
@@ -334,13 +334,13 @@ class AppTheme {
           color: white,
         ),
       ),
-      
+
       // 🎨 الأيقونات
       iconTheme: IconThemeData(
         size: 24,
         color: Colors.white70,
       ),
-      
+
       // 🔘 الأزرار
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -358,7 +358,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: green,
@@ -374,7 +374,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // 📱 تأثيرات اللمس
       splashColor: green.withValues(alpha: .1),
       highlightColor: green.withValues(alpha: .05),
@@ -384,13 +384,13 @@ class AppTheme {
   // ==============================================================
   // 🌈 التدرجات الجمالية المحسنة
   // ==============================================================
-  
+
   /// تدرج اللون للرؤوس والأقسام الرئيسية
   static LinearGradient headerGradient(Brightness brightness) => LinearGradient(
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: brightness == Brightness.dark
-            ? [green, grey900]  // أخضر إلى رمادي داكن
+            ? [green, grey900] // أخضر إلى رمادي داكن
             : [red, greyLight], // أحمر إلى رمادي فاتح
       );
 
@@ -399,8 +399,8 @@ class AppTheme {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: brightness == Brightness.dark
-            ? [grey800, grey700]  // رمادي داكن إلى أغمق
-            : [white, grey100],   // أبيض إلى رمادي فاتح
+            ? [grey800, grey700] // رمادي داكن إلى أغمق
+            : [white, grey100], // أبيض إلى رمادي فاتح
       );
 
   /// تدرج اللون للأزرار
@@ -408,42 +408,42 @@ class AppTheme {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: brightness == Brightness.dark
-            ? [green, Color(0xFF1B5E20)]  // أخضر بدرجتين
-            : [red, Color(0xFF8B1A1A)],   // أحمر بدرجتين
+            ? [green, Color(0xFF1B5E20)] // أخضر بدرجتين
+            : [red, Color(0xFF8B1A1A)], // أحمر بدرجتين
       );
 
   // ==============================================================
   // 🎯 أدوات مساعدة
   // ==============================================================
-  
+
   /// الحصول على الثيم المناسب بناءً على الوضع
   static ThemeData getTheme(bool isDarkMode) {
     return isDarkMode ? darkTheme : lightTheme;
   }
-  
+
   /// الحصول على التدرج المناسب للرأس
   static LinearGradient getHeaderGradient(bool isDarkMode) {
     return headerGradient(isDarkMode ? Brightness.dark : Brightness.light);
   }
-  
+
   /// الحصول على التدرج المناسب للبطاقات
   static LinearGradient getTileGradient(bool isDarkMode) {
     return tileGradient(isDarkMode ? Brightness.dark : Brightness.light);
   }
 
   // إضافة تدرجات متقدمة وتأثيرات ضوئية
-static LinearGradient get premiumGradient => LinearGradient(
-  colors: [Colors.red.shade700, Colors.green.shade600],
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-);
+  static LinearGradient get premiumGradient => LinearGradient(
+        colors: [Colors.red.shade700, Colors.green.shade600],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
 
 // إضافة ظلال متقدمة
-static List<BoxShadow> get premiumShadow => [
-  BoxShadow(
-    color: Colors.black.withValues(alpha: .25),
-    blurRadius: 20,
-    offset: Offset(0, 10),
-  ),
-];
+  static List<BoxShadow> get premiumShadow => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: .25),
+          blurRadius: 20,
+          offset: Offset(0, 10),
+        ),
+      ];
 }

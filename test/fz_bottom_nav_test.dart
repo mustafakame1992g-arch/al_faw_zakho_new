@@ -1,47 +1,61 @@
-import 'package:flutter_test/flutter_test.dart';
+// test/fz_bottom_nav_test.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+// إضافة هذين الاستيرادين:
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
-import 'helpers/test_app.dart'; // <— الملف الجديد
 
 class FakeNav implements INavigationService {
-  bool home = false, offices=false, donate=false, about=false;
-
-  @override void goAbout(BuildContext c){ about=true; }
-  @override void goDonate(BuildContext c){ donate=true; }
-  @override void goHome(BuildContext c){ home=true; }
-  @override void goOffices(BuildContext c){ offices=true; }
-
-  // إذا كان لديك goOffices في الواجهة الأصلية؛ هنا ليس لدينا Offices
+  bool home = false, donate = false, about = false;
+  @override void goAbout(BuildContext c) => about = true;
+  @override void goDonate(BuildContext c) => donate = true;
+  @override void goHome(BuildContext c)   => home = true;
+  @override void goOffices(BuildContext c) {}
 }
 
 void main() {
-  testWidgets('BottomNav taps call service (icons-based, locale-agnostic)', (tester) async {
+  testWidgets('BottomNav taps call service (keys-based)', (tester) async {
     final fake = FakeNav();
 
-    await tester.pumpWidget(
-      Provider<INavigationService>.value(
-        value: fake,
-        child: wrapWithTestApp(
-          const Scaffold(bottomNavigationBar: FZBottomNav(active: FZTab.home)),
-          locale: const Locale('ar'), // أو 'en' لو تحب
-        ),
-      ),
-    );
+    Widget host(FZTab tab) => Provider<INavigationService>.value(
+  value: fake,
+  child: MaterialApp(
+    locale: const Locale('ar'),
+    supportedLocales: const [Locale('ar'), Locale('en')],
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    home: Scaffold(
+      bottomNavigationBar: FZBottomNav(active: tab),
+    ),
+  ),
+);
 
-    // تبرع
-    await tester.tap(find.byIcon(Icons.volunteer_activism_outlined));
+    await tester.pumpWidget(host(FZTab.home));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('tab_donate')));
     await tester.pumpAndSettle();
     expect(fake.donate, isTrue);
 
-    // حول التطبيق
-    await tester.tap(find.byIcon(Icons.info_outline));
+    await tester.pumpWidget(host(FZTab.donate));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('tab_about')));
     await tester.pumpAndSettle();
     expect(fake.about, isTrue);
 
-    // الرئيسية
-    await tester.tap(find.byIcon(Icons.home_outlined));
+    await tester.pumpWidget(host(FZTab.about));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('tab_home')));
     await tester.pumpAndSettle();
     expect(fake.home, isTrue);
   });

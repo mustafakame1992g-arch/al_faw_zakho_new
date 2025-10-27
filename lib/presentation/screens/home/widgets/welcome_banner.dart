@@ -9,7 +9,7 @@ class WelcomeBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
-    
+
     return Card(
       elevation: 4,
       child: Padding(
@@ -37,15 +37,19 @@ class WelcomeBanner extends StatelessWidget {
 
   String _getWelcomeMessage(String languageCode) {
     switch (languageCode) {
-      case 'ar': return 'مرحباً بكم في تطبيق تجمع الفاو زاخو';
-      default: return 'Welcome to Faw Zaho Gathering App';
+      case 'ar':
+        return 'مرحباً بكم في تطبيق تجمع الفاو زاخو';
+      default:
+        return 'Welcome to Faw Zaho Gathering App';
     }
   }
 
   String _getSubtitleMessage(String languageCode) {
     switch (languageCode) {
-      case 'ar': return 'منصة سياسية شاملة للتعريف بالبرنامج الانتخابي والمرشحين';
-      default: return 'Comprehensive political platform for introducing the electoral program and candidates';
+      case 'ar':
+        return 'منصة سياسية شاملة للتعريف بالبرنامج الانتخابي والمرشحين';
+      default:
+        return 'Comprehensive political platform for introducing the electoral program and candidates';
     }
   }
 }

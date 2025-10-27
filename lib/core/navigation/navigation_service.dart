@@ -8,12 +8,13 @@ abstract class INavigationService {
 }
 
 class NavigationService implements INavigationService {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
-  static const homeRoute   = '/';
-  static const officesRoute= '/offices';
+  static const homeRoute = '/';
+  static const officesRoute = '/offices';
   static const donateRoute = '/donate';
-  static const aboutRoute  = '/about';
+  static const aboutRoute = '/about';
 
   bool _isCurrent(BuildContext? ctx, String route) {
     final routeName = ModalRoute.of(ctx!)?.settings.name;

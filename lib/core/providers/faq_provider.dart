@@ -108,6 +108,4 @@ class FAQProvider with ChangeNotifier {
     _error = '';
     notifyListeners();
   }
-
-  
 }

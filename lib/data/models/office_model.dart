@@ -1,4 +1,3 @@
-
 import 'dart:math' show cos, sin, sqrt, atan2, pi;
 import 'package:hive/hive.dart';
 
@@ -224,6 +223,7 @@ class OfficeModel {
       notes: notes ?? this.notes,
     );
   }
+
   // ===================== COMPATIBILITY HELPERS =====================
   factory OfficeModel.fromMap(Map<String, dynamic> map) {
     try {
@@ -233,19 +233,16 @@ class OfficeModel {
         nameEn: (map['name_en'] ?? map['nameEn'] ?? '').toString(),
         addressAr: (map['address_ar'] ?? map['addressAr'] ?? '').toString(),
         addressEn: (map['address_en'] ?? map['addressEn'] ?? '').toString(),
-        phoneNumber: (map['phone_number'] ?? map['phoneNumber'] ?? '').toString(),
+        phoneNumber:
+            (map['phone_number'] ?? map['phoneNumber'] ?? '').toString(),
         secondaryPhone: map['secondary_phone']?.toString(),
         email: (map['email'] ?? '').toString(),
         managerNameAr:
             (map['manager_name_ar'] ?? map['managerNameAr'] ?? '').toString(),
         managerNameEn:
             (map['manager_name_en'] ?? map['managerNameEn'] ?? '').toString(),
-        latitude: double.tryParse(
-                (map['latitude'] ?? '0').toString()) ??
-            0.0,
-        longitude: double.tryParse(
-                (map['longitude'] ?? '0').toString()) ??
-            0.0,
+        latitude: double.tryParse((map['latitude'] ?? '0').toString()) ?? 0.0,
+        longitude: double.tryParse((map['longitude'] ?? '0').toString()) ?? 0.0,
         province: (map['province'] ?? '').toString(),
         district: (map['district'] ?? '').toString(),
         workingHours:
@@ -285,60 +282,54 @@ class OfficeModel {
 class MockDataService {
   static List<OfficeModel> getMockOffices() {
     return [
-  OfficeModel(
-    id: '1',
-    nameAr: 'مكتب المثنى',
-    nameEn: 'Muthanna Office',
-    addressAr: 'السماوة - شارع المحافظة',
-    addressEn: 'Samawah - Governorate Street',
-    phoneNumber: '07800000001',
-    secondaryPhone: '07800000002',
-    email: 'muthanna.office@example.com',
-    managerNameAr: 'علي عبد',
-    managerNameEn: 'Ali Abd',
-    latitude: 31.3141,
-    longitude: 45.2806,
-    province: 'المثنى',
-    district: 'السماوة',
-    workingHours: '08:00 - 16:00',
-    workingDays: 'الأحد - الخميس',
-    isActive: true,
-    capacity: 100,
-    services: ['تحديث بيانات', 'استفسارات', 'إصدار بطاقات'],
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    notes: 'فرع رئيسي في المحافظة',
-  ),
-  OfficeModel(
-    id: '2',
-    nameAr: 'مكتب بغداد',
-    nameEn: 'Baghdad Office',
-    addressAr: 'بغداد - الكرادة',
-    addressEn: 'Baghdad - Karrada',
-    phoneNumber: '07800000011',
-    secondaryPhone: '07800000012',
-    email: 'baghdad.office@example.com',
-    managerNameAr: 'حسن كريم',
-    managerNameEn: 'Hassan Kareem',
-    latitude: 33.3152,
-    longitude: 44.3661,
-    province: 'بغداد',
-    district: 'الكرادة',
-    workingHours: '08:00 - 17:00',
-    workingDays: 'الأحد - الخميس',
-    isActive: true,
-    capacity: 200,
-    services: ['تحديث بيانات', 'شكاوى', 'إصدار بطاقات'],
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    notes: 'الفرع المركزي في بغداد',
-  ),
-
-
-
-];
-
+      OfficeModel(
+        id: '1',
+        nameAr: 'مكتب المثنى',
+        nameEn: 'Muthanna Office',
+        addressAr: 'السماوة - شارع المحافظة',
+        addressEn: 'Samawah - Governorate Street',
+        phoneNumber: '07800000001',
+        secondaryPhone: '07800000002',
+        email: 'muthanna.office@example.com',
+        managerNameAr: 'علي عبد',
+        managerNameEn: 'Ali Abd',
+        latitude: 31.3141,
+        longitude: 45.2806,
+        province: 'المثنى',
+        district: 'السماوة',
+        workingHours: '08:00 - 16:00',
+        workingDays: 'الأحد - الخميس',
+        isActive: true,
+        capacity: 100,
+        services: ['تحديث بيانات', 'استفسارات', 'إصدار بطاقات'],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        notes: 'فرع رئيسي في المحافظة',
+      ),
+      OfficeModel(
+        id: '2',
+        nameAr: 'مكتب بغداد',
+        nameEn: 'Baghdad Office',
+        addressAr: 'بغداد - الكرادة',
+        addressEn: 'Baghdad - Karrada',
+        phoneNumber: '07800000011',
+        secondaryPhone: '07800000012',
+        email: 'baghdad.office@example.com',
+        managerNameAr: 'حسن كريم',
+        managerNameEn: 'Hassan Kareem',
+        latitude: 33.3152,
+        longitude: 44.3661,
+        province: 'بغداد',
+        district: 'الكرادة',
+        workingHours: '08:00 - 17:00',
+        workingDays: 'الأحد - الخميس',
+        isActive: true,
+        capacity: 200,
+        services: ['تحديث بيانات', 'شكاوى', 'إصدار بطاقات'],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        notes: 'الفرع المركزي في بغداد',
+      ),
+    ];
   }
-
-  
 }

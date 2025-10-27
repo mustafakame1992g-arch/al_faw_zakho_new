@@ -7,7 +7,6 @@ import '/data/models/news_model.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsTicker extends StatefulWidget {
-  
   const NewsTicker({super.key});
 
   @override
@@ -41,53 +40,57 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
   }
 
   void _checkAccessibilityFeatures() {
-    final features = WidgetsBinding.instance.platformDispatcher.accessibilityFeatures;
+    final features =
+        WidgetsBinding.instance.platformDispatcher.accessibilityFeatures;
     setState(() => _reducedMotion = features.disableAnimations);
     _handleTimerControl();
   }
 
   // ====== Localization helpers (تشتغل حتى لو ما فعّلت AppLocalizations) ======
-  String _lang(BuildContext context) => Localizations.localeOf(context).languageCode;
+  String _lang(BuildContext context) =>
+      Localizations.localeOf(context).languageCode;
 
   bool _isRTL(BuildContext context) {
     final code = _lang(context);
     // لو عندك لغات أخرى RTL أضفها هنا
-    return code.startsWith('ar') || code.startsWith('fa') || code.startsWith('ur');
+    return code.startsWith('ar') ||
+        code.startsWith('fa') ||
+        code.startsWith('ur');
   }
 
-    String _tBreaking(BuildContext context) {
-      final t = AppLocalizations.of(context);
-      return t.translate('breaking');
-    }
-   
-    String _tLoading(BuildContext context) {
+  String _tBreaking(BuildContext context) {
     final t = AppLocalizations.of(context);
-   
-      return t.translate('loading_news');
-    }
-   
-    String _tPrev(BuildContext context) {
-      final t = AppLocalizations.of(context);
-      return t.translate('previous_news');
-    }
-   
-    String _tNext(BuildContext context) {
-      final t = AppLocalizations.of(context);
-      return t.translate('next_news');
-    }
-   
-    String _tGenericNews(BuildContext context) {
-      final t = AppLocalizations.of(context);
-      return t.translate('news');
-    }
-   
-    String _tTickerSemantics(BuildContext context, int count) {
-      final t = AppLocalizations.of(context);
-      // مثال بسيط للتجميع: "News ticker, {count} items"
-      final base = t.translate('news_ticker');
-      final unit = t.translate('items'); // أو news_items بالعربي
-      return '$base, $count $unit';
-    }
+    return t.translate('breaking');
+  }
+
+  String _tLoading(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
+    return t.translate('loading_news');
+  }
+
+  String _tPrev(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return t.translate('previous_news');
+  }
+
+  String _tNext(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return t.translate('next_news');
+  }
+
+  String _tGenericNews(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return t.translate('news');
+  }
+
+  String _tTickerSemantics(BuildContext context, int count) {
+    final t = AppLocalizations.of(context);
+    // مثال بسيط للتجميع: "News ticker, {count} items"
+    final base = t.translate('news_ticker');
+    final unit = t.translate('items'); // أو news_items بالعربي
+    return '$base, $count $unit';
+  }
 
   // ===========================================================================
 
@@ -155,7 +158,6 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
     _timer?.cancel();
     if (!_reducedMotion && !_paused && _items.isNotEmpty) _start();
   }
-
 
   @override
   void dispose() {
@@ -271,9 +273,12 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
           // شارة العاجل
           current.isBreaking
               ? Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFFB71C1C) : const Color(0xFFD32F2F),
+                    color: isDark
+                        ? const Color(0xFFB71C1C)
+                        : const Color(0xFFD32F2F),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -324,17 +329,21 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
                   icon: Icon(prevIcon, size: 20),
                   onPressed: _goToPrevious,
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   tooltip: _tPrev(context),
                 ),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF333333) : const Color(0xFFFFFFFF),
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF444444) : const Color(0xFFE0E0E0),
+                    color: isDark
+                        ? const Color(0xFF444444)
+                        : const Color(0xFFE0E0E0),
                   ),
                 ),
                 child: Text(
@@ -346,13 +355,13 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-
               if (_items.length > 1)
                 IconButton(
                   icon: Icon(nextIcon, size: 20),
                   onPressed: _goToNext,
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints:
+                      const BoxConstraints(minWidth: 32, minHeight: 32),
                   tooltip: _tNext(context),
                 ),
             ],
@@ -377,7 +386,9 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
     // fallback: لو العنوان فاضي، قص جزءًا من المحتوى
     if (title.isEmpty) {
       final content = current.bestContentForLocale(locale).trim();
-      title = content.isEmpty ? _tGenericNews(context) : (content.length <= 60 ? content : content.substring(0, 60));
+      title = content.isEmpty
+          ? _tGenericNews(context)
+          : (content.length <= 60 ? content : content.substring(0, 60));
     }
 
     return Semantics(

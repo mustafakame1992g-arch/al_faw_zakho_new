@@ -101,48 +101,49 @@ class _CandidatesByProvinceScreenState
       });
     }
   }
+
 // 🆕 إضافة متغير Debouncer في أعلى الكلاس
-Timer? _debounceTimer;
+  Timer? _debounceTimer;
 
-void _onSearchChanged() {
-  // 🆕 إلغاء المؤقت السابق إذا كان نشطاً
-  if (_debounceTimer?.isActive ?? false) {
-    _debounceTimer!.cancel();
-  }
-
-  // 🆕 إنشاء مؤقت جديد للبحث
-  _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-    final query = _searchController.text.trim().toLowerCase();
-    if (query.isEmpty) {
-      setState(() => _filteredCandidates = _allCandidates);
-      return;
+  void _onSearchChanged() {
+    // 🆕 إلغاء المؤقت السابق إذا كان نشطاً
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
     }
 
-    setState(() {
-      _filteredCandidates = _allCandidates.where((candidate) {
-        final nameAr = candidate.nameAr.toLowerCase();
-        final nameEn = candidate.nameEn.toLowerCase();
-        final nickAr = candidate.nicknameAr.toLowerCase();
-        final nickEn = candidate.nicknameEn.toLowerCase();
-        final province = candidate.province.toLowerCase();
-        
-        return nameAr.contains(query) ||
-            nameEn.contains(query) ||
-            nickAr.contains(query) ||
-            nickEn.contains(query) ||
-            province.contains(query);
-      }).toList();
-    });
-  });
-}
+    // 🆕 إنشاء مؤقت جديد للبحث
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      final query = _searchController.text.trim().toLowerCase();
+      if (query.isEmpty) {
+        setState(() => _filteredCandidates = _allCandidates);
+        return;
+      }
 
-@override
-void dispose() {
-  _debounceTimer?.cancel(); // 🆕 تنظيف المؤقت
-  _searchController.removeListener(_onSearchChanged);
-  _searchController.dispose();
-  super.dispose();
-}
+      setState(() {
+        _filteredCandidates = _allCandidates.where((candidate) {
+          final nameAr = candidate.nameAr.toLowerCase();
+          final nameEn = candidate.nameEn.toLowerCase();
+          final nickAr = candidate.nicknameAr.toLowerCase();
+          final nickEn = candidate.nicknameEn.toLowerCase();
+          final province = candidate.province.toLowerCase();
+
+          return nameAr.contains(query) ||
+              nameEn.contains(query) ||
+              nickAr.contains(query) ||
+              nickEn.contains(query) ||
+              province.contains(query);
+        }).toList();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel(); // 🆕 تنظيف المؤقت
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +154,9 @@ void dispose() {
     return FZScaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-     foregroundColor: Theme.of(context).colorScheme.onPrimary,
-     systemOverlayStyle: SystemUiOverlayStyle.light,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         title: Column(
-     
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -164,21 +164,22 @@ void dispose() {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onPrimary, // وضوح مضمون
+                color: Theme.of(context).colorScheme.onPrimary, // وضوح مضمون
               ),
             ),
             Text(
-                            IraqiProvinces.displayName(
-           IraqiProvinces.displayName(
-            widget.province,
-              Localizations.localeOf(context).languageCode,
-             ),  
-                           Localizations.localeOf(context).languageCode,
+              IraqiProvinces.displayName(
+                IraqiProvinces.displayName(
+                  widget.province,
+                  Localizations.localeOf(context).languageCode,
+                ),
+                Localizations.localeOf(context).languageCode,
               ),
-
               style: TextStyle(
                 fontSize: 14,
-                color: isDark ? Colors.grey[300] : Colors.white.withValues(alpha: .7), // 🎨 نص ثانوي واضح
+                color: isDark
+                    ? Colors.grey[300]
+                    : Colors.white.withValues(alpha: .7), // 🎨 نص ثانوي واضح
               ),
             ),
           ],
@@ -186,26 +187,27 @@ void dispose() {
         centerTitle: false,
         elevation: 2,
         actions: [
-        // 🆕 إضافة زر مسح البحث في AppBar
-        if (_searchController.text.isNotEmpty)
-          IconButton(
-            icon: Icon(Icons.clear, color: isDark ? Colors.white : Colors.white),
-            onPressed: () {
-              _searchController.clear();
-              setState(() {
-                _filteredCandidates = _allCandidates;
-              });
-            },
-            tooltip: AppLocalizations.of(context).translate('clear_search'),
-          ),
-      ],
+          // 🆕 إضافة زر مسح البحث في AppBar
+          if (_searchController.text.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.clear,
+                  color: isDark ? Colors.white : Colors.white),
+              onPressed: () {
+                _searchController.clear();
+                setState(() {
+                  _filteredCandidates = _allCandidates;
+                });
+              },
+              tooltip: AppLocalizations.of(context).translate('clear_search'),
+            ),
+        ],
       ),
       persistentBottom: FZTab.home,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
               ? _buildErrorState(isDark)
-                  : _buildCandidatesList(isArabic, isDark),
+              : _buildCandidatesList(isArabic, isDark),
     );
   }
 
@@ -219,12 +221,14 @@ void dispose() {
           color: isDark ? Colors.white : Colors.black87, // 🎨 نص واضح
         ),
         decoration: InputDecoration(
-          
-              hintText: AppLocalizations.of(context).translate('search_within_province'),
+          hintText:
+              AppLocalizations.of(context).translate('search_within_province'),
           hintStyle: TextStyle(
-            color: isDark ? Colors.grey[400] : Colors.grey[600], // 🎨 نص توضيحي واضح
+            color: isDark
+                ? Colors.grey[400]
+                : Colors.grey[600], // 🎨 نص توضيحي واضح
           ),
-          prefixIcon: Icon(Icons.search, 
+          prefixIcon: Icon(Icons.search,
               color: isDark ? Colors.grey[400] : Colors.grey[600]),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -246,26 +250,27 @@ void dispose() {
             ),
           ),
           filled: true,
-          fillColor: isDark ? Colors.grey[800]! : Colors.grey[100]!, // 🎨 خلفية مناسبة
+          fillColor:
+              isDark ? Colors.grey[800]! : Colors.grey[100]!, // 🎨 خلفية مناسبة
         ),
       ),
     );
   }
 
   Widget _buildCandidatesList(bool isArabic, bool isDark) {
-     
- // 🆕 إذا كانت هناك نتائج بحث فارغة، نعرضها داخل الشاشة نفسها
+    // 🆕 إذا كانت هناك نتائج بحث فارغة، نعرضها داخل الشاشة نفسها
     if (_filteredCandidates.isEmpty && _searchController.text.isNotEmpty) {
-    return Column(
-      children: [
-        _buildHeader(isDark),
-        _buildSearchBar(isArabic, isDark),
-        Expanded(
-          child: _buildEmptyStateWithinScreen(isDark, isArabic), // 🆕 حالة فارغة داخل الشاشة
-        ),
-      ],
-    );
-  }
+      return Column(
+        children: [
+          _buildHeader(isDark),
+          _buildSearchBar(isArabic, isDark),
+          Expanded(
+            child: _buildEmptyStateWithinScreen(
+                isDark, isArabic), // 🆕 حالة فارغة داخل الشاشة
+          ),
+        ],
+      );
+    }
 
     // إذا لم يكن هناك بحث أو توجد نتائج، نعرض القائمة العادية
     return ListView.builder(
@@ -292,135 +297,135 @@ void dispose() {
     );
   }
 
-
 // 🆕 بناء واجهة الحالة الفارغة داخل الشاشة نفسها
-Widget _buildEmptyStateWithinScreen(bool isDark, bool isArabic) {
-  return Center(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off_rounded,
-            size: 80,
-            color: isDark ? Colors.grey[500] : Colors.grey[400],
-          ),
-          const SizedBox(height: 20),
-          Text(
-            AppLocalizations.of(context).translate('no_matching_results'),
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+  Widget _buildEmptyStateWithinScreen(bool isDark, bool isArabic) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off_rounded,
+              size: 80,
+              color: isDark ? Colors.grey[500] : Colors.grey[400],
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-           '${AppLocalizations.of(context).translate('no_results_for')} "${_searchController.text}"',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context).translate('check_spelling_or_try_others'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.grey[500] : Colors.grey[500],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              _buildSuggestionChip(
-                isArabic ? 'مسح البحث' : 'Clear Search',
-                Icons.clear_all,
-                () {
-                  _searchController.clear();
-                  setState(() {
-                    _filteredCandidates = _allCandidates;
-                  });
-                },
-                isDark,
-              ),
-              _buildSuggestionChip(
-                isArabic ? 'عرض الكل' : 'Show All',
-                Icons.list,
-                () {
-                  _searchController.clear();
-                  setState(() {
-                    _filteredCandidates = _allCandidates;
-                  });
-                },
-                isDark,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey[800] : Colors.blue[50],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isDark ? Colors.grey[600]! : Colors.blue[100]!,
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context).translate('no_matching_results'),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
-            child: Row(
+            const SizedBox(height: 12),
+            Text(
+              '${AppLocalizations.of(context).translate('no_results_for')} "${_searchController.text}"',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.of(context)
+                  .translate('check_spelling_or_try_others'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.grey[500] : Colors.grey[500],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  color: isDark ? Colors.blue[200] : Colors.blue[600],
-                  size: 24,
+                _buildSuggestionChip(
+                  isArabic ? 'مسح البحث' : 'Clear Search',
+                  Icons.clear_all,
+                  () {
+                    _searchController.clear();
+                    setState(() {
+                      _filteredCandidates = _allCandidates;
+                    });
+                  },
+                  isDark,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    isArabic
-                        ? '${_allCandidates.length} مرشح متاح في ${widget.province}'
-                        : '${_allCandidates.length} candidates available in ${widget.province}',
-                    style: TextStyle(
-                      color: isDark ? Colors.blue[200] : Colors.blue[700],
-                      fontSize: 14,
-                    ),
-                  ),
+                _buildSuggestionChip(
+                  isArabic ? 'عرض الكل' : 'Show All',
+                  Icons.list,
+                  () {
+                    _searchController.clear();
+                    setState(() {
+                      _filteredCandidates = _allCandidates;
+                    });
+                  },
+                  isDark,
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[800] : Colors.blue[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isDark ? Colors.grey[600]! : Colors.blue[100]!,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: isDark ? Colors.blue[200] : Colors.blue[600],
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      isArabic
+                          ? '${_allCandidates.length} مرشح متاح في ${widget.province}'
+                          : '${_allCandidates.length} candidates available in ${widget.province}',
+                      style: TextStyle(
+                        color: isDark ? Colors.blue[200] : Colors.blue[700],
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
 // 🆕 بناء رقاقة اقتراح
-Widget _buildSuggestionChip(String text, IconData icon, VoidCallback onTap, bool isDark) {
-  return ActionChip(
-    avatar: Icon(icon, size: 16),
-    label: Text(text),
-    onPressed: onTap,
-    backgroundColor: isDark ? Colors.grey[700] : Colors.grey[200],
-    labelStyle: TextStyle(
-      color: isDark ? Colors.white : Colors.black87,
-      fontSize: 12,
-    ),
-  );
-}
-
+  Widget _buildSuggestionChip(
+      String text, IconData icon, VoidCallback onTap, bool isDark) {
+    return ActionChip(
+      avatar: Icon(icon, size: 16),
+      label: Text(text),
+      onPressed: onTap,
+      backgroundColor: isDark ? Colors.grey[700] : Colors.grey[200],
+      labelStyle: TextStyle(
+        color: isDark ? Colors.white : Colors.black87,
+        fontSize: 12,
+      ),
+    );
+  }
 
   Widget _buildHeader(bool isDark) {
     final count = _allCandidates.length;
     final langCode = Localizations.localeOf(context).languageCode;
-final isArabic = langCode == 'ar' || langCode.startsWith('ar');
-final displayProvince = IraqiProvinces.displayName(widget.province.trim(), langCode);
+    final isArabic = langCode == 'ar' || langCode.startsWith('ar');
+    final displayProvince =
+        IraqiProvinces.displayName(widget.province.trim(), langCode);
     String getLogoPath() {
       final province = widget.province.trim();
       const logoPaths = {
@@ -449,36 +454,52 @@ final displayProvince = IraqiProvinces.displayName(widget.province.trim(), langC
       const specialHeaders = {
         'بغداد': 'جميع مرشحينا دخلو باسم التجمع الوطني لبغداد 🇮🇶',
         'النجف': 'المرشحة الوحيدة لدينا في النجف الاشرف المهندسة سارة الموسوي ',
-        'كربلاء': 'مرشحنا الوحيد في كربلاء للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
-        'القادسية': 'مرشحنا الوحيد في القادسية للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
-        'ذي قار': 'مرشحنا الوحيد في ذي قار للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
-        'ميسان': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها ميسان',
-        'الانبار': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها الانبار',
-        'ديالى': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها ديالى',
-        'المثنى': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها المثنى',
-        'نينوى': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها نينوى',
-        'اربيل': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها اربيل',
-        'السليمانية': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها السليمانية',
-        'دهوك': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها دهوك',
-        'كركوك': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها كركوك',
-        'صلاح الدين': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها صلاح الدين',
-        'حلبجة': 'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها حلبجة',
+        'كربلاء':
+            'مرشحنا الوحيد في كربلاء للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
+        'القادسية':
+            'مرشحنا الوحيد في القادسية للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
+        'ذي قار':
+            'مرشحنا الوحيد في ذي قار للخبير الوطني عامر عبد الجبار ضمن تحالف البديل',
+        'ميسان':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها ميسان',
+        'الانبار':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها الانبار',
+        'ديالى':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها ديالى',
+        'المثنى':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها المثنى',
+        'نينوى':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها نينوى',
+        'اربيل':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها اربيل',
+        'السليمانية':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها السليمانية',
+        'دهوك':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها دهوك',
+        'كركوك':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها كركوك',
+        'صلاح الدين':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها صلاح الدين',
+        'حلبجة':
+            'مرشحنا الوحيد عن كوتا الصابئة المندائيين والمدعوم من الخبير الوطني عامر عبد الجبار في عشر محافظات من ضمنها حلبجة',
       };
-return specialHeaders[province] ??
-    (isArabic
-      ? 'جميعهم دخلو باسم ${AppLocalizations.of(context).translate('about_name')} وعددهم $count'
-      : 'All of them joined under ${AppLocalizations.of(context).translate('about_name')} — total $count');    }
+      return specialHeaders[province] ??
+          (isArabic
+              ? 'جميعهم دخلو باسم ${AppLocalizations.of(context).translate('about_name')} وعددهم $count'
+              : 'All of them joined under ${AppLocalizations.of(context).translate('about_name')} — total $count');
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey[800] : const Color(0xFFF4F4F4), // 🎨 خلفية مناسبة
+        color: isDark
+            ? Colors.grey[800]
+            : const Color(0xFFF4F4F4), // 🎨 خلفية مناسبة
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark ? Colors.grey[600]! : const Color(0xFF555555), 
-          width: 1.2
-        ),
+            color: isDark ? Colors.grey[600]! : const Color(0xFF555555),
+            width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -488,9 +509,12 @@ return specialHeaders[province] ??
             width: 80,
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isDark ? Colors.grey[700] : Colors.white, // 🎨 خلفية صورة مناسبة
+              color: isDark
+                  ? Colors.grey[700]
+                  : Colors.white, // 🎨 خلفية صورة مناسبة
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: isDark ? Colors.grey[600]! : Colors.grey.shade300),
+              border: Border.all(
+                  color: isDark ? Colors.grey[600]! : Colors.grey.shade300),
             ),
             child: Image.asset(
               getLogoPath(),
@@ -501,11 +525,12 @@ return specialHeaders[province] ??
           ),
           const SizedBox(height: 12),
           Text(
-           AppLocalizations.of(context).translate('candidates_in_province'),
+            AppLocalizations.of(context).translate('candidates_in_province'),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : const Color(0xFF222222), // 🎨 نص واضح
+              color:
+                  isDark ? Colors.white : const Color(0xFF222222), // 🎨 نص واضح
             ),
           ),
           const SizedBox(height: 4),
@@ -514,17 +539,20 @@ return specialHeaders[province] ??
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
-              color: isDark ? Colors.grey[300] : const Color(0xFF555555), // 🎨 نص ثانوي واضح
+              color: isDark
+                  ? Colors.grey[300]
+                  : const Color(0xFF555555), // 🎨 نص ثانوي واضح
             ),
           ),
           const SizedBox(height: 8),
           Text(
-             '${AppLocalizations.of(context).translate('province')}: $displayProvince',
-
+            '${AppLocalizations.of(context).translate('province')}: $displayProvince',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: isDark ? Colors.grey[200] : const Color(0xFF333333), // 🎨 نص واضح
+              color: isDark
+                  ? Colors.grey[200]
+                  : const Color(0xFF333333), // 🎨 نص واضح
             ),
           ),
         ],
@@ -536,24 +564,25 @@ return specialHeaders[province] ??
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            Icon(Icons.error_outline,
+                size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              _error ?? AppLocalizations.of(context).translate('unexpected_error'),
-
+              _error ??
+                  AppLocalizations.of(context).translate('unexpected_error'),
               style: TextStyle(
-                fontSize: 16, 
+                fontSize: 16,
                 color: isDark ? Colors.white : Colors.red, // 🎨 نص خطأ واضح
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadCandidates,
-              child: Text(AppLocalizations.of(context).translate('retry')),            ),
+              child: Text(AppLocalizations.of(context).translate('retry')),
+            ),
           ],
         ),
       );
-
 }
 
 class _CandidateCard extends StatelessWidget {
@@ -561,11 +590,8 @@ class _CandidateCard extends StatelessWidget {
   final bool isDark;
   final VoidCallback onTap;
 
-  const _CandidateCard({
-    required this.candidate, 
-    required this.isDark, 
-    required this.onTap
-  });
+  const _CandidateCard(
+      {required this.candidate, required this.isDark, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -582,7 +608,7 @@ class _CandidateCard extends StatelessWidget {
         title: Text(
           candidate.getName(currentLanguage),
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
             fontSize: 16,
             color: isDark ? Colors.white : Colors.black87, // 🎨 نص واضح
           ),
@@ -593,21 +619,22 @@ class _CandidateCard extends StatelessWidget {
             Text(
               candidate.getNickname(currentLanguage),
               style: TextStyle(
-                color: isDark ? Colors.grey[300] : Colors.grey[700], // 🎨 نص ثانوي واضح
+                color: isDark
+                    ? Colors.grey[300]
+                    : Colors.grey[700], // 🎨 نص ثانوي واضح
               ),
             ),
             const SizedBox(height: 4),
             Text(
               candidate.getPosition(currentLanguage),
               style: TextStyle(
-                color: isDark ? Colors.grey[400] : Colors.grey[600], 
-                fontSize: 12
-              ),
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  fontSize: 12),
             ),
             const SizedBox(height: 4),
             Text(
-              candidate.listName ?? AppLocalizations.of(context).translate('about_name'),
-
+              candidate.listName ??
+                  AppLocalizations.of(context).translate('about_name'),
               style: TextStyle(
                 fontSize: 12,
                 color: isDark ? Colors.grey[300] : Colors.black54, // 🎨 نص واضح
@@ -617,9 +644,10 @@ class _CandidateCard extends StatelessWidget {
           ],
         ),
         trailing: Icon(
-          Icons.arrow_forward_ios, 
-          size: 16, 
-          color: isDark ? Colors.grey[400] : Colors.grey[600], // 🎨 أيقونة مناسبة
+          Icons.arrow_forward_ios,
+          size: 16,
+          color:
+              isDark ? Colors.grey[400] : Colors.grey[600], // 🎨 أيقونة مناسبة
         ),
         onTap: onTap,
       ),
@@ -627,9 +655,10 @@ class _CandidateCard extends StatelessWidget {
   }
 
   Widget _buildCandidateAvatar() {
-    final logoPath = (candidate.listLogo != null && candidate.listLogo!.isNotEmpty)
-        ? candidate.listLogo!
-        : 'assets/images/logo.png';
+    final logoPath =
+        (candidate.listLogo != null && candidate.listLogo!.isNotEmpty)
+            ? candidate.listLogo!
+            : 'assets/images/logo.png';
     return CircleAvatar(
       radius: 28,
       backgroundImage: AssetImage(logoPath),

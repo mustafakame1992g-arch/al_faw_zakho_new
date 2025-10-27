@@ -7,11 +7,11 @@ class NewsListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(title: Text(AppLocalizations.of(context).translate('news'))),
+      appBar:
+          AppBar(title: Text(AppLocalizations.of(context).translate('news'))),
       body: const Center(
         child: Text('صفحة الأخبار قيد التطوير'),
       ),
     );
   }
 }
-

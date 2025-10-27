@@ -336,7 +336,8 @@ class _LanguageSelectionTileState extends State<_LanguageSelectionTile> {
   Future<void> _handleLanguageChange(String? newCode) async {
     if (newCode == null || _isChangingLanguage) return;
 
-    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
     if (newCode == languageProvider.languageCode) return;
 
     setState(() => _isChangingLanguage = true);
@@ -384,18 +385,24 @@ class _AppInfoDetails extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.flag, size: 32, color: Theme.of(context).primaryColor),
+                  child: Icon(Icons.flag,
+                      size: 32, color: Theme.of(context).primaryColor),
                 ),
                 const SizedBox(height: 12),
                 Text(context.tr('app_title'),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Text(
                   context.tr('political_election'),
-                  style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor, height: 1.4),
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).hintColor,
+                      height: 1.4),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -404,11 +411,23 @@ class _AppInfoDetails extends StatelessWidget {
           const SizedBox(height: 20),
           const Divider(),
           const SizedBox(height: 16),
-          _InfoRow(icon: Icons.verified, label: context.tr('version'), value: '1.0.0'),
-          _InfoRow(icon: Icons.build, label: context.tr('build'), value: '2025.01.01'),
-          _InfoRow(icon: Icons.update, label: context.tr('last_update'), value: 'Jan 2025'),
-          _InfoRow(icon: Icons.security, label: context.tr('status'), value: context.tr('stable')),
-   ],
+          _InfoRow(
+              icon: Icons.verified,
+              label: context.tr('version'),
+              value: '1.0.0'),
+          _InfoRow(
+              icon: Icons.build,
+              label: context.tr('build'),
+              value: '2025.01.01'),
+          _InfoRow(
+              icon: Icons.update,
+              label: context.tr('last_update'),
+              value: 'Jan 2025'),
+          _InfoRow(
+              icon: Icons.security,
+              label: context.tr('status'),
+              value: context.tr('stable')),
+        ],
       ),
     );
   }
@@ -419,7 +438,8 @@ class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow(
+      {required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -432,12 +452,15 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(label,
-                style: TextStyle(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurface)),
           ),
           Expanded(
             flex: 3,
             child: Text(value,
-                style: TextStyle(color: Theme.of(context).hintColor), textAlign: TextAlign.start),
+                style: TextStyle(color: Theme.of(context).hintColor),
+                textAlign: TextAlign.start),
           ),
         ],
       ),

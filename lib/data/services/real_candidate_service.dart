@@ -21,8 +21,10 @@ class RealCandidateService {
           'nicknameEn': 'Abu Mohammed',
           'positionAr': 'مرشح عن بغداد',
           'positionEn': 'Candidate for Baghdad',
-          'bioAr': 'خريج كلية الهندسة - جامعة بغداد. ناشط سياسي منذ 2010. عضو في تجمع الفاو زاخو منذ تأسيسه. له العديد من المساهمات في تطوير المنطقة.',
-          'bioEn': 'Engineering graduate - University of Baghdad. Political activist since 2010. Member of Al-Faw Zakhо Gathering since its establishment.',
+          'bioAr':
+              'خريج كلية الهندسة - جامعة بغداد. ناشط سياسي منذ 2010. عضو في تجمع الفاو زاخو منذ تأسيسه. له العديد من المساهمات في تطوير المنطقة.',
+          'bioEn':
+              'Engineering graduate - University of Baghdad. Political activist since 2010. Member of Al-Faw Zakhо Gathering since its establishment.',
           'imagePath': 'assets/images/candidates/ahmed.jpg',
           'phoneNumber': '+9647701234567',
           'province': 'بغداد',
@@ -30,13 +32,15 @@ class RealCandidateService {
         {
           'id': 'real_2',
           'nameAr': 'سارة عبد الكريم',
-          'nameEn': 'Sara Abdul Kareem', 
+          'nameEn': 'Sara Abdul Kareem',
           'nicknameAr': 'أم علي',
           'nicknameEn': 'Umm Ali',
           'positionAr': 'مرشحة عن أربيل',
           'positionEn': 'Candidate for Erbil',
-          'bioAr': 'حاصلة على ماجستير في القانون الدولي. ناشطة في مجال حقوق المرأة والطفل. عضو مؤسس في جمعية تمكين المرأة العراقية.',
-          'bioEn': 'Holds a masters degree in International Law. Activist in women and children rights.',
+          'bioAr':
+              'حاصلة على ماجستير في القانون الدولي. ناشطة في مجال حقوق المرأة والطفل. عضو مؤسس في جمعية تمكين المرأة العراقية.',
+          'bioEn':
+              'Holds a masters degree in International Law. Activist in women and children rights.',
           'imagePath': 'assets/images/candidates/sara.jpg',
           'phoneNumber': '+9647509876543',
           'province': 'أربيل',
@@ -49,8 +53,10 @@ class RealCandidateService {
           'nicknameEn': 'Abu Ali',
           'positionAr': 'مرشح عن البصرة',
           'positionEn': 'Candidate for Basra',
-          'bioAr': 'مهندس نفط بخبرة 15 سنة. رئيس لجنة الطاقة في المحافظة. حاصل على عدة جوائز في مجال تطوير القطاع النفطي.',
-          'bioEn': 'Petroleum engineer with 15 years experience. Head of Energy Committee in the province.',
+          'bioAr':
+              'مهندس نفط بخبرة 15 سنة. رئيس لجنة الطاقة في المحافظة. حاصل على عدة جوائز في مجال تطوير القطاع النفطي.',
+          'bioEn':
+              'Petroleum engineer with 15 years experience. Head of Energy Committee in the province.',
           'imagePath': 'assets/images/candidates/hassan.jpg',
           'phoneNumber': '+9647812345678',
           'province': 'البصرة',
@@ -63,20 +69,21 @@ class RealCandidateService {
           'nicknameEn': 'Umm Hussein',
           'positionAr': 'مرشحة عن نينوى',
           'positionEn': 'Candidate for Nineveh',
-          'bioAr': 'طبيبة أطفال ومديرة مستشفى سابقاً. ناشطة في مجال الصحة المجتمعية. حاصلة على جوائز تقديرية لجهودها أثناء جائحة كورونا.',
-          'bioEn': 'Pediatrician and former hospital director. Community health activist.',
+          'bioAr':
+              'طبيبة أطفال ومديرة مستشفى سابقاً. ناشطة في مجال الصحة المجتمعية. حاصلة على جوائز تقديرية لجهودها أثناء جائحة كورونا.',
+          'bioEn':
+              'Pediatrician and former hospital director. Community health activist.',
           'imagePath': 'assets/images/candidates/layla.jpg',
           'phoneNumber': '+9647911223344',
           'province': 'نينوى',
         },
       ];
 
-      final candidates = realCandidates
-          .map((data) => CandidateModel.fromJson(data))
-          .toList();
+      final candidates =
+          realCandidates.map((data) => CandidateModel.fromJson(data)).toList();
 
       await _repository.addCandidatesBatch(candidates);
-      
+
       developer.log('✅ تم إدخال ${candidates.length} مرشح حقيقي بنجاح');
     } catch (e) {
       developer.log('❌ فشل إدخال المرشحين الحقيقيين: $e');

@@ -32,7 +32,7 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // 🎨 ألوان الهوية الرسمية لتجمع الفاو زاخو
     const Color fawRed = Color(0xFFD32F2F);
@@ -57,7 +57,6 @@ class ErrorScreen extends StatelessWidget {
           ),
         ),
       ),
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -93,10 +92,9 @@ class ErrorScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
 
-
-              const SizedBox(height: 12),
-              Text(
-                message,
+                const SizedBox(height: 12),
+                Text(
+                  message,
                   style: TextStyle(
                     color: textColor,
                     fontSize: 16,
@@ -138,4 +136,3 @@ class ErrorScreen extends StatelessWidget {
     );
   }
 }
-

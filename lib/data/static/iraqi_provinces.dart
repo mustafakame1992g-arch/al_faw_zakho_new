@@ -24,7 +24,7 @@ class IraqiProvinces {
     'المثنى',
     'حلبجة',
   ];
-    // أسماء العرض بالإنجليزية مقابل الاسم العربي (نحتفظ بالعربي كمفتاح داخلي)
+  // أسماء العرض بالإنجليزية مقابل الاسم العربي (نحتفظ بالعربي كمفتاح داخلي)
   static const Map<String, String> arToEn = {
     'بغداد': 'Baghdad',
     'البصرة': 'Basra',
@@ -54,7 +54,6 @@ class IraqiProvinces {
     }
     return arName;
   }
-
 
   /// التحقق من صحة المحافظة
   static bool isValidProvince(String province) {
@@ -99,13 +98,13 @@ class IraqiProvinces {
     for (final province in allProvinces) {
       counts[province] = 0;
     }
-    
+
     for (final candidate in candidates) {
       if (candidate.province != null && isValidProvince(candidate.province)) {
         counts[candidate.province] = (counts[candidate.province] ?? 0) + 1;
       }
     }
-    
+
     return counts;
   }
 }
