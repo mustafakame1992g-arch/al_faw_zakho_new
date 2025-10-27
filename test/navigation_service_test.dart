@@ -19,7 +19,8 @@ void main() {
           GlobalCupertinoLocalizations.delegate,
         ],
         routes: {
-          NavigationService.homeRoute: (_) => const Scaffold(body: Text('Home')),
+          NavigationService.homeRoute: (_) =>
+              const Scaffold(body: Text('Home')),
           '/second': (_) => const Scaffold(body: Text('Second')),
         },
         initialRoute: '/second',
