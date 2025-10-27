@@ -1,12 +1,12 @@
+import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
 
 enum FZTab { home, donate, about }
 
 class FZBottomNav extends StatelessWidget {
-  final FZTab active;
   const FZBottomNav({super.key, required this.active});
+  final FZTab active;
 
   int get _selectedIndex => switch (active) {
         FZTab.home => 0,
@@ -20,16 +20,16 @@ class FZBottomNav extends StatelessWidget {
       selectedIndex: _selectedIndex,
       onDestinationSelected: (i) {
         if (i == _selectedIndex) return;
-        
+
         final nav = Provider.of<INavigationService>(context, listen: false);
         switch (i) {
-          case 0: 
+          case 0:
             nav.goHome(context);
             break;
-          case 1: 
+          case 1:
             nav.goDonate(context);
             break;
-          case 2: 
+          case 2:
             nav.goAbout(context);
             break;
         }

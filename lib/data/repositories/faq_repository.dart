@@ -1,9 +1,10 @@
 // lib/data/repositories/faq_repository.dart
 import 'dart:convert';
 import 'dart:developer' as developer;
+
+import 'package:al_faw_zakho/data/models/faq_model.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:al_faw_zakho/data/models/faq_model.dart';
 
 /// 🧩 واجهة المستودع العام للأسئلة الشائعة (Repository Interface)
 abstract class FAQRepository {
@@ -59,19 +60,25 @@ class FAQRepositoryImpl implements FAQRepository {
       // 1️⃣ محاولة من JSON المحلي (assets)
       final localFAQs = await _loadFromAssets();
       if (localFAQs.isNotEmpty) {
-        developer.log('✅ Loaded ${localFAQs.length} FAQs from assets',
-            name: 'FAQ_REPOSITORY');
+        developer.log(
+          '✅ Loaded ${localFAQs.length} FAQs from assets',
+          name: 'FAQ_REPOSITORY',
+        );
         await cacheFAQs(localFAQs);
         return localFAQs;
       }
 
       // 2️⃣ محاولة من الكاش المحلي (Hive)
-      developer.log('⚠️ No local FAQs found, trying cache...',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '⚠️ No local FAQs found, trying cache...',
+        name: 'FAQ_REPOSITORY',
+      );
       final cachedFAQs = await getCachedFAQs();
       if (cachedFAQs.isNotEmpty) {
-        developer.log('✅ Loaded ${cachedFAQs.length} FAQs from cache',
-            name: 'FAQ_REPOSITORY');
+        developer.log(
+          '✅ Loaded ${cachedFAQs.length} FAQs from cache',
+          name: 'FAQ_REPOSITORY',
+        );
         return cachedFAQs;
       }
 
@@ -89,8 +96,10 @@ class FAQRepositoryImpl implements FAQRepository {
   Future<List<FaqModel>> _loadFromAssets() async {
     for (int attempt = 1; attempt <= _maxRetryAttempts; attempt++) {
       try {
-        developer.log('📁 Loading FAQs from assets (attempt $attempt)...',
-            name: 'FAQ_REPOSITORY');
+        developer.log(
+          '📁 Loading FAQs from assets (attempt $attempt)...',
+          name: 'FAQ_REPOSITORY',
+        );
 
         final String response =
             await rootBundle.loadString('assets/data/faqs.json');
@@ -103,8 +112,10 @@ class FAQRepositoryImpl implements FAQRepository {
 
         // ✅ تحقق أكثر شمولاً
         if (data.isEmpty) {
-          developer.log('❌ Invalid or empty FAQs data structure',
-              name: 'FAQ_REPOSITORY');
+          developer.log(
+            '❌ Invalid or empty FAQs data structure',
+            name: 'FAQ_REPOSITORY',
+          );
           throw Exception('هيكل بيانات الأسئلة غير صالح');
         }
 
@@ -113,8 +124,10 @@ class FAQRepositoryImpl implements FAQRepository {
               try {
                 return FaqModel.fromJson(Map<String, dynamic>.from(json));
               } catch (e) {
-                developer.log('⚠️ Failed to parse FAQ item: $e',
-                    name: 'FAQ_REPOSITORY');
+                developer.log(
+                  '⚠️ Failed to parse FAQ item: $e',
+                  name: 'FAQ_REPOSITORY',
+                );
                 return null;
               }
             })
@@ -123,8 +136,9 @@ class FAQRepositoryImpl implements FAQRepository {
             .toList();
 
         developer.log(
-            '✅ Parsed ${faqs.length}/${data.length} FAQ items successfully',
-            name: 'FAQ_REPOSITORY');
+          '✅ Parsed ${faqs.length}/${data.length} FAQ items successfully',
+          name: 'FAQ_REPOSITORY',
+        );
         return faqs;
       } catch (e) {
         developer.log('❌ Attempt $attempt failed: $e', name: 'FAQ_REPOSITORY');
@@ -143,8 +157,10 @@ class FAQRepositoryImpl implements FAQRepository {
     if (faqs.isEmpty) return;
 
     try {
-      developer.log('💾 Caching ${faqs.length} FAQs...',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '💾 Caching ${faqs.length} FAQs...',
+        name: 'FAQ_REPOSITORY',
+      );
 
       final box = await Hive.openBox(_faqBoxName);
       final cacheData = {
@@ -186,8 +202,10 @@ class FAQRepositoryImpl implements FAQRepository {
       final age = DateTime.now().difference(timestamp);
 
       if (age > _cacheDuration) {
-        developer.log('🕒 Cache expired (${age.inHours}h old)',
-            name: 'FAQ_REPOSITORY');
+        developer.log(
+          '🕒 Cache expired (${age.inHours}h old)',
+          name: 'FAQ_REPOSITORY',
+        );
         await _faqBox.delete(_faqListKey);
         return [];
       }
@@ -198,8 +216,10 @@ class FAQRepositoryImpl implements FAQRepository {
             try {
               return FaqModel.fromJson(Map<String, dynamic>.from(json));
             } catch (e) {
-              developer.log('⚠️ Failed to parse cached FAQ: $e',
-                  name: 'FAQ_REPOSITORY');
+              developer.log(
+                '⚠️ Failed to parse cached FAQ: $e',
+                name: 'FAQ_REPOSITORY',
+              );
               return null;
             }
           })
@@ -207,8 +227,10 @@ class FAQRepositoryImpl implements FAQRepository {
           .cast<FaqModel>()
           .toList();
 
-      developer.log('✅ Retrieved ${faqs.length} FAQs from cache',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '✅ Retrieved ${faqs.length} FAQs from cache',
+        name: 'FAQ_REPOSITORY',
+      );
       return faqs;
     } catch (e) {
       developer.log('❌ Cache retrieval failed: $e', name: 'FAQ_REPOSITORY');
@@ -231,8 +253,10 @@ class FAQRepositoryImpl implements FAQRepository {
   @override
   Future<void> incrementViewCount(String faqId) async {
     try {
-      developer.log('👁️ Incrementing view count for FAQ: $faqId',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '👁️ Incrementing view count for FAQ: $faqId',
+        name: 'FAQ_REPOSITORY',
+      );
 
       final box = await Hive.openBox(_faqBoxName);
       final cachedData = box.get(_faqListKey);
@@ -247,8 +271,10 @@ class FAQRepositoryImpl implements FAQRepository {
             final currentCount = (map['view_count'] ?? 0) as int;
             map['view_count'] = currentCount + 1;
             updated = true;
-            developer.log('✅ View count incremented to ${currentCount + 1}',
-                name: 'FAQ_REPOSITORY');
+            developer.log(
+              '✅ View count incremented to ${currentCount + 1}',
+              name: 'FAQ_REPOSITORY',
+            );
           }
           return map;
         }).toList();
@@ -260,8 +286,10 @@ class FAQRepositoryImpl implements FAQRepository {
 
       await box.close();
     } catch (e) {
-      developer.log('⚠️ Failed to increment view count: $e',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '⚠️ Failed to increment view count: $e',
+        name: 'FAQ_REPOSITORY',
+      );
     }
   }
 
@@ -271,14 +299,18 @@ class FAQRepositoryImpl implements FAQRepository {
   @override
   Future<List<FaqModel>> getFAQsByCategory(String category) async {
     try {
-      developer.log('🏷️ Filtering FAQs by category: $category',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '🏷️ Filtering FAQs by category: $category',
+        name: 'FAQ_REPOSITORY',
+      );
 
       final allFAQs = await getFAQs();
       final filtered = allFAQs.where((f) => f.category == category).toList();
 
-      developer.log('✅ Found ${filtered.length} FAQs in category "$category"',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '✅ Found ${filtered.length} FAQs in category "$category"',
+        name: 'FAQ_REPOSITORY',
+      );
       return filtered;
     } catch (e) {
       developer.log('❌ Category filter failed: $e', name: 'FAQ_REPOSITORY');
@@ -300,16 +332,20 @@ class FAQRepositoryImpl implements FAQRepository {
       final q = query.toLowerCase();
 
       final results = allFAQs
-          .where((f) =>
-              f.questionAr.toLowerCase().contains(q) ||
-              f.questionEn.toLowerCase().contains(q) ||
-              f.answerAr.toLowerCase().contains(q) ||
-              f.answerEn.toLowerCase().contains(q) ||
-              f.tags.any((tag) => tag.toLowerCase().contains(q)))
+          .where(
+            (f) =>
+                f.questionAr.toLowerCase().contains(q) ||
+                f.questionEn.toLowerCase().contains(q) ||
+                f.answerAr.toLowerCase().contains(q) ||
+                f.answerEn.toLowerCase().contains(q) ||
+                f.tags.any((tag) => tag.toLowerCase().contains(q)),
+          )
           .toList();
 
-      developer.log('✅ Search found ${results.length} results',
-          name: 'FAQ_REPOSITORY');
+      developer.log(
+        '✅ Search found ${results.length} results',
+        name: 'FAQ_REPOSITORY',
+      );
       return results;
     } catch (e) {
       developer.log('❌ Search failed: $e', name: 'FAQ_REPOSITORY');

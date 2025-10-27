@@ -1,12 +1,13 @@
 import 'dart:convert';
+
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
+import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
-import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 
 class VisionScreen extends StatefulWidget {
   const VisionScreen({super.key});
@@ -44,8 +45,8 @@ class _VisionScreenState extends State<VisionScreen> {
   Future<void> _loadVisionContent() async {
     try {
       final jsonString = await rootBundle.loadString('assets/data/vision.json');
-      final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-      await Future.delayed(const Duration(milliseconds: 800));
+      final Map<String, dynamic> jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+     await Future<void>.delayed(const Duration(milliseconds: 800));
       setState(() {
         _visionData = jsonData;
         _isLoading = false;
@@ -95,24 +96,24 @@ class _VisionScreenState extends State<VisionScreen> {
     if (_isLoading) return _buildShimmerLoading(brightness);
     if (_error != null) return _buildErrorScreen(brightness);
 
-    final content = _visionData?[langCode] ?? _visionData?['ar'];
-    final sections = content['sections'] as List<dynamic>? ?? [];
+    // 🔥 الإصلاح الأساسي: تحويل الأنواع بشكل صريح
+    final Map<String, dynamic> content = switch (_visionData) {
+      final m? => (m[langCode] ?? m['ar']) as Map<String, dynamic>,
+      _ => <String, dynamic>{},
+    };
+
+    final List<Map<String, dynamic>> sections =
+        ((content['sections'] as List<dynamic>?) ?? const <dynamic>[])
+            .map<Map<String, dynamic>>((e) => e as Map<String, dynamic>)
+            .toList();
 
     // 🏗️ إنشاء المفاتيح إذا لزم الأمر
     if (_sectionKeys.length != sections.length) {
       _sectionKeys = List.generate(sections.length, (index) => GlobalKey());
     }
 
-    /* return Scaffold(
-      appBar: _buildAppBar(content['title'] ?? 'الرؤية', brightness, sections),
-      body: _isReadingMode? _buildReadingMode(content, sections, brightness)
-          : _buildPresentationMode(content, sections, brightness),
-      floatingActionButton: _buildFloatingActionButton(),
-    );
-  }*/
-
     return FZScaffold(
-      appBar: _buildAppBar(content['title'] ?? 'الرؤية', brightness, sections),
+      appBar: _buildAppBar((content['title'] as String?) ?? 'الرؤية', brightness, sections),
       body: _isReadingMode
           ? _buildReadingMode(content, sections, brightness)
           : _buildPresentationMode(content, sections, brightness),
@@ -121,7 +122,10 @@ class _VisionScreenState extends State<VisionScreen> {
   }
 
   AppBar _buildAppBar(
-      String title, Brightness brightness, List<dynamic> sections) {
+    String title,
+    Brightness brightness,
+    List<Map<String, dynamic>> sections,
+  ) {
     return AppBar(
       title: Text(title),
       flexibleSpace: Container(
@@ -140,10 +144,11 @@ class _VisionScreenState extends State<VisionScreen> {
               icon: const Icon(Icons.list),
               onSelected: _scrollToSection,
               itemBuilder: (context) => sections.asMap().entries.map((entry) {
+                final String heading = (entry.value['heading'] as String?) ?? 'قسم ${entry.key + 1}';
                 return PopupMenuItem<int>(
                   value: entry.key,
                   child: Text(
-                    entry.value['heading'] ?? 'قسم ${entry.key + 1}',
+                    heading,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 );
@@ -154,11 +159,14 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildReadingMode(Map<String, dynamic> content, List<dynamic> sections,
-      Brightness brightness) {
+  Widget _buildReadingMode(
+    Map<String, dynamic> content,
+    List<Map<String, dynamic>> sections,
+    Brightness brightness,
+  ) {
     return Column(
       children: [
-        _buildEnhancedHeader(brightness, content['title'] ?? ''),
+        _buildEnhancedHeader(brightness, (content['title'] as String?) ?? ''),
         Expanded(
           child: SingleChildScrollView(
             controller: _scrollController,
@@ -175,11 +183,14 @@ class _VisionScreenState extends State<VisionScreen> {
     );
   }
 
-  Widget _buildPresentationMode(Map<String, dynamic> content,
-      List<dynamic> sections, Brightness brightness) {
+  Widget _buildPresentationMode(
+    Map<String, dynamic> content,
+    List<Map<String, dynamic>> sections,
+    Brightness brightness,
+  ) {
     return Column(
       children: [
-        _buildPresentationHeader(brightness, content['title'] ?? ''),
+        _buildPresentationHeader(brightness, (content['title'] as String?) ?? ''),
         Expanded(
           child: PageView.builder(
             controller: _pageController,
@@ -187,7 +198,10 @@ class _VisionScreenState extends State<VisionScreen> {
             onPageChanged: (index) => setState(() => _currentPage = index),
             itemBuilder: (context, index) {
               return _buildVisionPageWithAnimation(
-                  sections[index], brightness, index);
+                sections[index],
+                brightness,
+                index,
+              );
             },
           ),
         ),
@@ -305,7 +319,14 @@ class _VisionScreenState extends State<VisionScreen> {
 
   // 🃏 بناء كرت القسم مع المفتاح الصحيح
   Widget _buildAnimatedSectionCard(
-      Map<String, dynamic> section, BuildContext context, int index) {
+    Map<String, dynamic> section,
+    BuildContext context,
+    int index,
+  ) {
+    final String? heading = section['heading'] as String?;
+    final String? text = section['text'] as String?;
+    final List<dynamic> bullets = (section['bullets'] as List<dynamic>?) ?? const <dynamic>[];
+
     return AnimatedContainer(
       duration: Duration(milliseconds: 400 + (index * 100)),
       curve: Curves.easeInOut,
@@ -336,16 +357,18 @@ class _VisionScreenState extends State<VisionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (section['heading'] != null)
-                    _AnimatedSectionTitle(section['heading'], index),
+                  if (heading != null)
+                    _AnimatedSectionTitle(heading, index),
                   const SizedBox(height: 12),
-                  if (section['text'] != null)
-                    _AnimatedSectionText(section['text'], index),
-                  if (section['bullets'] != null) ...[
+                  if (text != null)
+                    _AnimatedSectionText(text, index),
+                  if (bullets.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    for (final point in section['bullets'])
+                    for (final point in bullets)
                       _AnimatedSectionBullet(
-                          point.toString(), section['bullets'].indexOf(point)),
+                        point.toString(),
+                        bullets.indexOf(point),
+                      ),
                   ],
                 ],
               ),
@@ -357,7 +380,14 @@ class _VisionScreenState extends State<VisionScreen> {
   }
 
   Widget _buildVisionPageWithAnimation(
-      Map<String, dynamic> section, Brightness brightness, int index) {
+    Map<String, dynamic> section,
+    Brightness brightness,
+    int index,
+  ) {
+    final String? heading = section['heading'] as String?;
+    final String? text = section['text'] as String?;
+    final List<dynamic> bullets = (section['bullets'] as List<dynamic>?) ?? const <dynamic>[];
+
     return AnimatedBuilder(
       animation: _pageController,
       builder: (context, child) {
@@ -389,27 +419,28 @@ class _VisionScreenState extends State<VisionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      section['heading'] ?? '',
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (section['text'] != null)
+                    if (heading != null)
                       Text(
-                        section['text'],
+                        heading,
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                      ),
+                    const SizedBox(height: 16),
+                    if (text != null)
+                      Text(
+                        text,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               height: 1.7,
                               fontSize: 16,
                             ),
                         textAlign: TextAlign.justify,
                       ),
-                    if (section['bullets'] != null) ...[
+                    if (bullets.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      for (final point in section['bullets'])
+                      for (final point in bullets)
                         _SectionBullet(point.toString()),
                     ],
                   ],
@@ -508,10 +539,16 @@ class _VisionScreenState extends State<VisionScreen> {
           Container(width: 150, height: 18, color: Colors.grey[400]),
           const SizedBox(height: 12),
           Container(
-              width: double.infinity, height: 14, color: Colors.grey[300]),
+            width: double.infinity,
+            height: 14,
+            color: Colors.grey[300],
+          ),
           const SizedBox(height: 6),
           Container(
-              width: double.infinity, height: 14, color: Colors.grey[300]),
+            width: double.infinity,
+            height: 14,
+            color: Colors.grey[300],
+          ),
           const SizedBox(height: 6),
           Container(width: 200, height: 14, color: Colors.grey[300]),
         ],
@@ -532,12 +569,17 @@ class _VisionScreenState extends State<VisionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 16),
-            Text(_error!,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              _error!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _loadVisionContent,
@@ -567,9 +609,9 @@ class _VisionScreenState extends State<VisionScreen> {
 
 // 🎨 المكونات الفرعية المصححة
 class _AnimatedSectionTitle extends StatelessWidget {
+  const _AnimatedSectionTitle(this.text, this.index);
   final String text;
   final int index;
-  const _AnimatedSectionTitle(this.text, this.index);
 
   @override
   Widget build(BuildContext context) {
@@ -588,9 +630,9 @@ class _AnimatedSectionTitle extends StatelessWidget {
 }
 
 class _AnimatedSectionText extends StatelessWidget {
+  const _AnimatedSectionText(this.text, this.index);
   final String text;
   final int index;
-  const _AnimatedSectionText(this.text, this.index);
 
   @override
   Widget build(BuildContext context) {
@@ -610,9 +652,9 @@ class _AnimatedSectionText extends StatelessWidget {
 }
 
 class _AnimatedSectionBullet extends StatelessWidget {
+  const _AnimatedSectionBullet(this.text, this.bulletIndex);
   final String text;
   final int bulletIndex;
-  const _AnimatedSectionBullet(this.text, this.bulletIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -627,8 +669,10 @@ class _AnimatedSectionBullet extends StatelessWidget {
             AnimatedContainer(
               duration: Duration(milliseconds: 300 + (bulletIndex * 100)),
               curve: Curves.elasticOut,
-              child: const Text('• ',
-                  style: TextStyle(fontSize: 22, color: AppTheme.red)),
+              child: const Text(
+                '• ',
+                style: TextStyle(fontSize: 22, color: AppTheme.red),
+              ),
             ),
             Expanded(
               child: Text(
@@ -647,8 +691,8 @@ class _AnimatedSectionBullet extends StatelessWidget {
 }
 
 class _SectionBullet extends StatelessWidget {
-  final String text;
   const _SectionBullet(this.text);
+  final String text;
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:al_faw_zakho/presentation/screens/candidates/candidates_by_province_screen.dart';
+
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
-import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
+import 'package:al_faw_zakho/core/utils/province_search_engine.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
-import 'package:al_faw_zakho/core/utils/province_search_engine.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
+import 'package:al_faw_zakho/presentation/screens/candidates/candidates_by_province_screen.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
 
 class ProvincesScreen extends StatefulWidget {
   const ProvincesScreen({super.key});
@@ -78,10 +79,13 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
         _isLoading = false;
       });
 
-      AnalyticsService.trackEvent('provinces_data_loaded', parameters: {
-        'provinces_count': provinces.length,
-        'candidates_count': totalCandidates,
-      });
+      AnalyticsService.trackEvent(
+        'provinces_data_loaded',
+        parameters: {
+          'provinces_count': provinces.length,
+          'candidates_count': totalCandidates,
+        },
+      );
     } catch (e) {
       setState(() {
         _error = 'فشل تحميل البيانات: ${e.toString()}';
@@ -107,10 +111,13 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
       setState(() => _filteredProvinces = searchResult.matchedProvinces);
 
       if (query.isNotEmpty) {
-        AnalyticsService.trackEvent('province_search_executed', parameters: {
-          'query': query,
-          'results_count': searchResult.matchedProvinces.length,
-        });
+        AnalyticsService.trackEvent(
+          'province_search_executed',
+          parameters: {
+            'query': query,
+            'results_count': searchResult.matchedProvinces.length,
+          },
+        );
       }
     });
   }
@@ -393,8 +400,12 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
   }
 
   Widget _buildStatItem(
-      String label, String value, IconData icon, BuildContext context,
-      [String? tooltip]) {
+    String label,
+    String value,
+    IconData icon,
+    BuildContext context, [
+    String? tooltip,
+  ]) {
     final iconColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.blue[200]
         : Colors.blue[700];
@@ -427,7 +438,10 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
   }
 
   Widget _buildEmptyState(
-      Color textColor, Color subtitleColor, Color backgroundColor) {
+    Color textColor,
+    Color subtitleColor,
+    Color backgroundColor,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -465,7 +479,8 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
                 foregroundColor: Colors.white,
               ),
               child: Text(
-                  AppLocalizations.of(context).translate('show_all_provinces')),
+                AppLocalizations.of(context).translate('show_all_provinces'),
+              ),
             ),
           ],
         ),
@@ -493,7 +508,7 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
             color: _getProvinceColor(count),
             shape: BoxShape.circle,
           ),
-          child: Icon(
+          child: const Icon(
             Icons.location_on,
             color: Colors.white,
             size: 20,
@@ -540,11 +555,14 @@ class _ProvincesScreenState extends State<ProvincesScreen> {
           color: subtitleColor, // 🎨 لون السهم مناسب للوضع المظلم
         ),
         onTap: () {
-          AnalyticsService.trackEvent('province_selected', parameters: {
-            'province': province,
-            'candidates_count': count,
-            'search_query': _searchController.text,
-          });
+          AnalyticsService.trackEvent(
+            'province_selected',
+            parameters: {
+              'province': province,
+              'candidates_count': count,
+              'search_query': _searchController.text,
+            },
+          );
           Navigator.push(
             context,
             MaterialPageRoute(

@@ -1,9 +1,9 @@
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
+import 'package:al_faw_zakho/core/providers/theme_provider.dart';
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/theme_provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
-import 'package:al_faw_zakho/core/services/analytics_service.dart';
 
 /// ⚙️ شاشة الإعدادات المتكاملة (لغة + مظهر + حول التطبيق)
 class SettingsScreen extends StatelessWidget {
@@ -63,7 +63,7 @@ class _AppearanceSection extends StatelessWidget {
     return _SettingsSection(
       title: context.tr('appearance'),
       icon: Icons.palette,
-      children: [
+      children: const [
         _SettingCard(child: _ThemeSwitchTile()),
       ],
     );
@@ -104,15 +104,14 @@ class _AboutSection extends StatelessWidget {
 
 /// 🧩 عنصر القسم العام
 class _SettingsSection extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final List<Widget> children;
-
   const _SettingsSection({
     required this.title,
     required this.icon,
     required this.children,
   });
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -144,9 +143,8 @@ class _SettingsSection extends StatelessWidget {
 
 /// 🪟 بطاقة إعداد فرعية
 class _SettingCard extends StatelessWidget {
-  final Widget child;
-
   const _SettingCard({required this.child});
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -195,10 +193,13 @@ class _ThemeSwitchTile extends StatelessWidget {
           value: currentMode,
           onChanged: (mode) async {
             if (mode == null) return;
-            AnalyticsService.trackEvent('theme_changed', parameters: {
-              'from': currentMode.toString(),
-              'to': mode.toString(),
-            });
+            AnalyticsService.trackEvent(
+              'theme_changed',
+              parameters: {
+                'from': currentMode.toString(),
+                'to': mode.toString(),
+              },
+            );
             await themeProvider.setTheme(mode);
           },
           items: [
@@ -389,20 +390,28 @@ class _AppInfoDetails extends StatelessWidget {
                         Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.flag,
-                      size: 32, color: Theme.of(context).primaryColor),
+                  child: Icon(
+                    Icons.flag,
+                    size: 32,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 const SizedBox(height: 12),
-                Text(context.tr('app_title'),
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  context.tr('app_title'),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   context.tr('political_election'),
                   style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).hintColor,
-                      height: 1.4),
+                    fontSize: 14,
+                    color: Theme.of(context).hintColor,
+                    height: 1.4,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -412,21 +421,25 @@ class _AppInfoDetails extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 16),
           _InfoRow(
-              icon: Icons.verified,
-              label: context.tr('version'),
-              value: '1.0.0'),
+            icon: Icons.verified,
+            label: context.tr('version'),
+            value: '1.0.0',
+          ),
           _InfoRow(
-              icon: Icons.build,
-              label: context.tr('build'),
-              value: '2025.01.01'),
+            icon: Icons.build,
+            label: context.tr('build'),
+            value: '2025.01.01',
+          ),
           _InfoRow(
-              icon: Icons.update,
-              label: context.tr('last_update'),
-              value: 'Jan 2025'),
+            icon: Icons.update,
+            label: context.tr('last_update'),
+            value: 'Jan 2025',
+          ),
           _InfoRow(
-              icon: Icons.security,
-              label: context.tr('status'),
-              value: context.tr('stable')),
+            icon: Icons.security,
+            label: context.tr('status'),
+            value: context.tr('stable'),
+          ),
         ],
       ),
     );
@@ -434,12 +447,14 @@ class _AppInfoDetails extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
   final IconData icon;
   final String label;
   final String value;
-
-  const _InfoRow(
-      {required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -451,16 +466,21 @@ class _InfoRow extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             flex: 2,
-            child: Text(label,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface)),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
           ),
           Expanded(
             flex: 3,
-            child: Text(value,
-                style: TextStyle(color: Theme.of(context).hintColor),
-                textAlign: TextAlign.start),
+            child: Text(
+              value,
+              style: TextStyle(color: Theme.of(context).hintColor),
+              textAlign: TextAlign.start,
+            ),
           ),
         ],
       ),

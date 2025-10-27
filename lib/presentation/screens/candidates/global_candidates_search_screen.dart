@@ -1,17 +1,17 @@
 // lib/presentation/screens/candidates/global_candidates_search_screen.dart
 
 import 'dart:async' show Timer;
+import 'dart:developer' as developer;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/presentation/screens/candidates/candidate_details_screen.dart';
-import 'package:al_faw_zakho/core/services/analytics_service.dart';
-import 'dart:developer' as developer;
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GlobalCandidatesSearchScreen extends StatefulWidget {
   const GlobalCandidatesSearchScreen({super.key});
@@ -63,8 +63,10 @@ class _GlobalCandidatesSearchScreenState
         _isLoading = false;
       });
 
-      developer.log('✅ Loaded ${_allCandidates.length} total candidates',
-          name: 'GLOBAL_SEARCH');
+      developer.log(
+        '✅ Loaded ${_allCandidates.length} total candidates',
+        name: 'GLOBAL_SEARCH',
+      );
     } catch (e, stack) {
       AnalyticsService.trackError('global_search_load', e, stack);
       setState(() => _isLoading = false);
@@ -174,12 +176,16 @@ class _GlobalCandidatesSearchScreenState
           hintStyle: TextStyle(
             color: isDark ? Colors.grey[400] : Colors.grey[600],
           ),
-          prefixIcon: Icon(Icons.search,
-              color: isDark ? Colors.grey[400] : Colors.grey[600]),
+          prefixIcon: Icon(
+            Icons.search,
+            color: isDark ? Colors.grey[400] : Colors.grey[600],
+          ),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
-                  icon: Icon(Icons.clear,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                  icon: Icon(
+                    Icons.clear,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  ),
                   onPressed: _clearSearch,
                 )
               : null,
@@ -230,7 +236,11 @@ class _GlobalCandidatesSearchScreenState
 
   // 🆕 بناء واجهة الحالة الأولية (قبل البحث)
   Widget _buildInitialState(
-      bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
+    bool isArabic,
+    bool isDark,
+    Color textColor,
+    Color subtitleColor,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -302,7 +312,11 @@ class _GlobalCandidatesSearchScreenState
 
   // 🆕 بناء واجهة عدم وجود نتائج
   Widget _buildNoResultsState(
-      bool isArabic, bool isDark, Color textColor, Color subtitleColor) {
+    bool isArabic,
+    bool isDark,
+    Color textColor,
+    Color subtitleColor,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -424,7 +438,11 @@ class _GlobalCandidatesSearchScreenState
 
   // 🆕 بناء رقاقة اقتراح
   Widget _buildSuggestionChip(
-      String text, IconData icon, VoidCallback onTap, bool isDark) {
+    String text,
+    IconData icon,
+    VoidCallback onTap,
+    bool isDark,
+  ) {
     return ActionChip(
       avatar: Icon(icon, size: 16),
       label: Text(text),
@@ -445,9 +463,8 @@ class _GlobalCandidatesSearchScreenState
 }
 
 class _CandidateSearchCard extends StatelessWidget {
-  final CandidateModel candidate;
-
   const _CandidateSearchCard({required this.candidate});
+  final CandidateModel candidate;
 
   @override
   Widget build(BuildContext context) {
@@ -482,8 +499,9 @@ class _CandidateSearchCard extends StatelessWidget {
             Text(
               candidate.province,
               style: TextStyle(
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  fontSize: 12),
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                fontSize: 12,
+              ),
             ),
           ],
         ),

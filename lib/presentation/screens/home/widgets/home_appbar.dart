@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback onSettingsTap;
   const HomeAppBar({super.key, required this.onSettingsTap});
+  final VoidCallback onSettingsTap;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -1,11 +1,10 @@
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
 
 class CategoryGrid extends StatelessWidget {
-  final Function(String) onCategorySelected;
-
   const CategoryGrid({super.key, required this.onCategorySelected});
+  final Function(String) onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,9 @@ class CategoryGrid extends StatelessWidget {
         'icon': Icons.people,
         'color': Colors.blue,
         'title': _getCategoryTitle(
-            'candidates', languageProvider.locale.languageCode),
+          'candidates',
+          languageProvider.locale.languageCode,
+        ),
       },
       {
         'id': 'offices',
@@ -71,7 +72,9 @@ class CategoryGrid extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(
-      BuildContext context, Map<String, dynamic> category) {
+    BuildContext context,
+    Map<String, dynamic> category,
+  ) {
     return Card(
       elevation: 2,
       child: InkWell(

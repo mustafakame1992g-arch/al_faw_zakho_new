@@ -1,28 +1,27 @@
 // lib/presentation/screens/candidates/candidates_by_province_screen.dart
 
 import 'dart:async';
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
-import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
-import 'package:flutter/services.dart';
+import 'dart:developer' as developer;
 
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
+import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
 import 'package:al_faw_zakho/presentation/screens/candidates/candidate_details_screen.dart';
-import 'dart:developer' as developer;
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class CandidatesByProvinceScreen extends StatefulWidget {
-  final String province;
-
   const CandidatesByProvinceScreen({
     super.key,
     required this.province,
   });
+  final String province;
 
   @override
   State<CandidatesByProvinceScreen> createState() =>
@@ -44,9 +43,12 @@ class _CandidatesByProvinceScreenState
     super.initState();
     _loadCandidates();
     _searchController.addListener(_onSearchChanged);
-    AnalyticsService.trackEvent('candidates_by_province_opened', parameters: {
-      'province': widget.province,
-    });
+    AnalyticsService.trackEvent(
+      'candidates_by_province_opened',
+      parameters: {
+        'province': widget.province,
+      },
+    );
   }
 
   Future<void> _loadCandidates() async {
@@ -190,8 +192,10 @@ class _CandidatesByProvinceScreenState
           // 🆕 إضافة زر مسح البحث في AppBar
           if (_searchController.text.isNotEmpty)
             IconButton(
-              icon: Icon(Icons.clear,
-                  color: isDark ? Colors.white : Colors.white),
+              icon: Icon(
+                Icons.clear,
+                color: isDark ? Colors.white : Colors.white,
+              ),
               onPressed: () {
                 _searchController.clear();
                 setState(() {
@@ -228,8 +232,10 @@ class _CandidatesByProvinceScreenState
                 ? Colors.grey[400]
                 : Colors.grey[600], // 🎨 نص توضيحي واضح
           ),
-          prefixIcon: Icon(Icons.search,
-              color: isDark ? Colors.grey[400] : Colors.grey[600]),
+          prefixIcon: Icon(
+            Icons.search,
+            color: isDark ? Colors.grey[400] : Colors.grey[600],
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
@@ -266,7 +272,9 @@ class _CandidatesByProvinceScreenState
           _buildSearchBar(isArabic, isDark),
           Expanded(
             child: _buildEmptyStateWithinScreen(
-                isDark, isArabic), // 🆕 حالة فارغة داخل الشاشة
+              isDark,
+              isArabic,
+            ), // 🆕 حالة فارغة داخل الشاشة
           ),
         ],
       );
@@ -407,7 +415,11 @@ class _CandidatesByProvinceScreenState
 
 // 🆕 بناء رقاقة اقتراح
   Widget _buildSuggestionChip(
-      String text, IconData icon, VoidCallback onTap, bool isDark) {
+    String text,
+    IconData icon,
+    VoidCallback onTap,
+    bool isDark,
+  ) {
     return ActionChip(
       avatar: Icon(icon, size: 16),
       label: Text(text),
@@ -498,8 +510,9 @@ class _CandidatesByProvinceScreenState
             : const Color(0xFFF4F4F4), // 🎨 خلفية مناسبة
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: isDark ? Colors.grey[600]! : const Color(0xFF555555),
-            width: 1.2),
+          color: isDark ? Colors.grey[600]! : const Color(0xFF555555),
+          width: 1.2,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -514,7 +527,8 @@ class _CandidatesByProvinceScreenState
                   : Colors.white, // 🎨 خلفية صورة مناسبة
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                  color: isDark ? Colors.grey[600]! : Colors.grey.shade300),
+                color: isDark ? Colors.grey[600]! : Colors.grey.shade300,
+              ),
             ),
             child: Image.asset(
               getLogoPath(),
@@ -564,8 +578,11 @@ class _CandidatesByProvinceScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               _error ??
@@ -586,12 +603,14 @@ class _CandidatesByProvinceScreenState
 }
 
 class _CandidateCard extends StatelessWidget {
+  const _CandidateCard({
+    required this.candidate,
+    required this.isDark,
+    required this.onTap,
+  });
   final CandidateModel candidate;
   final bool isDark;
   final VoidCallback onTap;
-
-  const _CandidateCard(
-      {required this.candidate, required this.isDark, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -628,8 +647,9 @@ class _CandidateCard extends StatelessWidget {
             Text(
               candidate.getPosition(currentLanguage),
               style: TextStyle(
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  fontSize: 12),
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                fontSize: 12,
+              ),
             ),
             const SizedBox(height: 4),
             Text(

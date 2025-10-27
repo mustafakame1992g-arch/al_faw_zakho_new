@@ -1,23 +1,30 @@
-import 'package:flutter/foundation.dart';
 import 'package:al_faw_zakho/core/constants/app_constants.dart';
+import 'package:flutter/foundation.dart';
 
 class PerformanceTracker {
   static final Map<String, Duration> _operationTimings = {};
   static final Map<String, int> _operationCounts = {};
 
-  static void track(String operationName, Duration duration,
-      {String? category}) {
+  static void track(
+    String operationName,
+    Duration duration, {
+    String? category,
+  }) {
     final key = category != null ? '$category::$operationName' : operationName;
 
     // تحديث الإحصائيات
-    _operationTimings.update(key, (value) => value + duration,
-        ifAbsent: () => duration);
+    _operationTimings.update(
+      key,
+      (value) => value + duration,
+      ifAbsent: () => duration,
+    );
     _operationCounts.update(key, (value) => value + 1, ifAbsent: () => 1);
 
     // التحذير من العمليات البطيئة
     if (duration > AppConstants.slowOperationThreshold) {
       debugPrint(
-          '⚠️ PERFORMANCE WARNING: $key took ${duration.inMilliseconds}ms');
+        '⚠️ PERFORMANCE WARNING: $key took ${duration.inMilliseconds}ms',
+      );
     } else {
       if (kDebugMode) {
         debugPrint('⚡ PERFORMANCE OK: $key took ${duration.inMilliseconds}ms');
@@ -40,7 +47,8 @@ class PerformanceTracker {
       final count = _operationCounts[key] ?? 1;
       final average = Duration(microseconds: duration.inMicroseconds ~/ count);
       debugPrint(
-          '   $key: ${duration.inMilliseconds}ms total, $average average ($count operations)');
+        '   $key: ${duration.inMilliseconds}ms total, $average average ($count operations)',
+      );
     });
   }
 }

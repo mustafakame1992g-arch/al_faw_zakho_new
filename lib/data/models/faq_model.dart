@@ -5,27 +5,6 @@ part 'faq_model.g.dart';
 /// ❓ FAQModel (ar/en only) - Enhanced Version
 @HiveType(typeId: 4)
 class FaqModel {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String questionAr;
-  @HiveField(2)
-  final String questionEn;
-  @HiveField(3)
-  final String answerAr;
-  @HiveField(4)
-  final String answerEn;
-  @HiveField(5)
-  final String category;
-  @HiveField(6)
-  final int importance;
-  @HiveField(7)
-  final List<String> tags;
-  @HiveField(8)
-  final DateTime createdAt;
-  @HiveField(9)
-  final int viewCount;
-
   const FaqModel({
     required this.id,
     required this.questionAr,
@@ -43,7 +22,10 @@ class FaqModel {
   factory FaqModel.fromJson(Map<String, dynamic> json) {
     // Helper function for safe parsing with multiple key support
     T getValue<T>(
-        List<String> keys, T defaultValue, T Function(dynamic) parser) {
+      List<String> keys,
+      T defaultValue,
+      T Function(dynamic) parser,
+    ) {
       try {
         for (final key in keys) {
           if (json.containsKey(key)) {
@@ -113,9 +95,11 @@ class FaqModel {
 
       // Support for both camelCase and snake_case with multiple variations
       questionAr: parseString(
-          ['question_ar', 'questionAr', 'question_ar', 'question_arabic']),
+        ['question_ar', 'questionAr', 'question_ar', 'question_arabic'],
+      ),
       questionEn: parseString(
-          ['question_en', 'questionEn', 'question_en', 'question_english']),
+        ['question_en', 'questionEn', 'question_en', 'question_english'],
+      ),
       answerAr:
           parseString(['answer_ar', 'answerAr', 'answer_ar', 'answer_arabic']),
       answerEn:
@@ -131,6 +115,28 @@ class FaqModel {
       viewCount: parseInt(['view_count', 'viewCount', 'views', 'view_count']),
     );
   }
+
+  factory FaqModel.fromMap(Map<String, dynamic> map) => FaqModel.fromJson(map);
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String questionAr;
+  @HiveField(2)
+  final String questionEn;
+  @HiveField(3)
+  final String answerAr;
+  @HiveField(4)
+  final String answerEn;
+  @HiveField(5)
+  final String category;
+  @HiveField(6)
+  final int importance;
+  @HiveField(7)
+  final List<String> tags;
+  @HiveField(8)
+  final DateTime createdAt;
+  @HiveField(9)
+  final int viewCount;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -203,8 +209,6 @@ class FaqModel {
 
   // 📦 Conversion helpers
   Map<String, dynamic> toMap() => toJson();
-
-  factory FaqModel.fromMap(Map<String, dynamic> map) => FaqModel.fromJson(map);
 
   // 🔍 Comparison operators
   @override

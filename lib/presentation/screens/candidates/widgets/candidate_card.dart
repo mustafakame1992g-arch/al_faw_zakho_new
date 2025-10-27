@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
+import 'package:flutter/material.dart';
 
 class CandidateCard extends StatelessWidget {
+  const CandidateCard({super.key, required this.candidate, this.onTap});
   final CandidateModel candidate;
   final VoidCallback? onTap;
-  const CandidateCard({super.key, required this.candidate, this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -1,20 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:al_faw_zakho/core/constants/app_constants.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
-import 'package:al_faw_zakho/core/constants/app_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// يدير إعدادات السمة (الوضع المظلم/الفاتح) للتطبيق.
-/// 
+///
 /// - يستخدم `shared_preferences` لحفظ تفضيلات المستخدم.
 /// - يحتوي على منطق Fallback لضمان عدم فشل التهيئة.
 /// - يتكامل مع `AnalyticsService` و `PerformanceTracker`.
-/// 
+///
 /// التهيئة:
 /// 1. تحاول تحميل السمة المحفوظة.
 /// 2. عند الفشل، تعتمد على النظام كخيار افتراضي.
 /// 3. تتبع الأحداث والأداء تلقائيًا.
-
 
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = AppConstants.defaultTheme;
@@ -70,7 +69,9 @@ class ThemeProvider with ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
-          AppConstants.themePreferenceKey, _themeModeToString(newTheme));
+        AppConstants.themePreferenceKey,
+        _themeModeToString(newTheme),
+      );
 
       AnalyticsService.trackEvent(
         'theme_changed',
@@ -82,13 +83,15 @@ class ThemeProvider with ChangeNotifier {
       );
 
       debugPrint(
-          '🎨 Theme changed: ${_themeModeToString(previousTheme)} → ${_themeModeToString(newTheme)}');
+        '🎨 Theme changed: ${_themeModeToString(previousTheme)} → ${_themeModeToString(newTheme)}',
+      );
     } catch (e, stackTrace) {
       // Fallback: التراجع عن التغيير
       _themeMode = previousTheme;
       AnalyticsService.trackError('ThemeChange', e, stackTrace);
       debugPrint(
-          '⚠️ Failed to save theme preference, reverted to previous theme');
+        '⚠️ Failed to save theme preference, reverted to previous theme',
+      );
     }
 
     notifyListeners();
@@ -106,7 +109,8 @@ class ThemeProvider with ChangeNotifier {
     if (_retryCount <= AppConstants.maxRetryAttempts) {
       final retryDelay = AppConstants.retryDelay * _retryCount;
       debugPrint(
-          '🔄 Retrying ThemeProvider initialization in ${retryDelay.inSeconds}s');
+        '🔄 Retrying ThemeProvider initialization in ${retryDelay.inSeconds}s',
+      );
       Future.delayed(retryDelay, init);
     } else {
       _themeMode = AppConstants.defaultTheme;

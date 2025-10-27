@@ -1,14 +1,14 @@
 // lib/presentation/screens/candidates/candidates_screen.dart
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
+import 'package:al_faw_zakho/presentation/screens/candidates/global_candidates_search_screen.dart';
 import 'package:al_faw_zakho/presentation/widgets/error_screen.dart';
 import 'package:al_faw_zakho/presentation/widgets/loading_screen.dart';
-import 'package:al_faw_zakho/presentation/screens/candidates/global_candidates_search_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CandidatesScreen extends StatefulWidget {
   const CandidatesScreen({super.key});
@@ -193,8 +193,10 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                     ? Colors.grey[400]
                     : Colors.grey[600], // 🎨 نص توضيحي واضح
               ),
-              prefixIcon: Icon(Icons.search,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600]),
+              prefixIcon: Icon(
+                Icons.search,
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
@@ -242,7 +244,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
             color: isDark
                 ? Colors.orange[900]!
                 : Colors.orange[50]!, // 🎨 خلفية مناسبة
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.info_outline, size: 16, color: Colors.orange),
@@ -286,9 +288,12 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
           '/candidates_by_province',
           arguments: province,
         );
-        AnalyticsService.trackEvent('province_selected', parameters: {
-          'province': province,
-        });
+        AnalyticsService.trackEvent(
+          'province_selected',
+          parameters: {
+            'province': province,
+          },
+        );
       },
     );
   }

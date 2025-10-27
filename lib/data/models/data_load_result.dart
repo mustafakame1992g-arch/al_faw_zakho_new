@@ -10,15 +10,6 @@ enum DataLoadErrorType {
 
 /// 📊 نموذج لنتائج تحميل البيانات
 class DataLoadResult {
-  final bool isSuccess;
-  final DataLoadErrorType? errorType;
-  final String? message;
-  final String? details;
-  final int? elapsedMs;
-  final int? candidatesCount;
-  final int? faqsCount;
-  final int? newsCount;
-
   DataLoadResult._({
     required this.isSuccess,
     this.errorType,
@@ -55,4 +46,12 @@ class DataLoadResult {
         message: message,
         details: details,
       );
+  final bool isSuccess;
+  final DataLoadErrorType? errorType;
+  final String? message;
+  final String? details;
+  final int? elapsedMs;
+  final int? candidatesCount;
+  final int? faqsCount;
+  final int? newsCount;
 }

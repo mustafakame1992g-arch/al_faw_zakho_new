@@ -1,10 +1,10 @@
-import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-import 'package:flutter/material.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
-import 'package:al_faw_zakho/core/services/analytics_service.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 class OfficesScreen extends StatefulWidget {
   const OfficesScreen({super.key});
@@ -118,15 +118,31 @@ class _OfficesScreenState extends State<OfficesScreen> {
               const Divider(),
               const SizedBox(height: 10),
               _detailRow(
-                  Icons.location_on, 'العنوان', office.addressAr, textColor),
+                Icons.location_on,
+                'العنوان',
+                office.addressAr,
+                textColor,
+              ),
               _detailRow(
-                  Icons.person, 'المدير', office.managerNameAr, textColor),
+                Icons.person,
+                'المدير',
+                office.managerNameAr,
+                textColor,
+              ),
               _detailRow(Icons.phone, 'الهاتف', office.phoneNumber, textColor),
-              _detailRow(Icons.access_time, 'ساعات العمل', office.workingHours,
-                  textColor),
+              _detailRow(
+                Icons.access_time,
+                'ساعات العمل',
+                office.workingHours,
+                textColor,
+              ),
               if (office.email.isNotEmpty)
-                _detailRow(Icons.email_outlined, 'البريد الإلكتروني',
-                    office.email, textColor),
+                _detailRow(
+                  Icons.email_outlined,
+                  'البريد الإلكتروني',
+                  office.email,
+                  textColor,
+                ),
               _detailRow(Icons.map, 'المحافظة', office.province, textColor),
               const SizedBox(height: 24),
               Center(
@@ -151,7 +167,11 @@ class _OfficesScreenState extends State<OfficesScreen> {
   }
 
   Widget _detailRow(
-      IconData icon, String label, String value, Color textColor) {
+    IconData icon,
+    String label,
+    String value,
+    Color textColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -253,19 +273,25 @@ class _OfficesScreenState extends State<OfficesScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: const Icon(Icons.business,
-            color: Color.fromARGB(255, 52, 25, 72), size: 30),
+        leading: const Icon(
+          Icons.business,
+          color: Color.fromARGB(255, 52, 25, 72),
+          size: 30,
+        ),
         title: Text(
           '${office.nameAr} (${office.province})',
           style: const TextStyle(
-              color: Color.fromARGB(255, 36, 34, 118),
-              fontWeight: FontWeight.bold,
-              fontSize: 17),
+            color: Color.fromARGB(255, 36, 34, 118),
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
         ),
         subtitle: Text(
           office.addressAr,
           style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black87, fontSize: 14),
+            color: isDark ? Colors.white70 : Colors.black87,
+            fontSize: 14,
+          ),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: fawGold),
         onTap: () => _showOfficeDetails(office),
@@ -280,8 +306,10 @@ class _OfficesScreenState extends State<OfficesScreen> {
         children: [
           const Icon(Icons.business_outlined, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text('لا توجد مكاتب مطابقة لبحثك',
-              style: TextStyle(color: textColor)),
+          Text(
+            'لا توجد مكاتب مطابقة لبحثك',
+            style: TextStyle(color: textColor),
+          ),
         ],
       ),
     );

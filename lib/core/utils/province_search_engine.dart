@@ -72,11 +72,10 @@ class ProvinceSearchEngine {
 }
 
 class SearchResult {
-  final List<String> matchedProvinces;
-  final bool hasExactMatch;
-
   SearchResult({
     required this.matchedProvinces,
     required this.hasExactMatch,
   });
+  final List<String> matchedProvinces;
+  final bool hasExactMatch;
 }

@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-
+import 'package:al_faw_zakho/presentation/screens/faq/faq_screen.dart';
 // شاشة الصفحة الرئيسية الفعلية + بقية الشاشات الداخلية
-import 'home_screen.dart';
-import '../provinces/provinces_screen.dart';
-import '../news/news_list_screen.dart';
-import '../offices/offices_main_screen.dart';
-import '../vision/vision_screen.dart';
-import '../faq/faq_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/home/home_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/news/news_list_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/provinces/provinces_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/vision/vision_screen.dart';
+import 'package:flutter/material.dart';
 
 class HomeRoot extends StatelessWidget {
   const HomeRoot({super.key});

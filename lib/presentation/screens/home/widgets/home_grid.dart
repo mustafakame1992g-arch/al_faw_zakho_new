@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:flutter/material.dart';
 
 /// 🗳️ شبكة أقسام الشاشة الرئيسية
 ///
@@ -11,9 +11,8 @@ import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 /// بحيث يمكنك تعديل النصوص والمحتوى مستقبلاً بدون المساس بالكود؟
 /// بهذا تتحول إلى نظام إدارة محتوى مصغّر داخل التطبيق.
 class HomeGrid extends StatelessWidget {
-  final Function(String) onTap;
-
   const HomeGrid({super.key, required this.onTap});
+  final Function(String) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +22,22 @@ class HomeGrid extends StatelessWidget {
       {
         'id': 'candidates',
         'title': AppLocalizations.of(context).translate('candidates'),
-        'icon': Icons.how_to_vote
+        'icon': Icons.how_to_vote,
       },
       {
         'id': 'offices',
         'title': AppLocalizations.of(context).translate('offices'),
-        'icon': Icons.account_balance
+        'icon': Icons.account_balance,
       },
       {
         'id': 'faq',
         'title': AppLocalizations.of(context).translate('faq'),
-        'icon': Icons.help_outline
+        'icon': Icons.help_outline,
       },
       {
         'id': 'program',
         'title': AppLocalizations.of(context).translate('program'),
-        'icon': Icons.auto_stories
+        'icon': Icons.auto_stories,
       },
     ];
 

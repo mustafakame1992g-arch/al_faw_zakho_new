@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class UiUtils {
   static void showLanguageChangeSnackBar(
-      BuildContext context, String newLanguage) {
+    BuildContext context,
+    String newLanguage,
+  ) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🌍 ${context.tr('language_changed')}'),

@@ -1,8 +1,8 @@
 // 🏢 offices_list_screen.dart — شاشة عرض المكاتب مع بحث ذكي
-import 'package:flutter/material.dart';
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 class OfficesListScreen extends StatefulWidget {
   const OfficesListScreen({super.key});
@@ -34,8 +34,11 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
     try {
       final raw = LocalDatabase.getOffices();
       final offices = raw
-          .map((e) => OfficeModel.fromJson(
-              Map<String, dynamic>.from(e as Map<String, dynamic>)))
+          .map(
+            (e) => OfficeModel.fromJson(
+              Map<String, dynamic>.from(e as Map<String, dynamic>),
+            ),
+          )
           .toList();
       offices.sort((a, b) => a.province.compareTo(b.province));
       _allOffices = offices;
@@ -108,7 +111,8 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-                child: CircularProgressIndicator(color: fawRed));
+              child: CircularProgressIndicator(color: fawRed),
+            );
           }
 
           if (snapshot.hasError) {
@@ -133,7 +137,12 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
             itemBuilder: (context, index) {
               final office = _filteredOffices[index];
               return _buildOfficeCard(
-                  context, office, titleColor, textColor, isDark);
+                context,
+                office,
+                titleColor,
+                textColor,
+                isDark,
+              );
             },
           );
         },
@@ -167,8 +176,13 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
     );
   }
 
-  Widget _buildOfficeCard(BuildContext context, OfficeModel office,
-      Color titleColor, Color textColor, bool isDark) {
+  Widget _buildOfficeCard(
+    BuildContext context,
+    OfficeModel office,
+    Color titleColor,
+    Color textColor,
+    bool isDark,
+  ) {
     return Card(
       color: isDark ? Colors.grey[900] : Colors.white,
       elevation: 3,
@@ -180,7 +194,10 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
         title: Text(
           '${office.nameAr} (${office.province})',
           style: TextStyle(
-              color: titleColor, fontWeight: FontWeight.bold, fontSize: 17),
+            color: titleColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
         ),
         subtitle: Text(
           office.addressAr,
@@ -204,8 +221,8 @@ class _OfficesListScreenState extends State<OfficesListScreen> {
 
 // 🗂️ شاشة تفاصيل المكتب
 class OfficeDetailsScreen extends StatelessWidget {
-  final OfficeModel office;
   const OfficeDetailsScreen({super.key, required this.office});
+  final OfficeModel office;
 
   @override
   Widget build(BuildContext context) {
@@ -218,8 +235,10 @@ class OfficeDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: isDark ? Colors.black : fawRed,
-        title: Text(office.nameAr,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          office.nameAr,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -232,21 +251,49 @@ class OfficeDetailsScreen extends StatelessWidget {
           if (office.secondaryPhone != null &&
               office.secondaryPhone!.isNotEmpty)
             _infoTile(
-                '📱 رقم إضافي', office.secondaryPhone!, textColor, titleColor),
+              '📱 رقم إضافي',
+              office.secondaryPhone!,
+              textColor,
+              titleColor,
+            ),
           _infoTile(
-              '✉️ البريد الإلكتروني', office.email, textColor, titleColor),
+            '✉️ البريد الإلكتروني',
+            office.email,
+            textColor,
+            titleColor,
+          ),
           _infoTile(
-              '👤 مدير المكتب', office.managerNameAr, textColor, titleColor),
+            '👤 مدير المكتب',
+            office.managerNameAr,
+            textColor,
+            titleColor,
+          ),
           _infoTile(
-              '🕒 أوقات العمل', office.workingHours, textColor, titleColor),
+            '🕒 أوقات العمل',
+            office.workingHours,
+            textColor,
+            titleColor,
+          ),
           if (office.workingDays != null)
             _infoTile(
-                '📅 أيام العمل', office.workingDays!, textColor, titleColor),
+              '📅 أيام العمل',
+              office.workingDays!,
+              textColor,
+              titleColor,
+            ),
           if (office.services.isNotEmpty)
-            _infoTile('🔧 الخدمات المتوفرة', office.services.join('، '),
-                textColor, titleColor),
-          _infoTile('💪 الطاقة الاستيعابية', '${office.capacity} شخص',
-              textColor, titleColor),
+            _infoTile(
+              '🔧 الخدمات المتوفرة',
+              office.services.join('، '),
+              textColor,
+              titleColor,
+            ),
+          _infoTile(
+            '💪 الطاقة الاستيعابية',
+            '${office.capacity} شخص',
+            textColor,
+            titleColor,
+          ),
           if (office.notes != null && office.notes!.isNotEmpty)
             _infoTile('🗒️ ملاحظات', office.notes!, textColor, titleColor),
         ],
@@ -255,20 +302,29 @@ class OfficeDetailsScreen extends StatelessWidget {
   }
 
   Widget _infoTile(
-      String title, String value, Color textColor, Color titleColor) {
+    String title,
+    String value,
+    Color textColor,
+    Color titleColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: TextStyle(
-                  color: titleColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16)),
+          Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(value,
-              style: TextStyle(color: textColor, fontSize: 15, height: 1.4)),
+          Text(
+            value,
+            style: TextStyle(color: textColor, fontSize: 15, height: 1.4),
+          ),
         ],
       ),
     );

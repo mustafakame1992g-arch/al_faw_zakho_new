@@ -1,38 +1,36 @@
 // 🎯 main.dart — النسخة النهائية الجاهزة للإطلاق (Release Clean)
-import 'dart:developer' as developer;
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
+
+import 'package:al_faw_zakho/core/errors/global_error_handler.dart';
+import 'package:al_faw_zakho/core/live/live_data_updater.dart';
+// 🧩 Core
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
+import 'package:al_faw_zakho/core/network/api_client.dart';
+import 'package:al_faw_zakho/core/perf/memory_manager.dart';
+import 'package:al_faw_zakho/core/providers/app_provider.dart';
+import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
+import 'package:al_faw_zakho/core/providers/theme_provider.dart';
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
+import 'package:al_faw_zakho/data/local/local_database.dart';
+// 🧱 Data
+import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/presentation/screens/about/about_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/donate/donate_screen.dart';
+// 🎨 UI
+import 'package:al_faw_zakho/presentation/screens/home/home_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
-import 'package:al_faw_zakho/core/errors/global_error_handler.dart';
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/presentation/widgets/error_screen.dart';
+import 'package:al_faw_zakho/presentation/widgets/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'dart:async';
-
-// 🧩 Core
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
-import 'package:al_faw_zakho/core/providers/app_provider.dart';
-import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
-import 'package:al_faw_zakho/core/providers/theme_provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
-import 'package:al_faw_zakho/core/services/analytics_service.dart';
-import 'package:al_faw_zakho/core/network/api_client.dart';
-import 'package:al_faw_zakho/core/perf/memory_manager.dart';
-
-// 🧱 Data
-import 'package:al_faw_zakho/data/models/candidate_model.dart';
-import 'package:al_faw_zakho/data/local/local_database.dart';
-import 'package:al_faw_zakho/core/live/live_data_updater.dart';
-
-// 🎨 UI
-import 'package:al_faw_zakho/presentation/screens/home/home_screen.dart';
-import 'package:al_faw_zakho/presentation/widgets/loading_screen.dart';
-import 'package:al_faw_zakho/presentation/widgets/error_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,8 +71,10 @@ void main() async {
 /// 🧠 تهيئة أساسية متوازية لجميع الخدمات
 Future<void> _initializeCoreServices() async {
   final stopwatch = Stopwatch()..start();
-  developer.log('[MAIN] 🚀 Starting ultra-optimized core initialization...',
-      name: 'BOOT');
+  developer.log(
+    '[MAIN] 🚀 Starting ultra-optimized core initialization...',
+    name: 'BOOT',
+  );
 
   try {
     // ============================================================
@@ -110,8 +110,10 @@ Future<void> _initializeCoreServices() async {
 
     // ✅ فحص مباشر لعدد المكاتب بعد التهيئة
     final offices = await LocalDatabase.getAllOffices();
-    developer.log('📦 DEBUG: Offices in Hive after init = ${offices.length}',
-        name: 'DEBUG');
+    developer.log(
+      '📦 DEBUG: Offices in Hive after init = ${offices.length}',
+      name: 'DEBUG',
+    );
     for (final o in offices) {
       developer.log('➡️ ${o.province} | ${o.nameAr}', name: 'DEBUG');
     }
@@ -121,8 +123,12 @@ Future<void> _initializeCoreServices() async {
       name: 'BOOT',
     );
   } catch (e, stack) {
-    developer.log('[MAIN] ❌ Core initialization failed: $e',
-        name: 'ERROR', error: e, stackTrace: stack);
+    developer.log(
+      '[MAIN] ❌ Core initialization failed: $e',
+      name: 'ERROR',
+      error: e,
+      stackTrace: stack,
+    );
 
     // 🚨 fallback احتياطي شامل لتأمين الإقلاع حتى لو فشل Hive
     await LocalDatabase.emergencyFallbackInitialization(e);
@@ -131,8 +137,9 @@ Future<void> _initializeCoreServices() async {
   } finally {
     stopwatch.stop();
     developer.log(
-        '[MAIN] 🕒 Total initialization time: ${stopwatch.elapsedMilliseconds}ms',
-        name: 'BOOT');
+      '[MAIN] 🕒 Total initialization time: ${stopwatch.elapsedMilliseconds}ms',
+      name: 'BOOT',
+    );
   }
 }
 
@@ -145,16 +152,24 @@ Future<void> _initializeHiveWithRetry() async {
       await Hive.initFlutter();
       await LocalDatabase.init();
 
-      developer.log('[MAIN] Hive initialized ✅ (attempt $attempt)',
-          name: 'BOOT');
+      developer.log(
+        '[MAIN] Hive initialized ✅ (attempt $attempt)',
+        name: 'BOOT',
+      );
       return;
     } catch (e, stack) {
-      developer.log('[MAIN] Hive init failed (attempt $attempt): $e',
-          name: 'WARNING', error: e, stackTrace: stack);
+      developer.log(
+        '[MAIN] Hive init failed (attempt $attempt): $e',
+        name: 'WARNING',
+        error: e,
+        stackTrace: stack,
+      );
 
       if (attempt == maxAttempts) {
-        developer.log('[MAIN] Hive init failed after $maxAttempts attempts',
-            name: 'ERROR');
+        developer.log(
+          '[MAIN] Hive init failed after $maxAttempts attempts',
+          name: 'ERROR',
+        );
         rethrow;
       }
 
@@ -179,11 +194,16 @@ Future<void> _initializeRealDataSystem() async {
     }
 
     developer.log(
-        '[MAIN] Real data system initialized ✅ (${adapters.length} adapters)',
-        name: 'BOOT');
+      '[MAIN] Real data system initialized ✅ (${adapters.length} adapters)',
+      name: 'BOOT',
+    );
   } catch (e, stack) {
-    developer.log('[MAIN] Real data system init failed: $e',
-        name: 'ERROR', error: e, stackTrace: stack);
+    developer.log(
+      '[MAIN] Real data system init failed: $e',
+      name: 'ERROR',
+      error: e,
+      stackTrace: stack,
+    );
   }
 }
 
@@ -229,8 +249,12 @@ Future<void> _preloadEssentialData() async {
 
     developer.log('[MAIN] Essential assets preloaded ✅', name: 'BOOT');
   } catch (e, stack) {
-    developer.log('[MAIN] Preload warning: $e',
-        name: 'INFO', error: e, stackTrace: stack);
+    developer.log(
+      '[MAIN] Preload warning: $e',
+      name: 'INFO',
+      error: e,
+      stackTrace: stack,
+    );
   }
 }
 
@@ -295,8 +319,12 @@ class __AppRootState extends State<_AppRoot> {
         });
       }
     } catch (e, stack) {
-      developer.log('[_AppRoot] Initialization failed: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[_AppRoot] Initialization failed: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
 
       if (mounted) {
         setState(() {
@@ -337,7 +365,10 @@ class __AppRootState extends State<_AppRoot> {
   }
 
   Future<bool> _executePhaseWithTimeout(
-      _Phase phase, int current, int total) async {
+    _Phase phase,
+    int current,
+    int total,
+  ) async {
     _updateProgress(current, total, '${phase.name}...');
 
     try {
@@ -374,13 +405,19 @@ class __AppRootState extends State<_AppRoot> {
           Provider.of<ConnectivityProvider>(context, listen: false);
       final result = await connectivityProvider.checkConnection();
 
-      developer.log('[_AppRoot] Connectivity check result: $result',
-          name: 'DEBUG');
+      developer.log(
+        '[_AppRoot] Connectivity check result: $result',
+        name: 'DEBUG',
+      );
 
       return result;
     } catch (e, stackTrace) {
-      developer.log('[_AppRoot] Connectivity check failed: $e',
-          name: 'ERROR', error: e, stackTrace: stackTrace);
+      developer.log(
+        '[_AppRoot] Connectivity check failed: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return false;
     }
   }
@@ -398,13 +435,18 @@ class __AppRootState extends State<_AppRoot> {
 
       if (candidates.isEmpty || faqs.isEmpty) {
         developer.log(
-            '[REAL_DATA] Empty data detected (candidates: ${candidates.length}, FAQs: ${faqs.length}), loading default data...',
-            name: 'WARNING');
+          '[REAL_DATA] Empty data detected (candidates: ${candidates.length}, FAQs: ${faqs.length}), loading default data...',
+          name: 'WARNING',
+        );
         await _loadDefaultData();
       }
     } catch (e, stack) {
-      developer.log('[REAL_DATA] Critical load failure: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[REAL_DATA] Critical load failure: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
       await _loadDefaultData();
     }
   }
@@ -418,8 +460,9 @@ class __AppRootState extends State<_AppRoot> {
       final faqs = LocalDatabase.getFAQs();
 
       developer.log(
-          '[VALIDATION] Starting validation - Candidates: ${candidates.length}, FAQs: ${faqs.length}',
-          name: 'DEBUG');
+        '[VALIDATION] Starting validation - Candidates: ${candidates.length}, FAQs: ${faqs.length}',
+        name: 'DEBUG',
+      );
 
       if (candidates.isEmpty) {
         developer.log('[VALIDATION] Empty candidates list', name: 'WARNING');
@@ -438,15 +481,21 @@ class __AppRootState extends State<_AppRoot> {
         name: 'DATA',
       );
     } catch (e, stack) {
-      developer.log('[VALIDATION] Critical validation failure: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[VALIDATION] Critical validation failure: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
       await _loadDefaultData();
       rethrow;
     }
   }
 
   void _validateDataQuality(
-      List<CandidateModel> candidates, List<dynamic> faqs) {
+    List<CandidateModel> candidates,
+    List<dynamic> faqs,
+  ) {
     if (candidates.isEmpty || faqs.isEmpty) {
       throw Exception('البيانات فارغة لا يمكن التحقق من الجودة');
     }
@@ -455,7 +504,8 @@ class __AppRootState extends State<_AppRoot> {
     for (final candidate in candidates) {
       if (candidate.nameAr.isEmpty && candidate.nameEn.isEmpty) {
         throw Exception(
-            'بيانات مرشح غير مكتملة: الاسم مفقود للمرشح ${candidate.id}');
+          'بيانات مرشح غير مكتملة: الاسم مفقود للمرشح ${candidate.id}',
+        );
       }
     }
 
@@ -501,8 +551,10 @@ class __AppRootState extends State<_AppRoot> {
   /// 🗃️ تحميل البيانات الافتراضية من JSON
   Future<void> _loadDefaultData() async {
     try {
-      developer.log('[DEFAULT_DATA] Loading default data from assets...',
-          name: 'DATA');
+      developer.log(
+        '[DEFAULT_DATA] Loading default data from assets...',
+        name: 'DATA',
+      );
 
       await LocalDatabase.clearCandidates();
       await LocalDatabase.clearFAQs();
@@ -530,8 +582,9 @@ class __AppRootState extends State<_AppRoot> {
 
       await LocalDatabase.saveCandidates(candidatesList);
       developer.log(
-          '[DEFAULT_DATA] Saved ${candidatesList.length} candidates ✅',
-          name: 'DATA');
+        '[DEFAULT_DATA] Saved ${candidatesList.length} candidates ✅',
+        name: 'DATA',
+      );
 
       // ✅ حفظ الأسئلة الشائعة
       final faqsList = jsonData['faqs'] as List;
@@ -540,8 +593,10 @@ class __AppRootState extends State<_AppRoot> {
       }
 
       await LocalDatabase.saveFAQs(faqsList);
-      developer.log('[DEFAULT_DATA] Saved ${faqsList.length} FAQs ✅',
-          name: 'DATA');
+      developer.log(
+        '[DEFAULT_DATA] Saved ${faqsList.length} FAQs ✅',
+        name: 'DATA',
+      );
 
       await LocalDatabase.saveAppData(
         'last_data_update',
@@ -549,15 +604,22 @@ class __AppRootState extends State<_AppRoot> {
       );
 
       developer.log(
-          '[DEFAULT_DATA] Default data loaded successfully in ${stopwatch.elapsedMilliseconds}ms ✅',
-          name: 'PERF');
+        '[DEFAULT_DATA] Default data loaded successfully in ${stopwatch.elapsedMilliseconds}ms ✅',
+        name: 'PERF',
+      );
     } on TimeoutException {
-      developer.log('[DEFAULT_DATA] Timeout while loading default data',
-          name: 'ERROR');
+      developer.log(
+        '[DEFAULT_DATA] Timeout while loading default data',
+        name: 'ERROR',
+      );
       throw Exception('استغرقت عملية تحميل البيانات وقتاً طويلاً');
     } catch (e, stack) {
-      developer.log('[DEFAULT_DATA] Failed to load default data: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[DEFAULT_DATA] Failed to load default data: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
       throw Exception('فشل في تحميل البيانات الافتراضية');
     }
   }
@@ -574,11 +636,17 @@ class __AppRootState extends State<_AppRoot> {
               developer.log('[INIT] Live updater timeout', name: 'WARNING');
             },
           );
-          developer.log('[INIT] Live data updater started successfully ✅',
-              name: 'BOOT');
+          developer.log(
+            '[INIT] Live data updater started successfully ✅',
+            name: 'BOOT',
+          );
         } catch (e, stack) {
-          developer.log('[INIT] Live updater failed: $e',
-              name: 'WARNING', error: e, stackTrace: stack);
+          developer.log(
+            '[INIT] Live updater failed: $e',
+            name: 'WARNING',
+            error: e,
+            stackTrace: stack,
+          );
         }
       }
 
@@ -587,25 +655,41 @@ class __AppRootState extends State<_AppRoot> {
         await MemoryManager.tuneImageCacheForLowEnd(lowEnd: true);
         developer.log('[INIT] Memory tuning applied ✅', name: 'BOOT');
       } catch (e, stack) {
-        developer.log('[INIT] Memory tuning failed: $e',
-            name: 'WARNING', error: e, stackTrace: stack);
+        developer.log(
+          '[INIT] Memory tuning failed: $e',
+          name: 'WARNING',
+          error: e,
+          stackTrace: stack,
+        );
       }
 
       // ✅ تحسينات إضافية
       try {
         _optimizePerformance();
-        developer.log('[INIT] Performance optimizations applied ✅',
-            name: 'BOOT');
+        developer.log(
+          '[INIT] Performance optimizations applied ✅',
+          name: 'BOOT',
+        );
       } catch (e, stack) {
-        developer.log('[INIT] Performance optimization failed: $e',
-            name: 'WARNING', error: e, stackTrace: stack);
+        developer.log(
+          '[INIT] Performance optimization failed: $e',
+          name: 'WARNING',
+          error: e,
+          stackTrace: stack,
+        );
       }
 
-      developer.log('[INIT] Finalization complete (online: $connected) ✅',
-          name: 'BOOT');
+      developer.log(
+        '[INIT] Finalization complete (online: $connected) ✅',
+        name: 'BOOT',
+      );
     } catch (e, stack) {
-      developer.log('[INIT] Unexpected finalization error: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[INIT] Unexpected finalization error: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -624,10 +708,11 @@ class __AppRootState extends State<_AppRoot> {
       // 📊 تسجيل الإعدادات
       final imageCache = PaintingBinding.instance.imageCache;
       developer.log(
-          '[PERF] Image cache: ${imageCache.currentSize}/${imageCache.maximumSize} images, '
-          '${memoryStatus.cacheUsagePercent.toStringAsFixed(1)}% used '
-          '(lowEnd: $isLowEndDevice)',
-          name: 'DEBUG');
+        '[PERF] Image cache: ${imageCache.currentSize}/${imageCache.maximumSize} images, '
+        '${memoryStatus.cacheUsagePercent.toStringAsFixed(1)}% used '
+        '(lowEnd: $isLowEndDevice)',
+        name: 'DEBUG',
+      );
 
       // 🖥️ تكوين واجهة النظام للتحسين
       _configureSystemUI(isLowEndDevice);
@@ -636,15 +721,17 @@ class __AppRootState extends State<_AppRoot> {
       _scheduleAdaptiveMemoryCleanup(isLowEndDevice);
 
       developer.log(
-          '[PERF] Performance optimizations applied in ${stopwatch.elapsedMilliseconds}ms '
-          '(lowEnd: $isLowEndDevice, cache: ${memoryStatus.cacheUsagePercent.toStringAsFixed(1)}%)',
-          name: 'BOOT');
+        '[PERF] Performance optimizations applied in ${stopwatch.elapsedMilliseconds}ms '
+        '(lowEnd: $isLowEndDevice, cache: ${memoryStatus.cacheUsagePercent.toStringAsFixed(1)}%)',
+        name: 'BOOT',
+      );
     } catch (e, stack) {
       developer.log(
-          '[PERF] Performance optimization failed after ${stopwatch.elapsedMilliseconds}ms: $e',
-          name: 'WARNING',
-          error: e,
-          stackTrace: stack);
+        '[PERF] Performance optimization failed after ${stopwatch.elapsedMilliseconds}ms: $e',
+        name: 'WARNING',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -665,11 +752,16 @@ class __AppRootState extends State<_AppRoot> {
       }
 
       developer.log(
-          '[PERF] System UI configured for ${isLowEndDevice ? 'low-end' : 'high-end'} device',
-          name: 'DEBUG');
+        '[PERF] System UI configured for ${isLowEndDevice ? 'low-end' : 'high-end'} device',
+        name: 'DEBUG',
+      );
     } catch (e, stack) {
-      developer.log('[PERF] System UI configuration failed: $e',
-          name: 'INFO', error: e, stackTrace: stack);
+      developer.log(
+        '[PERF] System UI configuration failed: $e',
+        name: 'INFO',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -685,8 +777,9 @@ class __AppRootState extends State<_AppRoot> {
         );
 
         developer.log(
-            '[PERF] ${isLowEndDevice ? 'Aggressive' : 'Standard'} memory cleanup: $result',
-            name: 'DEBUG');
+          '[PERF] ${isLowEndDevice ? 'Aggressive' : 'Standard'} memory cleanup: $result',
+          name: 'DEBUG',
+        );
       } catch (e) {
         developer.log('[PERF] Memory cleanup failed: $e', name: 'INFO');
       }
@@ -697,8 +790,10 @@ class __AppRootState extends State<_AppRoot> {
     if (mounted) {
       setState(() => _progress = current / total);
     }
-    developer.log('[_AppRoot] Phase $current/$total: $phaseDescription',
-        name: 'PROGRESS');
+    developer.log(
+      '[_AppRoot] Phase $current/$total: $phaseDescription',
+      name: 'PROGRESS',
+    );
   }
 
   @override
@@ -787,10 +882,9 @@ class __AppRootState extends State<_AppRoot> {
 
 // ✅ إضافة كلاس _Phase المفقود
 class _Phase {
+  _Phase(this.name, this.task);
   final String name;
   final Future<void> Function() task;
-
-  _Phase(this.name, this.task);
 }
 
 //جديد يوم الخميس 9/10

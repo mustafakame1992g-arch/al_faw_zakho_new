@@ -13,20 +13,14 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:al_faw_zakho/core/config/app_config.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// 🔧 الإعدادات العامة لمعالجة الأخطاء
 class ErrorHandlerConfig {
-  final bool enableConsoleLogging;
-  final bool enableFileLogging;
-  final bool enableDatabaseLogging;
-  final bool enableAutoReporting;
-  final int duplicateSuppressionSeconds;
-  final int maxLogFileSizeMB;
-
   const ErrorHandlerConfig({
     this.enableConsoleLogging = true,
     this.enableFileLogging = true,
@@ -35,6 +29,12 @@ class ErrorHandlerConfig {
     this.duplicateSuppressionSeconds = 10,
     this.maxLogFileSizeMB = 5,
   });
+  final bool enableConsoleLogging;
+  final bool enableFileLogging;
+  final bool enableDatabaseLogging;
+  final bool enableAutoReporting;
+  final int duplicateSuppressionSeconds;
+  final int maxLogFileSizeMB;
 }
 
 /// 🧭 مستويات الخطأ (Severity)
@@ -94,8 +94,12 @@ class GlobalErrorHandler {
       _initialized = true;
       developer.log('[GlobalErrorHandler] Initialized ✅', name: 'ERROR_SYS');
     } catch (e, stack) {
-      developer.log('[GlobalErrorHandler] Setup failed: $e',
-          name: 'ERROR_SYS', error: e, stackTrace: stack);
+      developer.log(
+        '[GlobalErrorHandler] Setup failed: $e',
+        name: 'ERROR_SYS',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -117,15 +121,18 @@ class GlobalErrorHandler {
     if (_isDuplicateError(report)) return;
 
     // 🔁 تسجيل متعدد الوجهات بشكل غير حاجز
-    await Future.wait([
-      if (_config.enableConsoleLogging) _logToConsole(report),
-      if (_config.enableFileLogging) _logToFile(report),
-      if (_config.enableDatabaseLogging)
-        _logToDatabase(report, severity: severity),
-      if (_config.enableAutoReporting &&
-          severity.index >= ErrorSeverity.high.index)
-        _reportToAnalytics(error, stack, source),
-    ], eagerError: false);
+    await Future.wait(
+      [
+        if (_config.enableConsoleLogging) _logToConsole(report),
+        if (_config.enableFileLogging) _logToFile(report),
+        if (_config.enableDatabaseLogging)
+          _logToDatabase(report, severity: severity),
+        if (_config.enableAutoReporting &&
+            severity.index >= ErrorSeverity.high.index)
+          _reportToAnalytics(error, stack, source),
+      ],
+      eagerError: false,
+    );
   }
 
   // 🧾 تنسيق نص تقرير الخطأ
@@ -186,13 +193,16 @@ Stack: ${stack ?? 'No stack trace'}
 
       if (size > maxSize) {
         final backup = File(
-            '${_errorLogFile.path}.${DateTime.now().millisecondsSinceEpoch}.bak');
+          '${_errorLogFile.path}.${DateTime.now().millisecondsSinceEpoch}.bak',
+        );
         await _errorLogFile.rename(backup.path);
         _errorLogFile = File(_errorLogFile.path); // إنشاء جديد
       }
     } catch (e) {
-      developer.log('[GlobalErrorHandler] Log rotation failed: $e',
-          name: 'ERROR_SYS');
+      developer.log(
+        '[GlobalErrorHandler] Log rotation failed: $e',
+        name: 'ERROR_SYS',
+      );
     }
   }
 
@@ -210,14 +220,18 @@ Stack: ${stack ?? 'No stack trace'}
         flush: true,
       );
     } catch (e) {
-      developer.log('[GlobalErrorHandler] File logging failed: $e',
-          name: 'ERROR_SYS');
+      developer.log(
+        '[GlobalErrorHandler] File logging failed: $e',
+        name: 'ERROR_SYS',
+      );
     }
   }
 
   // 📦 التسجيل في قاعدة البيانات (Hive)
-  static Future<void> _logToDatabase(String report,
-      {required ErrorSeverity severity}) async {
+  static Future<void> _logToDatabase(
+    String report, {
+    required ErrorSeverity severity,
+  }) async {
     try {
       await LocalDatabase.saveAppData('last_error', {
         'message': report,
@@ -231,10 +245,15 @@ Stack: ${stack ?? 'No stack trace'}
 
   // 📊 إرسال تقارير الأخطاء الحرجة إلى التحليلات
   static Future<void> _reportToAnalytics(
-      Object error, StackTrace? stack, String source) async {
+    Object error,
+    StackTrace? stack,
+    String source,
+  ) async {
     try {
-      developer.log('[Analytics] Reporting critical error...',
-          name: 'ERROR_SYS');
+      developer.log(
+        '[Analytics] Reporting critical error...',
+        name: 'ERROR_SYS',
+      );
       // مستقبلاً يمكن إضافة Firebase Crashlytics أو API endpoint هنا
     } catch (e) {
       developer.log('[Analytics] Reporting failed: $e', name: 'ERROR_SYS');
@@ -263,8 +282,10 @@ Stack: ${stack ?? 'No stack trace'}
       await LocalDatabase.saveAppData('last_error', null);
       developer.log('[GlobalErrorHandler] Logs cleared ✅', name: 'ERROR_SYS');
     } catch (e) {
-      developer.log('[GlobalErrorHandler] Failed to clear logs: $e',
-          name: 'ERROR_SYS');
+      developer.log(
+        '[GlobalErrorHandler] Failed to clear logs: $e',
+        name: 'ERROR_SYS',
+      );
     }
   }
 
@@ -286,8 +307,12 @@ Stack: ${stack ?? 'No stack trace'}
       );
     } catch (e, st) {
       // إذا صار خطأ أثناء التسجيل نفسه، نسجّله محلياً بدون كراش
-      developer.log('[GlobalErrorHandler.capture] Failed: $e',
-          name: 'ERROR_SYS', error: e, stackTrace: st);
+      developer.log(
+        '[GlobalErrorHandler.capture] Failed: $e',
+        name: 'ERROR_SYS',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 }

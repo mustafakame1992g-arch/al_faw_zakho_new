@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 /// ⏳ شاشة التحميل العامة أثناء تهيئة البيانات
 class LoadingWidget extends StatelessWidget {
-  final double progress;
-
   const LoadingWidget({super.key, required this.progress});
+  final double progress;
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,8 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageManager {
-  static final _secureStorage = FlutterSecureStorage();
+  static final _secureStorage = const FlutterSecureStorage();
   static late final Encrypter _encrypter;
   static late final IV _iv;
 
@@ -28,7 +28,9 @@ class SecureStorageManager {
   static Future<void> saveAdKeys(String appId, String bannerId) async {
     await _secureStorage.write(key: _adMobAppIdKey, value: _encrypt(appId));
     await _secureStorage.write(
-        key: _adMobBannerIdKey, value: _encrypt(bannerId));
+      key: _adMobBannerIdKey,
+      value: _encrypt(bannerId),
+    );
   }
 
   /// 🔓 استرجاع مفاتيح الإعلانات

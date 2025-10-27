@@ -5,30 +5,6 @@ part 'news_model.g.dart';
 /// 📰 NewsModel — تصميم متين ومرن للـJSON (camel/snake)
 @HiveType(typeId: 1)
 class NewsModel {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String titleAr;
-  @HiveField(2)
-  final String titleEn;
-  @HiveField(3)
-  final String contentAr;
-  @HiveField(4)
-  final String contentEn;
-
-  @HiveField(5)
-  final String imagePath; // ملاحظة: اسم الحقل داخليًا imagePath
-  @HiveField(6)
-  final DateTime publishDate;
-  @HiveField(7)
-  final String author;
-  @HiveField(8)
-  final String category;
-  @HiveField(9)
-  final bool isBreaking;
-  @HiveField(10)
-  final int viewCount;
-
   const NewsModel({
     required this.id,
     required this.titleAr,
@@ -42,39 +18,6 @@ class NewsModel {
     required this.isBreaking,
     required this.viewCount,
   });
-
-  // -----------------------------
-  // Parsing Helpers (آمنة ومرنة)
-  // -----------------------------
-  // ignore: non_constant_identifier_names
-  static String _S(dynamic v) => (v ?? '').toString().trim();
-
-  // ignore: non_constant_identifier_names
-  static bool _B(dynamic v) {
-    if (v is bool) return v;
-    final s = _S(v).toLowerCase();
-    return s == 'true' || s == '1' || s == 'yes';
-  }
-
-  // ignore: non_constant_identifier_names
-  static int _I(dynamic v) {
-    if (v is int) return v;
-    final s = _S(v);
-    final n = int.tryParse(s);
-    return n ?? 0;
-  }
-
-  // ignore: non_constant_identifier_names
-  static DateTime _D(dynamic v) {
-    try {
-      if (v is DateTime) return v;
-      if (v is int) return DateTime.fromMillisecondsSinceEpoch(v);
-      final s = _S(v);
-      return s.isEmpty ? DateTime.now() : DateTime.parse(s);
-    } catch (_) {
-      return DateTime.now();
-    }
-  }
 
   // ---------------------------------------
   // JSON (يدعم snake_case و camelCase)
@@ -107,6 +50,62 @@ class NewsModel {
       isBreaking: isBreaking,
       viewCount: viewCount,
     );
+  }
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String titleAr;
+  @HiveField(2)
+  final String titleEn;
+  @HiveField(3)
+  final String contentAr;
+  @HiveField(4)
+  final String contentEn;
+
+  @HiveField(5)
+  final String imagePath; // ملاحظة: اسم الحقل داخليًا imagePath
+  @HiveField(6)
+  final DateTime publishDate;
+  @HiveField(7)
+  final String author;
+  @HiveField(8)
+  final String category;
+  @HiveField(9)
+  final bool isBreaking;
+  @HiveField(10)
+  final int viewCount;
+
+  // -----------------------------
+  // Parsing Helpers (آمنة ومرنة)
+  // -----------------------------
+  // ignore: non_constant_identifier_names
+  static String _S(dynamic v) => (v ?? '').toString().trim();
+
+  // ignore: non_constant_identifier_names
+  static bool _B(dynamic v) {
+    if (v is bool) return v;
+    final s = _S(v).toLowerCase();
+    return s == 'true' || s == '1' || s == 'yes';
+  }
+
+  // ignore: non_constant_identifier_names
+  static int _I(dynamic v) {
+    if (v is int) return v;
+    final s = _S(v);
+    final n = int.tryParse(s);
+    return n ?? 0;
+  }
+
+  // ignore: non_constant_identifier_names
+  static DateTime _D(dynamic v) {
+    try {
+      if (v is DateTime) return v;
+      if (v is int) return DateTime.fromMillisecondsSinceEpoch(v);
+      final s = _S(v);
+      return s.isEmpty ? DateTime.now() : DateTime.parse(s);
+    } catch (_) {
+      return DateTime.now();
+    }
   }
 
   Map<String, dynamic> toJson() => {

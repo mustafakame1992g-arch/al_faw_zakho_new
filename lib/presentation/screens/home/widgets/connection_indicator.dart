@@ -1,6 +1,6 @@
+import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
 
 /// 🌐 مؤشّر الاتصال بالإنترنت
 class ConnectionIndicator extends StatelessWidget {

@@ -1,10 +1,11 @@
 // lib/core/providers/faq_provider.dart
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
-import 'package:flutter/foundation.dart';
-import 'package:al_faw_zakho/data/repositories/faq_repository.dart';
 import 'package:al_faw_zakho/data/models/faq_model.dart';
+import 'package:al_faw_zakho/data/repositories/faq_repository.dart';
+import 'package:flutter/foundation.dart';
 
 class FAQProvider with ChangeNotifier {
+  FAQProvider(this._repository);
   final FAQRepository _repository;
 
   List<FaqModel> _faqs = [];
@@ -13,8 +14,6 @@ class FAQProvider with ChangeNotifier {
   String _error = '';
   String _searchQuery = '';
   String _selectedCategory = 'الكل';
-
-  FAQProvider(this._repository);
 
   // Getters
   List<FaqModel> get faqs => _filteredFAQs;

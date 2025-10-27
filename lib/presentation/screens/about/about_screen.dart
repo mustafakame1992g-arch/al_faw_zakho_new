@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-
 // ⚠️ ضروري لاستعمال context.tr / context.trf
 import 'package:al_faw_zakho/core/localization/localization_extensions.dart';
+import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -80,9 +79,9 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // أيقونات قنوات التواصل (مع Semantics/Tooltip لسهولة الوصول)
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 _IconRound(icon: Icons.language, tooltip: 'Website'),
                 SizedBox(width: 16),
                 _IconRound(icon: Icons.email_outlined, tooltip: 'Email'),
@@ -130,9 +129,9 @@ class AboutScreen extends StatelessWidget {
 }
 
 class _IconRound extends StatelessWidget {
+  const _IconRound({required this.icon, required this.tooltip});
   final IconData icon;
   final String tooltip;
-  const _IconRound({required this.icon, required this.tooltip});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
 // test/navigation_service_test.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('goHome resets stack', (tester) async {

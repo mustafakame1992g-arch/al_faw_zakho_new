@@ -1,13 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:flutter/material.dart';
 
 class FZScaffold extends StatelessWidget {
-  final Widget body;
-  final String? title;
-  final List<Widget>? actions;
-  final PreferredSizeWidget? appBar; // NEW: AppBar مخصّص
-  final FZTab? persistentBottom;
-
   const FZScaffold({
     super.key,
     required this.body,
@@ -16,6 +10,11 @@ class FZScaffold extends StatelessWidget {
     this.appBar,
     this.persistentBottom,
   });
+  final Widget body;
+  final String? title;
+  final List<Widget>? actions;
+  final PreferredSizeWidget? appBar; // NEW: AppBar مخصّص
+  final FZTab? persistentBottom;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +24,9 @@ class FZScaffold extends StatelessWidget {
         ? null
         : FZBottomNav(active: persistentBottom!);
     return Scaffold(
-        appBar: resolvedAppBar, body: body, bottomNavigationBar: bottom);
+      appBar: resolvedAppBar,
+      body: body,
+      bottomNavigationBar: bottom,
+    );
   }
 }

@@ -28,7 +28,7 @@ class AppTheme {
   // ☀️ الثيم النهاري - محسّن ومكتمل
   // ==============================================================
   static ThemeData get lightTheme {
-    final colorScheme = ColorScheme(
+    final colorScheme = const ColorScheme(
       brightness: Brightness.light,
       primary: red,
       onPrimary: black,
@@ -56,7 +56,7 @@ class AppTheme {
       scaffoldBackgroundColor: white,
 
       // 🔝 شريط التطبيق
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: black,
         elevation: 0,
@@ -74,7 +74,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: white,
         elevation: 2,
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -95,23 +95,23 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: red, width: 2),
+          borderSide: const BorderSide(color: red, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFFBA1A1A)),
+          borderSide: const BorderSide(color: Color(0xFFBA1A1A)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFFBA1A1A), width: 2),
+          borderSide: const BorderSide(color: Color(0xFFBA1A1A), width: 2),
         ),
-        hintStyle: TextStyle(color: Colors.black54),
-        labelStyle: TextStyle(color: Colors.black87),
-        floatingLabelStyle: TextStyle(color: red),
+        hintStyle: const TextStyle(color: Colors.black54),
+        labelStyle: const TextStyle(color: Colors.black87),
+        floatingLabelStyle: const TextStyle(color: red),
       ),
 
       // 📝 النصوص
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontFamily: fontFamily,
           fontWeight: FontWeight.w700,
@@ -157,7 +157,7 @@ class AppTheme {
       ),
 
       // 🎨 الأيقونات
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         size: 24,
         color: Colors.black87,
       ),
@@ -171,8 +171,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: const TextStyle(
             fontFamily: fontFamily,
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -183,12 +183,12 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: red,
-          side: BorderSide(color: red),
+          side: const BorderSide(color: red),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: const TextStyle(
             fontFamily: fontFamily,
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -206,7 +206,7 @@ class AppTheme {
   // 🌙 الثيم الليلي - محسّن ومكتمل
   // ==============================================================
   static ThemeData get darkTheme {
-    final colorScheme = ColorScheme(
+    final colorScheme = const ColorScheme(
       brightness: Brightness.dark,
       primary: green,
       onPrimary: white,
@@ -234,7 +234,7 @@ class AppTheme {
       scaffoldBackgroundColor: black,
 
       // 🔝 شريط التطبيق
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: white,
         elevation: 0,
@@ -253,7 +253,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: grey900,
         elevation: 2,
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -274,23 +274,23 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: green, width: 2),
+          borderSide: const BorderSide(color: green, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFFFFB4AB)),
+          borderSide: const BorderSide(color: Color(0xFFFFB4AB)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFFFFB4AB), width: 2),
+          borderSide: const BorderSide(color: Color(0xFFFFB4AB), width: 2),
         ),
-        hintStyle: TextStyle(color: Colors.white70),
-        labelStyle: TextStyle(color: Colors.white70),
-        floatingLabelStyle: TextStyle(color: green),
+        hintStyle: const TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
+        floatingLabelStyle: const TextStyle(color: green),
       ),
 
       // 📝 النصوص
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontFamily: fontFamily,
           fontWeight: FontWeight.w700,
@@ -336,7 +336,7 @@ class AppTheme {
       ),
 
       // 🎨 الأيقونات
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         size: 24,
         color: Colors.white70,
       ),
@@ -350,8 +350,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: const TextStyle(
             fontFamily: fontFamily,
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -362,12 +362,12 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: green,
-          side: BorderSide(color: green),
+          side: const BorderSide(color: green),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          textStyle: const TextStyle(
             fontFamily: fontFamily,
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -408,8 +408,8 @@ class AppTheme {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: brightness == Brightness.dark
-            ? [green, Color(0xFF1B5E20)] // أخضر بدرجتين
-            : [red, Color(0xFF8B1A1A)], // أحمر بدرجتين
+            ? [green, const Color(0xFF1B5E20)] // أخضر بدرجتين
+            : [red, const Color(0xFF8B1A1A)], // أحمر بدرجتين
       );
 
   // ==============================================================
@@ -443,7 +443,7 @@ class AppTheme {
         BoxShadow(
           color: Colors.black.withValues(alpha: .25),
           blurRadius: 20,
-          offset: Offset(0, 10),
+          offset: const Offset(0, 10),
         ),
       ];
 }

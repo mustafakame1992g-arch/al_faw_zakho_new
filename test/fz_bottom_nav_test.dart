@@ -1,9 +1,8 @@
+import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-
-import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-import 'package:al_faw_zakho/core/navigation/navigation_service.dart';
 
 class MockNavigationService implements INavigationService {
   int homeCalls = 0;
@@ -94,7 +93,8 @@ void main() {
       expect(mockNav.homeCalls, 1);
     });
 
-    testWidgets('لا يجب استدعاء navigation عند النقر على التبويب النشط', (tester) async {
+    testWidgets('لا يجب استدعاء navigation عند النقر على التبويب النشط',
+        (tester) async {
       await tester.pumpWidget(
         Provider<INavigationService>.value(
           value: mockNav,

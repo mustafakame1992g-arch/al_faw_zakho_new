@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 class ErrorScreen extends StatelessWidget {
+  const ErrorScreen({super.key, required this.error, required this.onRetry});
   final String error;
   final VoidCallback onRetry;
-
-  const ErrorScreen({super.key, required this.error, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

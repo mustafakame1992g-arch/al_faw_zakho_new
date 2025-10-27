@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 class NewsListScreen extends StatelessWidget {
   const NewsListScreen({super.key});

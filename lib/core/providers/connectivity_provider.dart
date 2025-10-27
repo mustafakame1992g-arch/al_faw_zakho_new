@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 /// 🌐 [ConnectivityProvider] - مدير حالة الاتصال بالإنترنت المتقدم
 ///
@@ -103,8 +104,10 @@ class ConnectivityProvider with ChangeNotifier {
   }
 
   /// 📊 تحديث حالة الاتصال مع التحسين
-  bool _updateConnectivityStatus(ConnectivityResult result,
-      {bool forceNotify = true}) {
+  bool _updateConnectivityStatus(
+    ConnectivityResult result, {
+    bool forceNotify = true,
+  }) {
     final newStatus = result != ConnectivityResult.none;
 
     // تحديث فقط إذا تغيرت الحالة أو إذا كان إجباري
@@ -126,7 +129,8 @@ class ConnectivityProvider with ChangeNotifier {
         );
 
         debugPrint(
-            '🌐 Connectivity changed: ${oldStatus ? 'Online' : 'Offline'} → ${newStatus ? 'Online' : 'Offline'} (${result.toString()})');
+          '🌐 Connectivity changed: ${oldStatus ? 'Online' : 'Offline'} → ${newStatus ? 'Online' : 'Offline'} (${result.toString()})',
+        );
       }
 
       notifyListeners();
@@ -137,14 +141,18 @@ class ConnectivityProvider with ChangeNotifier {
 
   /// 🛡️ معالجة أخطاء التهيئة مع exponential backoff
   void _handleInitializationError(
-      dynamic error, StackTrace stackTrace, int elapsedMs) {
+    dynamic error,
+    StackTrace stackTrace,
+    int elapsedMs,
+  ) {
     _retryCount++;
 
     if (_retryCount <= _maxRetryAttempts) {
       final retryDelay =
           _initialRetryDelay * _retryCount; // exponential backoff
       debugPrint(
-          '🔄 Retrying in ${retryDelay.inSeconds}s (attempt $_retryCount/$_maxRetryAttempts)');
+        '🔄 Retrying in ${retryDelay.inSeconds}s (attempt $_retryCount/$_maxRetryAttempts)',
+      );
 
       _retryTimer = Timer(retryDelay, init);
       init();
@@ -155,8 +163,11 @@ class ConnectivityProvider with ChangeNotifier {
 
     AnalyticsService.trackError('ConnectivityProvider_Init', error, stackTrace);
 
-    AnalyticsService.trackInitialization('ConnectivityProvider',
-        success: false, error: error.toString());
+    AnalyticsService.trackInitialization(
+      'ConnectivityProvider',
+      success: false,
+      error: error.toString(),
+    );
   }
 
   /// 🆘 تفعيل وضع Fallback الآمن
@@ -173,7 +184,8 @@ class ConnectivityProvider with ChangeNotifier {
     );
 
     debugPrint(
-        '🛡️ Fallback activated after $_retryCount attempts - Assuming online');
+      '🛡️ Fallback activated after $_retryCount attempts - Assuming online',
+    );
     notifyListeners();
   }
 
@@ -200,7 +212,8 @@ class ConnectivityProvider with ChangeNotifier {
 
   /// 🎯 الحصول على نتيجة الاتصال الأساسية
   ConnectivityResult _getPrimaryConnectivityResult(
-      List<ConnectivityResult> results) {
+    List<ConnectivityResult> results,
+  ) {
     if (results.isEmpty) return ConnectivityResult.none;
 
     // إعطاء الأولوية للاتصالات الأفضل

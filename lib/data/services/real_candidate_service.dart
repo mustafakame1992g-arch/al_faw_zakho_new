@@ -1,9 +1,10 @@
-import 'package:image_picker/image_picker.dart';
+import 'dart:developer' as developer;
 import 'dart:io';
+
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/data/repositories/candidate_repository.dart';
 import 'package:al_faw_zakho/data/static/iraqi_provinces.dart';
-import 'dart:developer' as developer;
+import 'package:image_picker/image_picker.dart';
 
 class RealCandidateService {
   final CandidateRepository _repository = CandidateRepository();

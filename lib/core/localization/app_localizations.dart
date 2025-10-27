@@ -1,19 +1,19 @@
+import 'dart:collection';
+
+import 'package:al_faw_zakho/core/constants/app_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:al_faw_zakho/core/constants/app_constants.dart';
-import 'dart:collection';
 
 /// 🌍 نظام الترجمة المتكامل والمحسن للتطبيق
 /// يدعم اللغات: العربية والإنجليزية فقط
 class AppLocalizations {
+  AppLocalizations(this.locale, {this.selectedLanguageCode});
   final Locale locale;
   final String? selectedLanguageCode;
 
   // 🎯 [إضافة] متغير اللغة الافتراضية
   static String defaultLanguage = 'ar';
-
-  AppLocalizations(this.locale, {this.selectedLanguageCode});
 
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
@@ -121,15 +121,15 @@ class AppLocalizations {
       'previous_news': 'الخبر السابق',
       'next_news': 'الخبر التالي',
 
-      "about_title": "حول التجمع",
-      "about_name": "تجمع الفاو زاخو",
-      "about_motto": "من أجل عراق موحَّد، من الجنوب إلى الشمال",
-      "about_intro": "تجمع الفاو زاخو هو مبادرة وطنية تهدف إلى ...",
-      "about_hq": "المقر الرئيسي: البصرة – العراق",
-      "about_founded": "التأسيس: 2024",
-      "about_goal": "الهدف: نشر الوعي الانتخابي ودعم الكفاءات الوطنية",
-      "rights_reserved":
-          "جميع الحقوق محفوظة © {year}\nتجمع الفاو زاخو – الإصدار {version}",
+      'about_title': 'حول التجمع',
+      'about_name': 'تجمع الفاو زاخو',
+      'about_motto': 'من أجل عراق موحَّد، من الجنوب إلى الشمال',
+      'about_intro': 'تجمع الفاو زاخو هو مبادرة وطنية تهدف إلى ...',
+      'about_hq': 'المقر الرئيسي: البصرة – العراق',
+      'about_founded': 'التأسيس: 2024',
+      'about_goal': 'الهدف: نشر الوعي الانتخابي ودعم الكفاءات الوطنية',
+      'rights_reserved':
+          'جميع الحقوق محفوظة © {year}\nتجمع الفاو زاخو – الإصدار {version}',
 
       'search_within_province': 'ابحث عن اسم المرشح داخل هذه المحافظة...',
       'candidates_in_province': '🗳️ مرشحونا في المحافظة',
@@ -204,16 +204,16 @@ class AppLocalizations {
       'loading_news': 'Loading news…',
       'previous_news': 'Previous news',
       'next_news': 'Next news',
-      "about_title": "About the Bloc",
-      "about_name": "Al-Faw Zakho Bloc",
-      "about_motto": "For a unified Iraq, from South to North",
-      "about_intro": "Al-Faw Zakho is a national initiative that aims to ...",
-      "about_hq": "Headquarters: Basra – Iraq",
-      "about_founded": "Founded: 2024",
-      "about_goal":
-          "Goal: Raise electoral awareness and support national competencies",
-      "rights_reserved":
-          "All rights reserved © {year}\nAl-Faw Zakho – version {version}",
+      'about_title': 'About the Bloc',
+      'about_name': 'Al-Faw Zakho Bloc',
+      'about_motto': 'For a unified Iraq, from South to North',
+      'about_intro': 'Al-Faw Zakho is a national initiative that aims to ...',
+      'about_hq': 'Headquarters: Basra – Iraq',
+      'about_founded': 'Founded: 2024',
+      'about_goal':
+          'Goal: Raise electoral awareness and support national competencies',
+      'rights_reserved':
+          'All rights reserved © {year}\nAl-Faw Zakho – version {version}',
 
       'search_candidates': 'Search Candidates',
       'mobile_number': 'Mobile number',
@@ -436,10 +436,9 @@ class _SmartTranslationCache {
 
 /// ⏰ مدخل الذاكرة المؤقتة مع وقت الانتهاء
 class _CacheEntry {
+  _CacheEntry(this.value, Duration ttl) : expiryTime = DateTime.now().add(ttl);
   final String value;
   final DateTime expiryTime;
-
-  _CacheEntry(this.value, Duration ttl) : expiryTime = DateTime.now().add(ttl);
 
   bool get isExpired => DateTime.now().isAfter(expiryTime);
 }
@@ -462,7 +461,8 @@ class _AppLocalizationsDelegate
           prefs.getString(AppConstants.languagePreferenceKey);
 
       return SynchronousFuture<AppLocalizations>(
-          AppLocalizations(locale, selectedLanguageCode: selectedLanguage));
+        AppLocalizations(locale, selectedLanguageCode: selectedLanguage),
+      );
     } catch (e, stackTrace) {
       // ✅ معالجة أخطاء محسنة
       if (kDebugMode) {
@@ -555,7 +555,9 @@ class TranslationValidator {
   }
 
   static void _checkEmptyValues(
-      Map<String, String> translations, String language) {
+    Map<String, String> translations,
+    String language,
+  ) {
     final emptyKeys = translations.entries
         .where((entry) => entry.value.isEmpty)
         .map((entry) => entry.key)

@@ -3,10 +3,9 @@ import 'dart:async' show Timer;
 import 'dart:ui' show VoidCallback;
 
 class Debouncer {
+  Debouncer({required this.milliseconds});
   final int milliseconds;
   Timer? _timer;
-
-  Debouncer({required this.milliseconds});
 
   void run(VoidCallback action) {
     _timer?.cancel();

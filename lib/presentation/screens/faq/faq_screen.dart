@@ -1,13 +1,14 @@
-import 'package:al_faw_zakho/data/repositories/faq_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/data/models/faq_model.dart';
+import 'dart:developer' as developer;
+
+import 'package:al_faw_zakho/core/localization/app_localizations.dart';
 import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
-import 'dart:developer' as developer;
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:al_faw_zakho/data/models/faq_model.dart';
+import 'package:al_faw_zakho/data/repositories/faq_repository.dart';
 import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -48,12 +49,13 @@ class _FAQScreenState extends State<FAQScreen>
       await repo.initialize(); // ✅ يفتح الصندوق مرة واحدة
       final faqs = await repo.getFAQs();
       final valid = faqs
-          .where((f) =>
-                  f.questionAr.trim().isNotEmpty &&
-                  //f.questionEn.trim().isNotEmpty &&
-                  f.answerAr.trim().isNotEmpty
-              //  f.answerEn.trim().isNotEmpty
-              )
+          .where(
+            (f) =>
+                f.questionAr.trim().isNotEmpty &&
+                //f.questionEn.trim().isNotEmpty &&
+                f.answerAr.trim().isNotEmpty,
+            //  f.answerEn.trim().isNotEmpty
+          )
           .toList();
 
       /* if (valid.isEmpty) {
@@ -69,18 +71,26 @@ class _FAQScreenState extends State<FAQScreen>
 
       if (valid.isEmpty) {
         developer.log(
-            '⚠️ ملف faqs.json تم تحميله لكن فارغ أو المفاتيح غير متطابقة',
-            name: 'FAQ_SCREEN');
+          '⚠️ ملف faqs.json تم تحميله لكن فارغ أو المفاتيح غير متطابقة',
+          name: 'FAQ_SCREEN',
+        );
         throw Exception(
-            'لم يتم العثور على أسئلة صالحة للعرض. تحقق من JSON أو المفاتيح.');
+          'لم يتم العثور على أسئلة صالحة للعرض. تحقق من JSON أو المفاتيح.',
+        );
       }
 
-      developer.log('✅ Loaded ${valid.length} FAQs into screen',
-          name: 'FAQ_SCREEN');
+      developer.log(
+        '✅ Loaded ${valid.length} FAQs into screen',
+        name: 'FAQ_SCREEN',
+      );
       return valid;
     } catch (e, st) {
-      developer.log('❌ Error loading FAQs: $e',
-          name: 'FAQ_SCREEN', error: e, stackTrace: st);
+      developer.log(
+        '❌ Error loading FAQs: $e',
+        name: 'FAQ_SCREEN',
+        error: e,
+        stackTrace: st,
+      );
       throw Exception('فشل في تحميل الأسئلة الشائعة: ${e.toString()}');
     }
   }
@@ -98,10 +108,13 @@ class _FAQScreenState extends State<FAQScreen>
     if (index != null) {
       final langProvider =
           Provider.of<LanguageProvider>(context, listen: false);
-      AnalyticsService.trackEvent('faq_expanded', parameters: {
-        'index': index,
-        'language': langProvider.languageCode,
-      });
+      AnalyticsService.trackEvent(
+        'faq_expanded',
+        parameters: {
+          'index': index,
+          'language': langProvider.languageCode,
+        },
+      );
     }
   }
 
@@ -168,7 +181,9 @@ class _FAQScreenState extends State<FAQScreen>
   }
 
   Widget _buildContent(
-      BuildContext context, AsyncSnapshot<List<FaqModel>> snapshot) {
+    BuildContext context,
+    AsyncSnapshot<List<FaqModel>> snapshot,
+  ) {
     final connectionState = snapshot.connectionState;
 
     if (connectionState == ConnectionState.waiting && !snapshot.hasData) {
@@ -213,17 +228,16 @@ class _FAQScreenState extends State<FAQScreen>
 }
 
 class _FAQItem extends StatelessWidget {
-  final FaqModel faq;
-  final int index;
-  final bool isExpanded;
-  final VoidCallback onTap;
-
   const _FAQItem({
     required this.faq,
     required this.index,
     required this.isExpanded,
     required this.onTap,
   });
+  final FaqModel faq;
+  final int index;
+  final bool isExpanded;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -453,9 +467,8 @@ class _ShimmerLoadingView extends StatelessWidget {
 }
 
 class _EmptyView extends StatelessWidget {
-  final VoidCallback onRefresh;
-
   const _EmptyView({required this.onRefresh});
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -501,7 +514,8 @@ class _EmptyView extends StatelessWidget {
                 onPressed: onRefresh,
                 icon: const Icon(Icons.refresh_rounded),
                 label: Text(
-                    AppLocalizations.of(context).translate('refresh_content')),
+                  AppLocalizations.of(context).translate('refresh_content'),
+                ),
                 style: FilledButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -519,13 +533,12 @@ class _EmptyView extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
   const _ErrorView({
     required this.message,
     required this.onRetry,
   });
+  final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -628,9 +641,11 @@ class _ErrorView extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(isArabic ? 'المساعدة' : 'Help'),
-        content: Text(isArabic
-            ? 'إذا استمرت المشكلة، يرجى التأكد من اتصالك بالإنترنت أو التواصل مع الدعم الفني.'
-            : 'If the problem persists, please check your internet connection or contact technical support.'),
+        content: Text(
+          isArabic
+              ? 'إذا استمرت المشكلة، يرجى التأكد من اتصالك بالإنترنت أو التواصل مع الدعم الفني.'
+              : 'If the problem persists, please check your internet connection or contact technical support.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

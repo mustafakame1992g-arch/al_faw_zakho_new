@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 /// 🧠 نظام متكامل لإدارة الذاكرة والأداء
 class MemoryManager {
-  static final _instance = MemoryManager._internal();
   factory MemoryManager() => _instance;
   MemoryManager._internal();
+  static final _instance = MemoryManager._internal();
 
   static const String _tag = 'MemoryManager';
   bool _isInitialized = false;
@@ -25,8 +25,12 @@ class MemoryManager {
 
       developer.log('[$_tag] ✅ Initialized successfully', name: 'PERF');
     } catch (e, stack) {
-      developer.log('[$_tag] ❌ Initialization failed: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[$_tag] ❌ Initialization failed: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
       rethrow;
     }
   }
@@ -42,8 +46,9 @@ class MemoryManager {
 
     try {
       developer.log(
-          '[$_tag] Starting cleanup (aggressive: $aggressive, priority: $priority)',
-          name: 'PERF');
+        '[$_tag] Starting cleanup (aggressive: $aggressive, priority: $priority)',
+        name: 'PERF',
+      );
 
       // 📸 تنظيف ذاكرة الصور
       final imageResult = await _cleanImageCache(aggressive);
@@ -75,8 +80,12 @@ class MemoryManager {
       developer.log('[$_tag] ✅ Cleanup completed: $result', name: 'PERF');
       return result;
     } catch (e, stack) {
-      developer.log('[$_tag] ❌ Cleanup failed: $e',
-          name: 'ERROR', error: e, stackTrace: stack);
+      developer.log(
+        '[$_tag] ❌ Cleanup failed: $e',
+        name: 'ERROR',
+        error: e,
+        stackTrace: stack,
+      );
 
       return MemoryCleanupResult(
         success: false,
@@ -109,12 +118,17 @@ class MemoryManager {
       }
 
       developer.log(
-          '[$_tag] Image cache tuned: ${imageCache.maximumSize} images, '
-          '${imageCache.maximumSizeBytes ~/ (1024 * 1024)}MB (lowEnd: $lowEnd)',
-          name: 'PERF');
+        '[$_tag] Image cache tuned: ${imageCache.maximumSize} images, '
+        '${imageCache.maximumSizeBytes ~/ (1024 * 1024)}MB (lowEnd: $lowEnd)',
+        name: 'PERF',
+      );
     } catch (e, stack) {
-      developer.log('[$_tag] Image cache tuning failed: $e',
-          name: 'WARNING', error: e, stackTrace: stack);
+      developer.log(
+        '[$_tag] Image cache tuning failed: $e',
+        name: 'WARNING',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -122,11 +136,17 @@ class MemoryManager {
   static void _disableSystemUiAutoAdjustment() {
     try {
       // يمكن إضافة إعدادات واجهة النظام هنا إذا لزم الأمر
-      developer.log('[$_tag] System UI auto-adjustment disabled',
-          name: 'DEBUG');
+      developer.log(
+        '[$_tag] System UI auto-adjustment disabled',
+        name: 'DEBUG',
+      );
     } catch (e, stack) {
-      developer.log('[$_tag] Failed to disable system UI adjustment: $e',
-          name: 'INFO', error: e, stackTrace: stack);
+      developer.log(
+        '[$_tag] Failed to disable system UI adjustment: $e',
+        name: 'INFO',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -167,8 +187,10 @@ class MemoryManager {
       final freedItems = beforeSize - imageCache.currentSize;
       final freedBytes = _estimateFreedBytes(freedItems);
 
-      developer.log('[$_tag] Image cache cleaned: $freedItems images',
-          name: 'PERF');
+      developer.log(
+        '[$_tag] Image cache cleaned: $freedItems images',
+        name: 'PERF',
+      );
 
       return CleanupResult(freedItems, freedBytes);
     } catch (e) {
@@ -191,8 +213,10 @@ class MemoryManager {
         freedItems += await _cleanExpiredCache();
       }
 
-      developer.log('[$_tag] App data cleaned: $freedItems items',
-          name: 'PERF');
+      developer.log(
+        '[$_tag] App data cleaned: $freedItems items',
+        name: 'PERF',
+      );
       return CleanupResult(freedItems, freedBytes);
     } catch (e) {
       developer.log('[$_tag] App data cleaning failed: $e', name: 'WARNING');
@@ -209,8 +233,10 @@ class MemoryManager {
       developer.log('[$_tag] Memory cache cleaned', name: 'PERF');
       return CleanupResult(0, 0); // يصعب قياس الذاكرة المحررة
     } catch (e) {
-      developer.log('[$_tag] Memory cache cleaning failed: $e',
-          name: 'WARNING');
+      developer.log(
+        '[$_tag] Memory cache cleaning failed: $e',
+        name: 'WARNING',
+      );
       return CleanupResult(0, 0);
     }
   }
@@ -225,8 +251,10 @@ class MemoryManager {
         cache.clear();
       }
     } catch (e) {
-      developer.log('[$_tag] Least used images cleaning failed: $e',
-          name: 'WARNING');
+      developer.log(
+        '[$_tag] Least used images cleaning failed: $e',
+        name: 'WARNING',
+      );
     }
   }
 
@@ -236,8 +264,10 @@ class MemoryManager {
       // يمكن إضافة صناديق مؤقتة محددة تحتاج تنظيف
       // await Hive.box('temp_cache').clear();
     } catch (e) {
-      developer.log('[$_tag] Hive temp boxes cleaning failed: $e',
-          name: 'WARNING');
+      developer.log(
+        '[$_tag] Hive temp boxes cleaning failed: $e',
+        name: 'WARNING',
+      );
     }
   }
 
@@ -248,8 +278,10 @@ class MemoryManager {
       // منطق تنظيف البيانات المنتهية الصلاحية
       // يمكن التكامل مع نظام الكاش الخاص بالتطبيق
     } catch (e) {
-      developer.log('[$_tag] Expired cache cleaning failed: $e',
-          name: 'WARNING');
+      developer.log(
+        '[$_tag] Expired cache cleaning failed: $e',
+        name: 'WARNING',
+      );
     }
     return cleanedItems;
   }
@@ -259,7 +291,8 @@ class MemoryManager {
     try {
       // في Flutter/Dart، GC يعمل تلقائياً
       // لكن يمكن تشجيع النظام على تحرير الذاكرة
-      await Future.delayed(Duration.zero);
+      // ignore: inference_failure_on_instance_creation
+await Future<void>.delayed(const Duration(milliseconds: 300));
       WidgetsBinding.instance.addPostFrameCallback((_) {});
     } catch (e) {
       // لا نرمي خطأ لأن هذه عملية تحسين وليست ضرورية
@@ -304,13 +337,6 @@ enum CleanupPriority {
 
 /// 📊 نتيجة عملية التنظيف
 class MemoryCleanupResult {
-  final bool success;
-  final int freedItems;
-  final int freedBytes;
-  final int duration; // بالمللي ثانية
-  final String? cleanupType;
-  final String? error;
-
   MemoryCleanupResult({
     required this.success,
     this.freedItems = 0,
@@ -319,6 +345,12 @@ class MemoryCleanupResult {
     this.cleanupType,
     this.error,
   });
+  final bool success;
+  final int freedItems;
+  final int freedBytes;
+  final int duration; // بالمللي ثانية
+  final String? cleanupType;
+  final String? error;
 
   @override
   String toString() {
@@ -331,14 +363,6 @@ class MemoryCleanupResult {
 
 /// 📈 حالة الذاكرة الحالية
 class MemoryStatus {
-  final int currentImageCount;
-  final int maxImageCount;
-  final int currentCacheBytes;
-  final int maxCacheBytes;
-  final DateTime? lastCleanup;
-  final bool isInitialized;
-  final String? error;
-
   MemoryStatus({
     required this.currentImageCount,
     required this.maxImageCount,
@@ -357,6 +381,13 @@ class MemoryStatus {
         isInitialized: false,
         error: error,
       );
+  final int currentImageCount;
+  final int maxImageCount;
+  final int currentCacheBytes;
+  final int maxCacheBytes;
+  final DateTime? lastCleanup;
+  final bool isInitialized;
+  final String? error;
 
   double get cacheUsagePercent {
     if (maxCacheBytes == 0) return 0.0;
@@ -368,8 +399,7 @@ class MemoryStatus {
 
 /// 🔧 نتيجة التنظيف الداخلية
 class CleanupResult {
+  CleanupResult(this.freedItems, this.freedBytes);
   final int freedItems;
   final int freedBytes;
-
-  CleanupResult(this.freedItems, this.freedBytes);
 }

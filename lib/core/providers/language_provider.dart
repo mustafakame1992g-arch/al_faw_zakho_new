@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:al_faw_zakho/core/constants/app_constants.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manages the application's language and persists the setting locally.
 /// Supported languages are Arabic and English.
@@ -46,7 +46,8 @@ class LanguageProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('Error loading language preference: $e');
       // حدث فشل التهيئة (بدون st لتجنّب التحذير)
-      AnalyticsService.trackEvent('LanguageProvider_Init_Failed', error: e.toString());
+      AnalyticsService.trackEvent('LanguageProvider_Init_Failed',
+          error: e.toString());
     } finally {
       sw.stop();
       PerformanceTracker.track('LanguageProvider_Init', sw.elapsed);
@@ -62,7 +63,8 @@ class LanguageProvider with ChangeNotifier {
     if (!_supportedLanguages.contains(languageCode)) return;
 
     _locale = Locale(languageCode);
-    AnalyticsService.trackEvent('Language_Changed', parameters: {'language': languageCode});
+    AnalyticsService.trackEvent('Language_Changed',
+        parameters: {'language': languageCode});
     notifyListeners(); // Update UI immediately
 
     // Persist the choice in the background.
@@ -79,7 +81,8 @@ class LanguageProvider with ChangeNotifier {
     final newLanguage = _locale.languageCode == arabic ? english : arabic;
 
     // الأنسب دقّةً: سجّل اللغة الجديدة مباشرة
-    AnalyticsService.trackEvent('Language_Toggled', parameters: {'new_language': newLanguage});
+    AnalyticsService.trackEvent('Language_Toggled',
+        parameters: {'new_language': newLanguage});
 
     setLanguage(newLanguage);
   }

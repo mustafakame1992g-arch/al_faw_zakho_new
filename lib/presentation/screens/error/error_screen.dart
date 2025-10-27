@@ -2,25 +2,18 @@ import 'package:flutter/material.dart';
 
 /// ⚙️ إعدادات النصوص الخاصة بالخطأ (تُستخدم من DefaultDataService)
 class ErrorConfig {
-  final String title;
-  final String ctaLabel;
-  final bool showRetry;
-
   ErrorConfig({
     required this.title,
     required this.ctaLabel,
     required this.showRetry,
   });
+  final String title;
+  final String ctaLabel;
+  final bool showRetry;
 }
 
 /// 🧱 شاشة عرض الأخطاء العامة في التطبيق
 class ErrorScreen extends StatelessWidget {
-  final String title;
-  final String message;
-  final String ctaLabel;
-  final VoidCallback onRetry;
-  final bool showRetry;
-
   const ErrorScreen({
     super.key,
     required this.title,
@@ -29,6 +22,11 @@ class ErrorScreen extends StatelessWidget {
     required this.onRetry,
     this.showRetry = true,
   });
+  final String title;
+  final String message;
+  final String ctaLabel;
+  final VoidCallback onRetry;
+  final bool showRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +119,9 @@ class ErrorScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: buttonColor,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 36, vertical: 14),
+                        horizontal: 36,
+                        vertical: 14,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

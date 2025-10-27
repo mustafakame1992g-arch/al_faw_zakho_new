@@ -1,7 +1,7 @@
 // lib/presentation/screens/home/widgets/welcome_banner.dart
+import 'package:al_faw_zakho/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/core/providers/language_provider.dart';
 
 class WelcomeBanner extends StatelessWidget {
   const WelcomeBanner({super.key});

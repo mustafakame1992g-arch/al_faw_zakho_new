@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 
 /// أدوات ترجمة مريحة وآمنة للاستعمال من أي Widget عبر BuildContext.
 /// - context.tr('key')  => ترجمة المفتاح أو يرجع المفتاح نفسه عند الفشل.
@@ -23,7 +23,7 @@ extension L10nX on BuildContext {
 
   /// ترجمة مع استبدال {placeholders}. القيم غير الموجودة تُترك كما هي.
   String trf(String key, [Map<String, String>? vars]) {
-    var text = tr(key);
+    final text = tr(key);
     if (vars == null || vars.isEmpty) return text;
 
     return text.replaceAllMapped(

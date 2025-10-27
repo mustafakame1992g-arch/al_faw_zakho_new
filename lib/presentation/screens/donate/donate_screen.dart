@@ -1,7 +1,7 @@
-import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-import 'package:flutter/material.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
 
 class DonateScreen extends StatelessWidget {
   const DonateScreen({super.key});
@@ -14,15 +14,16 @@ class DonateScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Card(
+          const Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('ادعم تجمع الفاو زاخو',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                children: [
+                  Text(
+                    'ادعم تجمع الفاو زاخو',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 8),
                   Text('مساهمتك تحدث فرقًا حقيقيًا — شكرًا لدعمك!'),
                 ],
@@ -33,10 +34,13 @@ class DonateScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.account_balance_wallet),
-              title: Text(AppLocalizations.of(context)
-                  .translate('donate_via_zaincash')),
-              subtitle: Text(AppLocalizations.of(context)
-                  .translate('open_zaincash_and_send_to')),
+              title: Text(
+                AppLocalizations.of(context).translate('donate_via_zaincash'),
+              ),
+              subtitle: Text(
+                AppLocalizations.of(context)
+                    .translate('open_zaincash_and_send_to'),
+              ),
               trailing: const Icon(Icons.qr_code),
               onTap: () {
                 showModalBottomSheet(
@@ -47,14 +51,17 @@ class DonateScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                            '${AppLocalizations.of(context).translate('number_label')}: 0780-XXX-XXXX'),
+                          '${AppLocalizations.of(context).translate('number_label')}: 0780-XXX-XXXX',
+                        ),
                         Text(
-                            '${AppLocalizations.of(context).translate('name_label')}: ${AppLocalizations.of(context).translate('about_name')}'),
-                        SizedBox(height: 8),
+                          '${AppLocalizations.of(context).translate('name_label')}: ${AppLocalizations.of(context).translate('about_name')}',
+                        ),
+                        const SizedBox(height: 8),
                         Text(
-                            '${AppLocalizations.of(context).translate('description_label')}: ${AppLocalizations.of(context).translate('donation_description')}'),
+                          '${AppLocalizations.of(context).translate('description_label')}: ${AppLocalizations.of(context).translate('donation_description')}',
+                        ),
                       ],
                     ),
                   ),

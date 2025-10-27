@@ -2,8 +2,6 @@
 import 'package:dio/dio.dart';
 
 class NetworkExceptions implements Exception {
-  final String message;
-
   NetworkExceptions(this.message);
 
   factory NetworkExceptions.getDioException(DioException error) {
@@ -26,6 +24,7 @@ class NetworkExceptions implements Exception {
         return NetworkExceptions('Unknown error: ${error.message}');
     }
   }
+  final String message;
 
   @override
   String toString() => message;

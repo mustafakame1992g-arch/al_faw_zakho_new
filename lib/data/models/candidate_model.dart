@@ -1,43 +1,10 @@
-import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 
 part 'candidate_model.g.dart';
 
 @HiveType(typeId: 3)
 class CandidateModel extends Equatable {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String nameAr;
-  @HiveField(2)
-  final String nameEn;
-  @HiveField(3)
-  final String nicknameAr;
-  @HiveField(4)
-  final String nicknameEn;
-  @HiveField(5)
-  final String positionAr;
-  @HiveField(6)
-  final String positionEn;
-  @HiveField(7)
-  final String bioAr;
-  @HiveField(8)
-  final String bioEn;
-  @HiveField(9)
-  final String imagePath;
-  @HiveField(10)
-  final String phoneNumber;
-  @HiveField(11)
-  final String province;
-  @HiveField(12)
-  final DateTime createdAt;
-  @HiveField(13)
-  final DateTime updatedAt;
-  @HiveField(14)
-  final String? listName;
-  @HiveField(15)
-  final String? listLogo;
-
   const CandidateModel({
     required this.id,
     required this.nameAr,
@@ -56,26 +23,6 @@ class CandidateModel extends Equatable {
     this.listName,
     this.listLogo,
   });
-
-  // JSON serialization
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'nameAr': nameAr,
-        'nameEn': nameEn,
-        'nicknameAr': nicknameAr,
-        'nicknameEn': nicknameEn,
-        'positionAr': positionAr,
-        'positionEn': positionEn,
-        'bioAr': bioAr,
-        'bioEn': bioEn,
-        'imagePath': imagePath,
-        'phoneNumber': phoneNumber,
-        'province': province,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'listName': listName,
-        'listLogo': listLogo,
-      };
 
   factory CandidateModel.fromJson(Map<String, dynamic> json) {
     DateTime parseDateTime(dynamic value) {
@@ -109,18 +56,71 @@ class CandidateModel extends Equatable {
       listLogo: json['listLogo'] == null ? null : parseString(json['listLogo']),
     );
   }
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String nameAr;
+  @HiveField(2)
+  final String nameEn;
+  @HiveField(3)
+  final String nicknameAr;
+  @HiveField(4)
+  final String nicknameEn;
+  @HiveField(5)
+  final String positionAr;
+  @HiveField(6)
+  final String positionEn;
+  @HiveField(7)
+  final String bioAr;
+  @HiveField(8)
+  final String bioEn;
+  @HiveField(9)
+  final String imagePath;
+  @HiveField(10)
+  final String phoneNumber;
+  @HiveField(11)
+  final String province;
+  @HiveField(12)
+  final DateTime createdAt;
+  @HiveField(13)
+  final DateTime updatedAt;
+  @HiveField(14)
+  final String? listName;
+  @HiveField(15)
+  final String? listLogo;
+
+  // JSON serialization
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nameAr': nameAr,
+        'nameEn': nameEn,
+        'nicknameAr': nicknameAr,
+        'nicknameEn': nicknameEn,
+        'positionAr': positionAr,
+        'positionEn': positionEn,
+        'bioAr': bioAr,
+        'bioEn': bioEn,
+        'imagePath': imagePath,
+        'phoneNumber': phoneNumber,
+        'province': province,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'listName': listName,
+        'listLogo': listLogo,
+      };
 
   // Validation
   void validate() {
-    if (id.isEmpty) throw FormatException('معرف المرشح مطلوب');
-    if (nameAr.isEmpty && nameEn.isEmpty) throw FormatException('الاسم مطلوب');
-    if (province.isEmpty) throw FormatException('المحافظة مطلوبة');
+    if (id.isEmpty) throw const FormatException('معرف المرشح مطلوب');
+    if (nameAr.isEmpty && nameEn.isEmpty)
+      throw const FormatException('الاسم مطلوب');
+    if (province.isEmpty) throw const FormatException('المحافظة مطلوبة');
 
     // Phone validation
     if (phoneNumber.isNotEmpty) {
       final phoneRegex = RegExp(r'^\+?[\d\s\-]{7,15}$');
       if (!phoneRegex.hasMatch(phoneNumber)) {
-        throw FormatException('رقم الهاتف غير صالح');
+        throw const FormatException('رقم الهاتف غير صالح');
       }
     }
   }

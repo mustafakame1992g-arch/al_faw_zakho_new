@@ -1,31 +1,30 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
-import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+
 // 🧩 مزوّدو الحالة (Providers)
 import 'package:al_faw_zakho/core/providers/app_provider.dart';
 import 'package:al_faw_zakho/core/providers/connectivity_provider.dart';
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
-
+import 'package:al_faw_zakho/presentation/screens/faq/faq_screen.dart';
+import 'package:al_faw_zakho/presentation/screens/home/widgets/connection_indicator.dart';
+// 🧱 مكونات واجهة الهوم
+import 'package:al_faw_zakho/presentation/screens/home/widgets/home_appbar.dart';
+import 'package:al_faw_zakho/presentation/screens/home/widgets/home_grid.dart';
+import 'package:al_faw_zakho/presentation/screens/home/widgets/loading_widget.dart';
+import 'package:al_faw_zakho/presentation/screens/home/widgets/news_ticker.dart';
+import 'package:al_faw_zakho/presentation/screens/home/widgets/welcome_banner.dart';
 // 🎨 الثيم العام
 
 // 🏛️ الشاشات الأخرى
 import 'package:al_faw_zakho/presentation/screens/provinces/provinces_screen.dart';
-import 'package:al_faw_zakho/presentation/screens/faq/faq_screen.dart';
 //import 'package:al_faw_zakho/presentation/screens/news/news_list_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/settings/settings_screen.dart';
-import '/presentation/screens/vision/vision_screen.dart';
-
-// 🧱 مكونات واجهة الهوم
-import 'package:al_faw_zakho/presentation/screens/home/widgets/home_appbar.dart';
-import 'package:al_faw_zakho/presentation/screens/home/widgets/loading_widget.dart';
-import 'package:al_faw_zakho/presentation/screens/home/widgets/connection_indicator.dart';
-import 'package:al_faw_zakho/presentation/screens/home/widgets/news_ticker.dart';
-import 'package:al_faw_zakho/presentation/screens/home/widgets/welcome_banner.dart';
-import 'package:al_faw_zakho/presentation/screens/home/widgets/home_grid.dart';
+import 'package:al_faw_zakho/presentation/screens/vision/vision_screen.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_bottom_nav.dart';
+import 'package:al_faw_zakho/presentation/widgets/fz_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -79,10 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
       _preloadNews().then((_) => _updateProgress(++completed, totalSteps)),
     ];
 
-    await Future.wait(tasks.map((t) => t.catchError((e) {
+    await Future.wait(
+      tasks.map(
+        (t) => t.catchError((e) {
           developer.log('Preload task error: $e', name: 'WARNING');
           return null;
-        })));
+        }),
+      ),
+    );
   }
 
   void _updateProgress(int current, int total) {
@@ -185,13 +188,17 @@ class _HomeScreenState extends State<HomeScreen> {
   // 🔁 التعامل مع الضغط على الأقسام
   // ============================================================
   void _handleCategoryTap(String category, BuildContext context) {
-    AnalyticsService.trackEvent('home_category_tapped',
-        parameters: {'category': category});
+    AnalyticsService.trackEvent(
+      'home_category_tapped',
+      parameters: {'category': category},
+    );
 
     switch (category) {
       case 'candidates':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const ProvincesScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const ProvincesScreen()),
+        );
         break;
       case 'offices':
         // ✅ بدل فتح صفحة جديدة، استخدم الـ Navigator الداخلي (HomeRoot)
@@ -201,11 +208,15 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case 'program':
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const VisionScreen()));
+          context,
+          MaterialPageRoute(builder: (_) => const VisionScreen()),
+        );
         break;
       case 'faq':
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const FAQScreen()));
+          context,
+          MaterialPageRoute(builder: (_) => const FAQScreen()),
+        );
         break;
       /*case 'news':
         Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsListScreen()));

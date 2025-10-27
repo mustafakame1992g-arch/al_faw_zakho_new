@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:al_faw_zakho/core/localization/app_localizations.dart';
-import 'package:flutter/material.dart';
 import 'package:al_faw_zakho/core/services/news_service.dart';
-import '/data/models/news_model.dart';
+import 'package:al_faw_zakho/data/models/news_model.dart';
+import 'package:flutter/material.dart';
 // إذا عندك l10n مفعّل:
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -265,7 +266,7 @@ class _NewsTickerState extends State<NewsTicker> with WidgetsBindingObserver {
             color: Colors.black.withOpacity(isDark ? 0.25 : 0.08),
             offset: const Offset(0, 1),
             blurRadius: 4,
-          )
+          ),
         ],
       ),
       child: Row(

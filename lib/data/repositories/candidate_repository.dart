@@ -1,13 +1,14 @@
 import 'dart:io';
+
+import 'package:al_faw_zakho/core/services/analytics_service.dart';
+import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:al_faw_zakho/data/models/candidate_model.dart';
-import 'package:al_faw_zakho/core/services/analytics_service.dart';
 
 class CandidateRepository {
   static const String _boxName = 'candidates';
-  final Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
 
   Future<Box<CandidateModel>> _openBox() async {
     if (!Hive.isBoxOpen(_boxName)) {
@@ -44,7 +45,10 @@ class CandidateRepository {
           .toList();
     } catch (e) {
       AnalyticsService.trackError(
-          'getCandidatesByProvince', e, StackTrace.current);
+        'getCandidatesByProvince',
+        e,
+        StackTrace.current,
+      );
       rethrow;
     }
   }
@@ -75,10 +79,13 @@ class CandidateRepository {
       final box = await _openBox();
       await box.put(candidate.id, candidate);
 
-      AnalyticsService.trackEvent('candidate_added', parameters: {
-        'candidate_id': candidate.id,
-        'province': candidate.province,
-      });
+      AnalyticsService.trackEvent(
+        'candidate_added',
+        parameters: {
+          'candidate_id': candidate.id,
+          'province': candidate.province,
+        },
+      );
     } catch (e) {
       AnalyticsService.trackError('addCandidate', e, StackTrace.current);
       rethrow;
@@ -98,9 +105,12 @@ class CandidateRepository {
 
       await box.putAll(candidatesMap);
 
-      AnalyticsService.trackEvent('candidates_batch_added', parameters: {
-        'count': candidates.length,
-      });
+      AnalyticsService.trackEvent(
+        'candidates_batch_added',
+        parameters: {
+          'count': candidates.length,
+        },
+      );
     } catch (e) {
       AnalyticsService.trackError('addCandidatesBatch', e, StackTrace.current);
       rethrow;
@@ -115,9 +125,12 @@ class CandidateRepository {
       final box = await _openBox();
       await box.put(updatedCandidate.id, updatedCandidate);
 
-      AnalyticsService.trackEvent('candidate_updated', parameters: {
-        'candidate_id': candidate.id,
-      });
+      AnalyticsService.trackEvent(
+        'candidate_updated',
+        parameters: {
+          'candidate_id': candidate.id,
+        },
+      );
     } catch (e) {
       AnalyticsService.trackError('updateCandidate', e, StackTrace.current);
       rethrow;
@@ -130,9 +143,12 @@ class CandidateRepository {
       final box = await _openBox();
       await box.delete(candidateId);
 
-      AnalyticsService.trackEvent('candidate_deleted', parameters: {
-        'candidate_id': candidateId,
-      });
+      AnalyticsService.trackEvent(
+        'candidate_deleted',
+        parameters: {
+          'candidate_id': candidateId,
+        },
+      );
     } catch (e) {
       AnalyticsService.trackError('deleteCandidate', e, StackTrace.current);
       rethrow;
@@ -165,9 +181,12 @@ class CandidateRepository {
 
       final savedFile = await imageFile.copy(newPath);
 
-      AnalyticsService.trackEvent('candidate_image_saved', parameters: {
-        'file_path': newPath,
-      });
+      AnalyticsService.trackEvent(
+        'candidate_image_saved',
+        parameters: {
+          'file_path': newPath,
+        },
+      );
 
       return savedFile.path;
     } catch (e) {
@@ -221,9 +240,12 @@ class CandidateRepository {
 
       if (oldCandidates.isNotEmpty) {
         await box.deleteAll(oldCandidates);
-        AnalyticsService.trackEvent('old_data_cleaned', parameters: {
-          'cleaned_count': oldCandidates.length,
-        });
+        AnalyticsService.trackEvent(
+          'old_data_cleaned',
+          parameters: {
+            'cleaned_count': oldCandidates.length,
+          },
+        );
       }
     } catch (e) {
       AnalyticsService.trackError('cleanupOldData', e, StackTrace.current);

@@ -6,59 +6,6 @@ part 'office_model.g.dart';
 /// 🏢 OfficeModel (ar/en only)
 @HiveType(typeId: 2)
 class OfficeModel {
-  @HiveField(0)
-  final String id;
-
-  @HiveField(1)
-  final String nameAr;
-  @HiveField(2)
-  final String nameEn;
-
-  @HiveField(3)
-  final String addressAr;
-  @HiveField(4)
-  final String addressEn;
-
-  @HiveField(5)
-  final String phoneNumber;
-  @HiveField(6)
-  final String? secondaryPhone;
-  @HiveField(7)
-  final String email;
-
-  @HiveField(8)
-  final String managerNameAr;
-  @HiveField(9)
-  final String managerNameEn;
-
-  @HiveField(10)
-  final double latitude;
-  @HiveField(11)
-  final double longitude;
-
-  @HiveField(12)
-  final String province;
-  @HiveField(13)
-  final String district;
-  @HiveField(14)
-  final String workingHours;
-  @HiveField(15)
-  final String? workingDays;
-
-  @HiveField(16)
-  final bool isActive;
-  @HiveField(17)
-  final int capacity;
-  @HiveField(18)
-  final List<String> services;
-
-  @HiveField(19)
-  final DateTime createdAt;
-  @HiveField(20)
-  final DateTime updatedAt;
-  @HiveField(21)
-  final String? notes;
-
   OfficeModel({
     required this.id,
     required this.nameAr,
@@ -112,12 +59,110 @@ class OfficeModel {
       capacity: (j['capacity'] as int?) ?? 50,
       services: List<String>.from(j['services'] as List? ?? const []),
       createdAt: DateTime.parse(
-          (j['created_at'] ?? DateTime.now().toIso8601String()).toString()),
+        (j['created_at'] ?? DateTime.now().toIso8601String()).toString(),
+      ),
       updatedAt: DateTime.parse(
-          (j['updated_at'] ?? DateTime.now().toIso8601String()).toString()),
+        (j['updated_at'] ?? DateTime.now().toIso8601String()).toString(),
+      ),
       notes: j['notes']?.toString(),
     );
   }
+
+  // ===================== COMPATIBILITY HELPERS =====================
+  factory OfficeModel.fromMap(Map<String, dynamic> map) {
+    try {
+      return OfficeModel(
+        id: (map['id'] ?? '').toString(),
+        nameAr: (map['name_ar'] ?? map['nameAr'] ?? '').toString(),
+        nameEn: (map['name_en'] ?? map['nameEn'] ?? '').toString(),
+        addressAr: (map['address_ar'] ?? map['addressAr'] ?? '').toString(),
+        addressEn: (map['address_en'] ?? map['addressEn'] ?? '').toString(),
+        phoneNumber:
+            (map['phone_number'] ?? map['phoneNumber'] ?? '').toString(),
+        secondaryPhone: map['secondary_phone']?.toString(),
+        email: (map['email'] ?? '').toString(),
+        managerNameAr:
+            (map['manager_name_ar'] ?? map['managerNameAr'] ?? '').toString(),
+        managerNameEn:
+            (map['manager_name_en'] ?? map['managerNameEn'] ?? '').toString(),
+        latitude: double.tryParse((map['latitude'] ?? '0').toString()) ?? 0.0,
+        longitude: double.tryParse((map['longitude'] ?? '0').toString()) ?? 0.0,
+        province: (map['province'] ?? '').toString(),
+        district: (map['district'] ?? '').toString(),
+        workingHours:
+            (map['working_hours'] ?? map['workingHours'] ?? '').toString(),
+        workingDays: map['working_days']?.toString(),
+        isActive: map['is_active'] as bool? ?? true,
+        capacity: (map['capacity'] as int?) ?? 50,
+        services: List<String>.from(map['services'] as List? ?? const []),
+        createdAt: DateTime.tryParse(
+              (map['created_at'] ?? DateTime.now().toIso8601String())
+                  .toString(),
+            ) ??
+            DateTime.now(),
+        updatedAt: DateTime.tryParse(
+              (map['updated_at'] ?? DateTime.now().toIso8601String())
+                  .toString(),
+            ) ??
+            DateTime.now(),
+        notes: map['notes']?.toString(),
+      );
+    } catch (e) {
+      throw Exception('Invalid map data for OfficeModel: $e');
+    }
+  }
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final String nameAr;
+  @HiveField(2)
+  final String nameEn;
+
+  @HiveField(3)
+  final String addressAr;
+  @HiveField(4)
+  final String addressEn;
+
+  @HiveField(5)
+  final String phoneNumber;
+  @HiveField(6)
+  final String? secondaryPhone;
+  @HiveField(7)
+  final String email;
+
+  @HiveField(8)
+  final String managerNameAr;
+  @HiveField(9)
+  final String managerNameEn;
+
+  @HiveField(10)
+  final double latitude;
+  @HiveField(11)
+  final double longitude;
+
+  @HiveField(12)
+  final String province;
+  @HiveField(13)
+  final String district;
+  @HiveField(14)
+  final String workingHours;
+  @HiveField(15)
+  final String? workingDays;
+
+  @HiveField(16)
+  final bool isActive;
+  @HiveField(17)
+  final int capacity;
+  @HiveField(18)
+  final List<String> services;
+
+  @HiveField(19)
+  final DateTime createdAt;
+  @HiveField(20)
+  final DateTime updatedAt;
+  @HiveField(21)
+  final String? notes;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -222,48 +267,6 @@ class OfficeModel {
       updatedAt: updatedAt ?? this.updatedAt,
       notes: notes ?? this.notes,
     );
-  }
-
-  // ===================== COMPATIBILITY HELPERS =====================
-  factory OfficeModel.fromMap(Map<String, dynamic> map) {
-    try {
-      return OfficeModel(
-        id: (map['id'] ?? '').toString(),
-        nameAr: (map['name_ar'] ?? map['nameAr'] ?? '').toString(),
-        nameEn: (map['name_en'] ?? map['nameEn'] ?? '').toString(),
-        addressAr: (map['address_ar'] ?? map['addressAr'] ?? '').toString(),
-        addressEn: (map['address_en'] ?? map['addressEn'] ?? '').toString(),
-        phoneNumber:
-            (map['phone_number'] ?? map['phoneNumber'] ?? '').toString(),
-        secondaryPhone: map['secondary_phone']?.toString(),
-        email: (map['email'] ?? '').toString(),
-        managerNameAr:
-            (map['manager_name_ar'] ?? map['managerNameAr'] ?? '').toString(),
-        managerNameEn:
-            (map['manager_name_en'] ?? map['managerNameEn'] ?? '').toString(),
-        latitude: double.tryParse((map['latitude'] ?? '0').toString()) ?? 0.0,
-        longitude: double.tryParse((map['longitude'] ?? '0').toString()) ?? 0.0,
-        province: (map['province'] ?? '').toString(),
-        district: (map['district'] ?? '').toString(),
-        workingHours:
-            (map['working_hours'] ?? map['workingHours'] ?? '').toString(),
-        workingDays: map['working_days']?.toString(),
-        isActive: map['is_active'] as bool? ?? true,
-        capacity: (map['capacity'] as int?) ?? 50,
-        services: List<String>.from(map['services'] as List? ?? const []),
-        createdAt: DateTime.tryParse(
-                (map['created_at'] ?? DateTime.now().toIso8601String())
-                    .toString()) ??
-            DateTime.now(),
-        updatedAt: DateTime.tryParse(
-                (map['updated_at'] ?? DateTime.now().toIso8601String())
-                    .toString()) ??
-            DateTime.now(),
-        notes: map['notes']?.toString(),
-      );
-    } catch (e) {
-      throw Exception('Invalid map data for OfficeModel: $e');
-    }
   }
 
   Map<String, dynamic> toMap() => toJson();

@@ -1,9 +1,9 @@
 // lib/core/cache/prefs_manager.dart
 
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer' as developer;
 
 /// 🎯 مدير مفضلات التطبيق - واجهة موحدة للـ SharedPreferences
 class PrefsManager {
@@ -33,8 +33,11 @@ class PrefsManager {
 
         developer.log('✅ PrefsManager initialized successfully', name: 'PREFS');
       } catch (e) {
-        developer.log('❌ PrefsManager initialization failed: $e',
-            name: 'PREFS', level: 1000);
+        developer.log(
+          '❌ PrefsManager initialization failed: $e',
+          name: 'PREFS',
+          level: 1000,
+        );
         _initCompleter!.completeError(e);
         rethrow;
       }
@@ -55,12 +58,18 @@ class PrefsManager {
     try {
       await _ensureInitialized();
       final result = await _prefs!.setString(key, value);
-      developer.log('💾 Saved string to prefs: $key',
-          name: 'PREFS', level: 600);
+      developer.log(
+        '💾 Saved string to prefs: $key',
+        name: 'PREFS',
+        level: 600,
+      );
       return result;
     } catch (e) {
-      developer.log('❌ Failed to save string: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to save string: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -70,8 +79,11 @@ class PrefsManager {
       await _ensureInitialized();
       return await _prefs!.setInt(key, value);
     } catch (e) {
-      developer.log('❌ Failed to save int: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to save int: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -81,8 +93,11 @@ class PrefsManager {
       await _ensureInitialized();
       return await _prefs!.setBool(key, value);
     } catch (e) {
-      developer.log('❌ Failed to save bool: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to save bool: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -92,8 +107,11 @@ class PrefsManager {
       await _ensureInitialized();
       return await _prefs!.setDouble(key, value);
     } catch (e) {
-      developer.log('❌ Failed to save double: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to save double: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -103,8 +121,11 @@ class PrefsManager {
       await _ensureInitialized();
       return await _prefs!.setStringList(key, value);
     } catch (e) {
-      developer.log('❌ Failed to save string list: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to save string list: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -115,8 +136,11 @@ class PrefsManager {
       if (!_isInitialized) return null;
       return _prefs!.getString(key);
     } catch (e) {
-      developer.log('❌ Failed to get string: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to get string: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return null;
     }
   }
@@ -126,8 +150,11 @@ class PrefsManager {
       if (!_isInitialized) return null;
       return _prefs!.getInt(key);
     } catch (e) {
-      developer.log('❌ Failed to get int: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to get int: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return null;
     }
   }
@@ -137,8 +164,11 @@ class PrefsManager {
       if (!_isInitialized) return null;
       return _prefs!.getBool(key);
     } catch (e) {
-      developer.log('❌ Failed to get bool: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to get bool: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return null;
     }
   }
@@ -152,8 +182,11 @@ class PrefsManager {
       if (!_isInitialized) return null;
       return _prefs!.getDouble(key);
     } catch (e) {
-      developer.log('❌ Failed to get double: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to get double: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return null;
     }
   }
@@ -163,8 +196,11 @@ class PrefsManager {
       if (!_isInitialized) return null;
       return _prefs!.getStringList(key);
     } catch (e) {
-      developer.log('❌ Failed to get string list: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to get string list: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return null;
     }
   }
@@ -174,12 +210,18 @@ class PrefsManager {
     try {
       await _ensureInitialized();
       final result = await _prefs!.remove(key);
-      developer.log('🧹 Removed key from prefs: $key',
-          name: 'PREFS', level: 600);
+      developer.log(
+        '🧹 Removed key from prefs: $key',
+        name: 'PREFS',
+        level: 600,
+      );
       return result;
     } catch (e) {
-      developer.log('❌ Failed to remove: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to remove: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -202,8 +244,11 @@ class PrefsManager {
       if (!_isInitialized) return false;
       return _prefs!.containsKey(key);
     } catch (e) {
-      developer.log('❌ Failed to check key: $key - $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to check key: $key - $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return false;
     }
   }
@@ -306,8 +351,11 @@ class PrefsManager {
       developer.log('🧹 Cleaned $removedCount obsolete keys', name: 'PREFS');
       return removedCount;
     } catch (e) {
-      developer.log('❌ Failed to clean old keys: $e',
-          name: 'PREFS', level: 1000);
+      developer.log(
+        '❌ Failed to clean old keys: $e',
+        name: 'PREFS',
+        level: 1000,
+      );
       return 0;
     }
   }

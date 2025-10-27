@@ -44,7 +44,7 @@ class AnalyticsService {
             ? 'excellent'
             : loadTime.inMilliseconds < 3000
                 ? 'good'
-                : 'slow'
+                : 'slow',
       },
       category: 'performance',
     );
@@ -78,8 +78,11 @@ class AnalyticsService {
   }
 
   // ⚙️ تتبع تهيئة المكونات
-  static void trackInitialization(String componentName,
-      {bool success = true, String? error}) {
+  static void trackInitialization(
+    String componentName, {
+    bool success = true,
+    String? error,
+  }) {
     trackEvent(
       'component_initialized',
       parameters: {
@@ -94,7 +97,10 @@ class AnalyticsService {
 
   // 🚨 تتبع الأخطاء
   static void trackError(
-      String operation, dynamic error, StackTrace stackTrace) {
+    String operation,
+    dynamic error,
+    StackTrace stackTrace,
+  ) {
     trackEvent(
       'operation_error',
       parameters: {
@@ -143,12 +149,6 @@ class AnalyticsService {
 
 /// 🧾 نموذج الحدث التحليلي
 class AnalyticsEvent {
-  final String name;
-  final Map<String, dynamic> parameters;
-  final String? error;
-  final String? category;
-  final DateTime timestamp;
-
   AnalyticsEvent({
     required this.name,
     required this.parameters,
@@ -156,6 +156,11 @@ class AnalyticsEvent {
     this.category,
     required this.timestamp,
   });
+  final String name;
+  final Map<String, dynamic> parameters;
+  final String? error;
+  final String? category;
+  final DateTime timestamp;
 
   @override
   String toString() {
