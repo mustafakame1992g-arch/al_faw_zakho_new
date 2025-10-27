@@ -4,6 +4,18 @@ import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
 import 'package:al_faw_zakho/core/constants/app_constants.dart';
 
+/// يدير إعدادات السمة (الوضع المظلم/الفاتح) للتطبيق.
+/// 
+/// - يستخدم `shared_preferences` لحفظ تفضيلات المستخدم.
+/// - يحتوي على منطق Fallback لضمان عدم فشل التهيئة.
+/// - يتكامل مع `AnalyticsService` و `PerformanceTracker`.
+/// 
+/// التهيئة:
+/// 1. تحاول تحميل السمة المحفوظة.
+/// 2. عند الفشل، تعتمد على النظام كخيار افتراضي.
+/// 3. تتبع الأحداث والأداء تلقائيًا.
+
+
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = AppConstants.defaultTheme;
   bool _isInitialized = false;
