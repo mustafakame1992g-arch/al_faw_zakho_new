@@ -292,7 +292,7 @@ class MemoryManager {
       // في Flutter/Dart، GC يعمل تلقائياً
       // لكن يمكن تشجيع النظام على تحرير الذاكرة
       // ignore: inference_failure_on_instance_creation
-await Future<void>.delayed(const Duration(milliseconds: 300));
+      await Future<void>.delayed(const Duration(milliseconds: 300));
       WidgetsBinding.instance.addPostFrameCallback((_) {});
     } catch (e) {
       // لا نرمي خطأ لأن هذه عملية تحسين وليست ضرورية

@@ -96,7 +96,7 @@ class CandidateRepository {
   Future<void> addCandidatesBatch(List<CandidateModel> candidates) async {
     try {
       final box = await _openBox();
-      final Map<String, CandidateModel> candidatesMap = {};
+      final Map<String, CandidateModel> candidatesMap = <String, CandidateModel>{};
 
       for (final candidate in candidates) {
         candidate.validate();
@@ -209,20 +209,21 @@ class CandidateRepository {
         );
       }
 
-      return {
-        'total_candidates': candidates.length,
-        'provinces_distribution': provinces,
-        'with_images': candidates.where((c) => c.hasImage).length,
-        'last_updated': DateTime.now().toIso8601String(),
-      };
+      return <String, dynamic>{
+  'total_candidates': candidates.length,
+  'provinces_distribution': provinces, // Map<String, int>
+  'with_images': candidates.where((c) => c.hasImage).length,
+  'last_updated': DateTime.now().toIso8601String(),
+};
     } catch (e) {
       AnalyticsService.trackError('getStatistics', e, StackTrace.current);
-      return {
-        'total_candidates': 0,
-        'provinces_distribution': {},
-        'with_images': 0,
-        'last_updated': DateTime.now().toIso8601String(),
-      };
+      return <String, dynamic>{
+  'total_candidates': 0,
+  'provinces_distribution': <String, int>{}, // ← هنا أصل التحذير
+  'with_images': 0,
+  'last_updated': DateTime.now().toIso8601String(),
+};
+
     }
   }
 

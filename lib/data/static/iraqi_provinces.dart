@@ -1,4 +1,5 @@
 // lib/data/static/iraqi_provinces.dart
+import 'package:al_faw_zakho/data/models/candidate_model.dart';
 
 /// 🗺️ قائمة المحافظات العراقية الـ 19
 class IraqiProvinces {
@@ -93,15 +94,34 @@ class IraqiProvinces {
   static bool get isComplete => allProvinces.length == 19;
 
   /// الحصول على خريطة المحافظات مع عدد المرشحين (للاستخدام المستقبلي)
-  static Map<String, int> getProvinceCandidateCounts(List<dynamic> candidates) {
-    final Map<String, int> counts = {};
-    for (final province in allProvinces) {
-      counts[province] = 0;
-    }
+  /// الحصول على خريطة المحافظات مع عدد المرشحين (يدعم CandidateModel أو Map أو String)
+  static Map<String, int> getProvinceCandidateCounts(
+    Iterable<dynamic> candidates,
+  ) {
+    // جهّز العدادات لكل محافظة
+    final Map<String, int> counts = {
+      for (final p in allProvinces) p: 0,
+    };
 
-    for (final candidate in candidates) {
-      if (candidate.province != null && isValidProvince(candidate.province)) {
-        counts[candidate.province] = (counts[candidate.province] ?? 0) + 1;
+    for (final c in candidates) {
+      String? province;
+
+      // 1) لو العنصر CandidateModel
+      if (c is CandidateModel) {
+        province = c.province;
+      }
+      // 2) لو Map فيها مفتاح 'province'
+      else if (c is Map) {
+        final v = c['province'];
+        if (v is String) province = v;
+      }
+      // 3) (اختياري) لو أصلاً العنصر String يمثل المحافظة
+      else if (c is String) {
+        province = c;
+      }
+
+      if (province != null && isValidProvince(province)) {
+        counts[province] = (counts[province] ?? 0) + 1;
       }
     }
 

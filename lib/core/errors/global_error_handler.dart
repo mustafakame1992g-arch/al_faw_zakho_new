@@ -11,6 +11,7 @@
 // الإصدار: 2.0.0 — FAW ZAKHO TECH TEAM
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
 
@@ -233,11 +234,12 @@ Stack: ${stack ?? 'No stack trace'}
     required ErrorSeverity severity,
   }) async {
     try {
-      await LocalDatabase.saveAppData('last_error', {
+      final payload = jsonEncode({
         'message': report,
         'severity': severity.name,
         'timestamp': DateTime.now().toIso8601String(),
       });
+      await LocalDatabase.saveAppData('last_error', payload); // <- String
     } catch (e) {
       // Hive قد لا يكون مهيأ بعد
     }
@@ -279,7 +281,7 @@ Stack: ${stack ?? 'No stack trace'}
       if (await _errorLogFile.exists()) {
         await _errorLogFile.delete();
       }
-      await LocalDatabase.saveAppData('last_error', null);
+      await LocalDatabase.saveAppData('last_error', ''); // <- بدلاً من null
       developer.log('[GlobalErrorHandler] Logs cleared ✅', name: 'ERROR_SYS');
     } catch (e) {
       developer.log(

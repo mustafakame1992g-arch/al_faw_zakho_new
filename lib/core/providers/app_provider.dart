@@ -53,7 +53,7 @@ class AppProvider extends ChangeNotifier {
       notifyListeners();
 
       // ✅ محاكاة تحميل البيانات من API
-await Future<void>.delayed(const Duration(milliseconds: 300));
+      await Future<void>.delayed(const Duration(milliseconds: 300));
 
       // هنا سيتم استدعاء API Client عندما يكون جاهزاً
       if (_apiClient != null) {

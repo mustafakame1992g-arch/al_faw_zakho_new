@@ -92,7 +92,9 @@ class DefaultDataService {
   }
 
   /// 📋 تحميل قائمة JSON بشكل آمن
-  static Future<List<Map<String, dynamic>>> _loadJsonList(String assetPath) async {
+  static Future<List<Map<String, dynamic>>> _loadJsonList(
+    String assetPath,
+  ) async {
     try {
       final raw = await rootBundle.loadString(assetPath);
       final decoded = json.decode(raw) as List<dynamic>;
@@ -106,20 +108,23 @@ class DefaultDataService {
   Future<Map<String, dynamic>> _loadAllAssetsSafely() async {
     developer.log('[BOOTSTRAP] Loading assets safely...', name: 'DATA');
 
-    final results = await Future.wait<dynamic>([
-      _loadJsonList(_assetPaths['candidates']!).timeout(
-        const Duration(seconds: _timeoutSeconds),
-        onTimeout: () => throw TimeoutException('Timeout loading candidates'),
-      ),
-      _loadJsonList(_assetPaths['faqs']!).timeout(
-        const Duration(seconds: _timeoutSeconds),
-        onTimeout: () => throw TimeoutException('Timeout loading FAQs'),
-      ),
-      _loadJsonList(_assetPaths['news']!).timeout(
-        const Duration(seconds: _timeoutSeconds),
-        onTimeout: () => throw TimeoutException('Timeout loading news'),
-      ),
-    ], eagerError: true);
+    final results = await Future.wait<dynamic>(
+      [
+        _loadJsonList(_assetPaths['candidates']!).timeout(
+          const Duration(seconds: _timeoutSeconds),
+          onTimeout: () => throw TimeoutException('Timeout loading candidates'),
+        ),
+        _loadJsonList(_assetPaths['faqs']!).timeout(
+          const Duration(seconds: _timeoutSeconds),
+          onTimeout: () => throw TimeoutException('Timeout loading FAQs'),
+        ),
+        _loadJsonList(_assetPaths['news']!).timeout(
+          const Duration(seconds: _timeoutSeconds),
+          onTimeout: () => throw TimeoutException('Timeout loading news'),
+        ),
+      ],
+      eagerError: true,
+    );
 
     return {
       'candidates': results[0] as List<Map<String, dynamic>>,
@@ -129,7 +134,9 @@ class DefaultDataService {
   }
 
   /// 🔍 معالجة والتحقق من صحة البيانات
-  Future<ProcessedData> _processAndValidateData(Map<String, dynamic> rawData) async {
+  Future<ProcessedData> _processAndValidateData(
+    Map<String, dynamic> rawData,
+  ) async {
     final candidatesJson = rawData['candidates'] as List<Map<String, dynamic>>;
     final faqsJson = rawData['faqs'] as List<Map<String, dynamic>>;
     final newsJson = rawData['news'] as List<Map<String, dynamic>>;
@@ -170,10 +177,10 @@ class DefaultDataService {
   }
 
   /// 👥 معالجة بيانات المرشحين
-  static List<CandidateModel> _processCandidates(List<Map<String, dynamic>> candidatesJson) {
-    return candidatesJson
-        .map((json) => CandidateModel.fromJson(json))
-        .toList();
+  static List<CandidateModel> _processCandidates(
+    List<Map<String, dynamic>> candidatesJson,
+  ) {
+    return candidatesJson.map((json) => CandidateModel.fromJson(json)).toList();
   }
 
   /// ❓ معالجة الأسئلة الشائعة
@@ -198,7 +205,10 @@ class DefaultDataService {
     List<FaqModel> faqs,
     List<NewsModel> news,
   ) {
-    developer.log('[BOOTSTRAP] Performing quality checks...', name: 'VALIDATION');
+    developer.log(
+      '[BOOTSTRAP] Performing quality checks...',
+      name: 'VALIDATION',
+    );
 
     // 1. فحص المرشحين
     for (final candidate in candidates) {
@@ -318,7 +328,10 @@ class DefaultDataService {
   }
 
   /// ✅ معالجة أخطاء التحقق من الصحة
-  DataLoadResult _handleValidationError(DataValidationException e, StackTrace stack) {
+  DataLoadResult _handleValidationError(
+    DataValidationException e,
+    StackTrace stack,
+  ) {
     developer.log(
       '[BOOTSTRAP] Data validation failed ❌',
       name: 'ERROR',
@@ -376,7 +389,6 @@ class DefaultDataService {
 
 /// ⚙️ تكوين رسائل الخطأ
 class ErrorConfig {
-
   ErrorConfig({
     required this.title,
     required this.ctaLabel,

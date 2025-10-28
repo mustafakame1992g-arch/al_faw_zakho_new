@@ -10,8 +10,6 @@ import 'package:al_faw_zakho/data/models/candidate_model.dart';
 import 'package:al_faw_zakho/data/models/faq_model.dart';
 import 'package:al_faw_zakho/data/models/news_model.dart';
 import 'package:al_faw_zakho/data/models/office_model.dart';
-import 'package:al_faw_zakho/data/repositories/faq_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -130,7 +128,7 @@ class LocalDatabase {
     final List<Map<String, dynamic>> data = candidates
         .map((candidate) => candidate.toJson())
         .toList(growable: false);
-    
+
     await _saveList<CandidateModel>(
       _candidatesBox,
       _candidatesKey,
@@ -141,19 +139,17 @@ class LocalDatabase {
 
   /// 💾 حفظ الأسئلة الشائعة
   static Future<void> saveFAQs(List<FaqModel> faqs) async {
-    final List<Map<String, dynamic>> data = faqs
-        .map((faq) => faq.toJson())
-        .toList(growable: false);
-    
+    final List<Map<String, dynamic>> data =
+        faqs.map((faq) => faq.toJson()).toList(growable: false);
+
     await _saveList<FaqModel>(_faqBox, _faqsKey, data, 'FAQs');
   }
 
   /// 💾 حفظ الأخبار مع التشذيب التلقائي
   static Future<void> saveNews(List<NewsModel> newsList) async {
-    final List<Map<String, dynamic>> data = newsList
-        .map((news) => news.toJson())
-        .toList(growable: false);
-    
+    final List<Map<String, dynamic>> data =
+        newsList.map((news) => news.toJson()).toList(growable: false);
+
     await _saveList<NewsModel>(_newsBox, _newsKey, data, 'News');
     await _pruneOldNewsKeepLatest();
   }
@@ -170,9 +166,9 @@ class LocalDatabase {
 
   /// 📥 جلب المرشحين
   static List<CandidateModel> getCandidates() {
-    final List<Map<String, dynamic>> rawList = 
+    final List<Map<String, dynamic>> rawList =
         _getList<CandidateModel>(_candidatesBox, _candidatesKey, 'Candidates');
-    
+
     final List<CandidateModel> candidates = <CandidateModel>[];
     int fixedCount = 0;
 
@@ -181,7 +177,8 @@ class LocalDatabase {
         // إصلاح البيانات القديمة
         final Map<String, dynamic> fixedItem = Map<String, dynamic>.from(item)
           ..['province'] ??= 'غير محدد'
-          ..['fullNameAr'] ??= '${item['nameAr'] ?? ''} ${item['nicknameAr'] ?? ''}'.trim();
+          ..['fullNameAr'] ??=
+              '${item['nameAr'] ?? ''} ${item['nicknameAr'] ?? ''}'.trim();
 
         candidates.add(CandidateModel.fromJson(fixedItem));
         fixedCount++;
@@ -200,9 +197,9 @@ class LocalDatabase {
 
   /// 📥 جلب الأسئلة الشائعة
   static List<FaqModel> getFAQs() {
-    final List<Map<String, dynamic>> rawList = 
+    final List<Map<String, dynamic>> rawList =
         _getList<FaqModel>(_faqBox, _faqsKey, 'FAQs');
-    
+
     final List<FaqModel> faqs = rawList
         .map((Map<String, dynamic> item) => FaqModel.fromJson(item))
         .toList(growable: false);
@@ -210,7 +207,9 @@ class LocalDatabase {
     // الترتيب حسب الأهمية والتاريخ
     faqs.sort((FaqModel a, FaqModel b) {
       final int byImportance = b.importance.compareTo(a.importance);
-      return byImportance != 0 ? byImportance : b.createdAt.compareTo(a.createdAt);
+      return byImportance != 0
+          ? byImportance
+          : b.createdAt.compareTo(a.createdAt);
     });
 
     return faqs;
@@ -218,9 +217,9 @@ class LocalDatabase {
 
   /// 📥 جلب الأخبار
   static Future<List<NewsModel>> getNews() async {
-    final List<Map<String, dynamic>> rawList = 
+    final List<Map<String, dynamic>> rawList =
         _getList<NewsModel>(_newsBox, _newsKey, 'News');
-    
+
     final List<NewsModel> newsList = <NewsModel>[];
     bool hasCorrections = false;
     int fixedCount = 0;
@@ -248,9 +247,9 @@ class LocalDatabase {
 
   /// 📥 جلب المكاتب
   static List<OfficeModel> getOffices() {
-    final List<Map<String, dynamic>> rawList = 
+    final List<Map<String, dynamic>> rawList =
         _getList<OfficeModel>(_officesBox, _officesKey, 'Offices');
-    
+
     return rawList
         .map((Map<String, dynamic> item) => OfficeModel.fromJson(item))
         .toList(growable: false);
@@ -276,15 +275,18 @@ class LocalDatabase {
     final Stopwatch sw = Stopwatch()..start();
     try {
       if (_isInitialized && !_useFallbackStorage) {
-        await Future.wait(<Future<void>>[
-          _appBox.clear(),
-          _candidatesBox.clear(),
-          _faqBox.clear(),
-          _newsBox.clear(),
-          _officesBox.clear(),
-        ], eagerError: true);
+        await Future.wait(
+          <Future<void>>[
+            _appBox.clear(),
+            _candidatesBox.clear(),
+            _faqBox.clear(),
+            _newsBox.clear(),
+            _officesBox.clear(),
+          ],
+          eagerError: true,
+        );
       }
-      
+
       if (_fallbackInitialized) {
         const List<String> keys = <String>[
           _candidatesKey,
@@ -294,13 +296,13 @@ class LocalDatabase {
           'mock_data_generated',
           'mock_data_timestamp',
         ];
-        
+
         await Future.wait(
           keys.map((String key) => PrefsManager.remove(key)),
           eagerError: true,
         );
       }
-      
+
       AnalyticsService.trackEvent('Cache_Cleared_All');
       developer.log('🗑️ All cache data cleared', name: 'CACHE');
     } finally {
@@ -344,7 +346,12 @@ class LocalDatabase {
       AnalyticsService.trackEvent('Hive_TypeSafe_Initialization_Success');
       developer.log('✅ Hive initialized with Type Safety', name: 'CACHE');
     } catch (e, stack) {
-      developer.log('❌ Hive init failed: $e', name: 'CACHE', error: e, stackTrace: stack);
+      developer.log(
+        '❌ Hive init failed: $e',
+        name: 'CACHE',
+        error: e,
+        stackTrace: stack,
+      );
       await _handleInitializationFallback(e);
     } finally {
       sw.stop();
@@ -358,10 +365,14 @@ class LocalDatabase {
     try {
       final List<Future<Box<dynamic>>> boxFutures = <Future<Box<dynamic>>>[
         Hive.openBox<String>('app_data').then((Box<String> box) => box),
-        Hive.openBox<List<Map<String, dynamic>>>('candidates').then((Box<List<Map<String, dynamic>>> box) => box),
-        Hive.openBox<List<Map<String, dynamic>>>('faqs').then((Box<List<Map<String, dynamic>>> box) => box),
-        Hive.openBox<List<Map<String, dynamic>>>('news').then((Box<List<Map<String, dynamic>>> box) => box),
-        Hive.openBox<List<Map<String, dynamic>>>('offices').then((Box<List<Map<String, dynamic>>> box) => box),
+        Hive.openBox<List<Map<String, dynamic>>>('candidates')
+            .then((Box<List<Map<String, dynamic>>> box) => box),
+        Hive.openBox<List<Map<String, dynamic>>>('faqs')
+            .then((Box<List<Map<String, dynamic>>> box) => box),
+        Hive.openBox<List<Map<String, dynamic>>>('news')
+            .then((Box<List<Map<String, dynamic>>> box) => box),
+        Hive.openBox<List<Map<String, dynamic>>>('offices')
+            .then((Box<List<Map<String, dynamic>>> box) => box),
       ];
 
       final List<Box<dynamic>> results = await Future.wait(boxFutures)
@@ -408,7 +419,7 @@ class LocalDatabase {
     final Stopwatch sw = Stopwatch()..start();
     try {
       await _ensureInitialized();
-      
+
       if (!_useFallbackStorage) {
         try {
           await box.put(key, data);
@@ -420,7 +431,7 @@ class LocalDatabase {
       } else {
         await _saveToSharedPrefsFallback(key, data);
       }
-      
+
       AnalyticsService.trackEvent('${label}_Saved');
     } finally {
       sw.stop();
@@ -437,7 +448,7 @@ class LocalDatabase {
     final Stopwatch sw = Stopwatch()..start();
     try {
       if (!_isInitialized) return <Map<String, dynamic>>[];
-      
+
       List<Map<String, dynamic>> result;
       if (!_useFallbackStorage) {
         try {
@@ -449,7 +460,7 @@ class LocalDatabase {
       } else {
         result = _getFromSharedPrefsFallback(key) ?? <Map<String, dynamic>>[];
       }
-      
+
       AnalyticsService.trackEvent('${label}_Retrieved');
       return result;
     } finally {
@@ -461,14 +472,15 @@ class LocalDatabase {
   /// 🔧 إصلاح عنصر الأخبار
   static Map<String, dynamic> _fixNewsItem(Map<String, dynamic> item) {
     final Map<String, dynamic> fixed = Map<String, dynamic>.from(item);
-    
+
     // إصلاح تاريخ النشر
-    dynamic publishDate = fixed['publishDate'] ?? fixed['publish_date'];
+    final dynamic publishDate = fixed['publishDate'] ?? fixed['publish_date'];
     if (publishDate is int) {
-      fixed['publish_date'] = DateTime.fromMillisecondsSinceEpoch(publishDate).toIso8601String();
+      fixed['publish_date'] =
+          DateTime.fromMillisecondsSinceEpoch(publishDate).toIso8601String();
     } else if (publishDate is DateTime) {
       fixed['publish_date'] = publishDate.toIso8601String();
-    } else if (publishDate is! String || (publishDate as String).isEmpty) {
+    } else if (publishDate is! String || (publishDate).isEmpty) {
       fixed['publish_date'] = DateTime.now().toIso8601String();
     }
 
@@ -492,20 +504,26 @@ class LocalDatabase {
 
   /// ✂️ تشذيب الأخبار القديمة
   static Future<void> _pruneOldNewsKeepLatest() async {
-    final List<Map<String, dynamic>> raw = 
+    final List<Map<String, dynamic>> raw =
         _getList<NewsModel>(_newsBox, _newsKey, 'News');
-    
+
     if (raw.length <= _maxNewsItems) return;
 
     final List<NewsModel> newsList = raw
         .map((Map<String, dynamic> item) => NewsModel.fromJson(item))
         .toList()
-      ..sort((NewsModel a, NewsModel b) => b.publishDate.compareTo(a.publishDate));
+      ..sort(
+        (NewsModel a, NewsModel b) => b.publishDate.compareTo(a.publishDate),
+      );
 
-    final List<NewsModel> keep = newsList.take(_maxNewsItems).toList(growable: false);
+    final List<NewsModel> keep =
+        newsList.take(_maxNewsItems).toList(growable: false);
     await saveNews(keep);
 
-    developer.log('✂️ تشذيب الأخبار: ${newsList.length} → $_maxNewsItems', name: 'CACHE');
+    developer.log(
+      '✂️ تشذيب الأخبار: ${newsList.length} → $_maxNewsItems',
+      name: 'CACHE',
+    );
   }
 
   // ============================
@@ -517,7 +535,7 @@ class LocalDatabase {
     try {
       // اختبار نظام الطوارئ
       final Map<String, dynamic> probe = <String, dynamic>{
-        't': DateTime.now().millisecondsSinceEpoch
+        't': DateTime.now().millisecondsSinceEpoch,
       };
       await PrefsManager.saveString('fallback_test', json.encode(probe));
       final String? ok = PrefsManager.getString('fallback_test');
@@ -598,49 +616,61 @@ class LocalDatabase {
 
       await Future.wait(loadTasks, eagerError: true);
       developer.log('✅ تم تحميل البيانات الأولية بنجاح', name: 'SEED');
-      
     } catch (e, stack) {
-      developer.log('❌ فشل تحميل البيانات الأولية: $e', name: 'SEED', error: e, stackTrace: stack);
+      developer.log(
+        '❌ فشل تحميل البيانات الأولية: $e',
+        name: 'SEED',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
   static Future<void> _loadAndSaveCandidates() async {
-    final List<dynamic> list = await _loadJson('assets/data/candidates.json');
+    final list = await _loadJson('assets/data/candidates.json');
     if (list.isNotEmpty) {
-      final List<CandidateModel> candidates = list
-          .map((dynamic e) => CandidateModel.fromJson(Map<String, dynamic>.from(e)))
+      final candidates = list
+          .whereType<Map<String, dynamic>>() // ✅ نوع صريح
+          .map(CandidateModel.fromJson) // ✅ بدون cast زائد
           .toList(growable: false);
       await saveCandidates(candidates);
     }
   }
 
   static Future<void> _loadAndSaveFAQs() async {
-    final List<dynamic> list = await _loadJson('assets/data/faqs.json');
+    final list = await _loadJson('assets/data/faqs.json');
     if (list.isNotEmpty) {
-      final List<FaqModel> faqs = list
-          .map((dynamic e) => FaqModel.fromJson(Map<String, dynamic>.from(e)))
+      final faqs = list
+          .whereType<Map<String, dynamic>>() // ✅
+          .map(FaqModel.fromJson) // ✅
           .toList(growable: false);
       await saveFAQs(faqs);
     }
   }
 
   static Future<void> _loadAndSaveNews() async {
-    final List<dynamic> list = await _loadJson('assets/data/news.json');
+    final list = await _loadJson('assets/data/news.json');
     if (list.isNotEmpty) {
-      final List<NewsModel> news = list
-          .map((dynamic e) => NewsModel.fromJson(Map<String, dynamic>.from(e)))
+      final news = list
+          .whereType<Map<String, dynamic>>() // ✅
+          .map(NewsModel.fromJson) // ✅
           .toList(growable: false);
       await saveNews(news);
     }
   }
 
   static Future<void> _loadAndSaveOffices() async {
-    final List<dynamic> list = await _loadJson('assets/data/offices.json');
+    final list = await _loadJson('assets/data/offices.json');
     if (list.isNotEmpty) {
-      final List<Map<String, dynamic>> offices = list
-          .cast<Map<String, dynamic>>()
+      final offices = list
+          .whereType<Map<String, dynamic>>() // ✅
           .toList(growable: false);
-      await _saveList<OfficeModel>(_officesBox, _officesKey, offices, 'Offices');
+      await _saveList<OfficeModel>(
+        _officesBox,
+        _officesKey,
+        offices,
+        'Offices',
+      );
     }
   }
 
@@ -658,28 +688,35 @@ class LocalDatabase {
 
   /// 📥 تحميل الأسئلة الشائعة من Assets عند الحاجة
   static Future<void> _loadFAQsFromAssetsIfNeeded() async {
-    final Stopwatch sw = Stopwatch()..start();
+    final sw = Stopwatch()..start();
     try {
       if (!_faqBox.isOpen) return;
-      
+
       if (_faqBox.isEmpty) {
-        developer.log('📂 تحميل الأسئلة الشائعة من Assets...', name: 'LOCAL_DB');
-        
-        final String jsonString = await rootBundle.loadString('assets/data/faqs.json');
-        final List<dynamic> decoded = json.decode(jsonString) as List<dynamic>;
-        
-        final List<FaqModel> faqs = decoded
-            .map((dynamic e) => FaqModel.fromJson(Map<String, dynamic>.from(e)))
+        final jsonString = await rootBundle.loadString('assets/data/faqs.json');
+        final decoded = json.decode(jsonString) as List<dynamic>;
+
+        final faqs = decoded
+            .whereType<Map<String, dynamic>>() // ✅ المهم هنا
+            .map(FaqModel.fromJson) // ✅
             .toList(growable: false);
 
-        await saveFAQs(faqqs);
+        await saveFAQs(faqs);
         developer.log('✅ تم تحميل ${faqs.length} سؤال شائع', name: 'LOCAL_DB');
       }
     } catch (e, stack) {
-      developer.log('❌ فشل تحميل الأسئلة الشائعة: $e', name: 'LOCAL_DB', error: e, stackTrace: stack);
+      developer.log(
+        '❌ فشل تحميل الأسئلة الشائعة: $e',
+        name: 'LOCAL_DB',
+        error: e,
+        stackTrace: stack,
+      );
     } finally {
       sw.stop();
-      PerformanceTracker.track('LocalDatabase_Load_FAQs_From_Assets', sw.elapsed);
+      PerformanceTracker.track(
+        'LocalDatabase_Load_FAQs_From_Assets',
+        sw.elapsed,
+      );
     }
   }
 
@@ -690,13 +727,18 @@ class LocalDatabase {
   /// 🧨 إعادة ضبط كاملة
   static Future<void> _hardReset() async {
     const List<String> names = <String>[
-      'app_data', 'candidates', 'offices', 'faqs', 'news'
+      'app_data',
+      'candidates',
+      'offices',
+      'faqs',
+      'news',
     ];
 
     for (final String name in names) {
       if (Hive.isBoxOpen(name)) {
-        await Hive.box(name).close();
+        await Hive.box<dynamic>(name).close(); // ✅ حدّد النوع
       }
+
       await Hive.deleteBoxFromDisk(name);
     }
     developer.log('🧨 Hard reset: جميع الصناديق محذوفة', name: 'CACHE');
@@ -707,7 +749,8 @@ class LocalDatabase {
     try {
       if (!await Hive.boxExists('news')) return;
 
-      final Box<dynamic> tempBox = await Hive.openBox('news', crashRecovery: true);
+      final Box<dynamic> tempBox =
+          await Hive.openBox('news', crashRecovery: true);
       final dynamic rawData = tempBox.get(_newsKey);
 
       if (rawData is! List) {
@@ -729,14 +772,22 @@ class LocalDatabase {
       await tempBox.close();
       await Hive.deleteBoxFromDisk('news');
 
-      final Box<List<Map<String, dynamic>>> newBox = 
+      final Box<List<Map<String, dynamic>>> newBox =
           await Hive.openBox<List<Map<String, dynamic>>>('news');
       await newBox.put(_newsKey, fixedList);
       await newBox.close();
 
-      developer.log('✅ تم إصلاح صندوق الأخبار ($correctedCount عنصر)', name: 'MIGRATION');
+      developer.log(
+        '✅ تم إصلاح صندوق الأخبار ($correctedCount عنصر)',
+        name: 'MIGRATION',
+      );
     } catch (e, stack) {
-      developer.log('❌ فشل إصلاح الأخبار: $e', name: 'MIGRATION', error: e, stackTrace: stack);
+      developer.log(
+        '❌ فشل إصلاح الأخبار: $e',
+        name: 'MIGRATION',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -744,16 +795,19 @@ class LocalDatabase {
   //    🔄 دوال الطوارئ
   // ============================
 
-  static Future<void> _saveToSharedPrefsFallback(String key, List<Map<String, dynamic>> data) async {
+  static Future<void> _saveToSharedPrefsFallback(
+    String key,
+    List<Map<String, dynamic>> data,
+  ) async {
     final Stopwatch sw = Stopwatch()..start();
     try {
       if (!_fallbackInitialized) throw Exception('Fallback not initialized');
-      
+
       final String encoded = json.encode(data);
       if (encoded.length > _maxFallbackSize) {
         throw Exception('Data too large for fallback');
       }
-      
+
       await PrefsManager.saveString(key, encoded);
     } finally {
       sw.stop();
@@ -765,10 +819,10 @@ class LocalDatabase {
     final Stopwatch sw = Stopwatch()..start();
     try {
       if (!_fallbackInitialized) return null;
-      
+
       final String? encoded = PrefsManager.getString(key);
       if (encoded == null) return null;
-      
+
       final dynamic decoded = json.decode(encoded);
       return decoded is List ? decoded.cast<Map<String, dynamic>>() : null;
     } finally {
@@ -790,7 +844,7 @@ class LocalDatabase {
     } catch (e) {
       developer.log('⚠️ فشل التنظيف: $e', name: 'CACHE');
     }
-    
+
     _isInitialized = false;
     _initCompleter = null;
     await init();

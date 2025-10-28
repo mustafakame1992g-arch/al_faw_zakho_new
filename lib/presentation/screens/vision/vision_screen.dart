@@ -9,6 +9,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+// ✅ اترك هذه النسخة فقط
+@pragma('vm:prefer-inline')
+T? castOrNull<T>(Object? v) => v is T ? v : null;
+
+@pragma('vm:prefer-inline')
+Map<String, dynamic> asMap(Object? v) =>
+    v is Map ? v.cast<String, dynamic>() : <String, dynamic>{};
+
+@pragma('vm:prefer-inline')
+List<Map<String, dynamic>> asListOfMap(Object? v) => v is List
+    ? v.whereType<Map>().map((e) => e.cast<String, dynamic>()).toList()
+    : <Map<String, dynamic>>[];
+
+@pragma('vm:prefer-inline')
+List<String> asListOfString(Object? v) =>
+    v is List ? v.map((e) => e.toString()).toList() : <String>[];
+
+@pragma('vm:prefer-inline')
+String asString(Object? v) => v?.toString() ?? '';
+
 class VisionScreen extends StatefulWidget {
   const VisionScreen({super.key});
 
@@ -45,8 +65,9 @@ class _VisionScreenState extends State<VisionScreen> {
   Future<void> _loadVisionContent() async {
     try {
       final jsonString = await rootBundle.loadString('assets/data/vision.json');
-      final Map<String, dynamic> jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
-     await Future<void>.delayed(const Duration(milliseconds: 800));
+      final Map<String, dynamic> jsonData =
+          jsonDecode(jsonString) as Map<String, dynamic>;
+      await Future<void>.delayed(const Duration(milliseconds: 800));
       setState(() {
         _visionData = jsonData;
         _isLoading = false;
@@ -90,22 +111,20 @@ class _VisionScreenState extends State<VisionScreen> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final languageProvider = Provider.of<LanguageProvider>(context);
+    final languageProvider =
+        context.watch<LanguageProvider>(); // 🔥 استخدام watch
     final langCode = languageProvider.languageCode;
 
     if (_isLoading) return _buildShimmerLoading(brightness);
     if (_error != null) return _buildErrorScreen(brightness);
 
-    // 🔥 الإصلاح الأساسي: تحويل الأنواع بشكل صريح
-    final Map<String, dynamic> content = switch (_visionData) {
-      final m? => (m[langCode] ?? m['ar']) as Map<String, dynamic>,
-      _ => <String, dynamic>{},
-    };
+    // 🔥 الإصلاح: استخدام دوال التحويل الآمن
+    final Map<String, dynamic> content =
+        asMap(_visionData?[langCode] ?? _visionData?['ar']);
 
+    final String title = asString(content['title']);
     final List<Map<String, dynamic>> sections =
-        ((content['sections'] as List<dynamic>?) ?? const <dynamic>[])
-            .map<Map<String, dynamic>>((e) => e as Map<String, dynamic>)
-            .toList();
+        asListOfMap(content['sections']);
 
     // 🏗️ إنشاء المفاتيح إذا لزم الأمر
     if (_sectionKeys.length != sections.length) {
@@ -113,10 +132,19 @@ class _VisionScreenState extends State<VisionScreen> {
     }
 
     return FZScaffold(
-      appBar: _buildAppBar((content['title'] as String?) ?? 'الرؤية', brightness, sections),
+      appBar:
+          _buildAppBar(title.isEmpty ? 'الرؤية' : title, brightness, sections),
       body: _isReadingMode
-          ? _buildReadingMode(content, sections, brightness)
-          : _buildPresentationMode(content, sections, brightness),
+          ? _buildReadingMode(
+              sections,
+              brightness,
+              title,
+            ) // 🔥 إزالة content غير الضروري
+          : _buildPresentationMode(
+              sections,
+              brightness,
+              title,
+            ), // 🔥 إزالة content
       persistentBottom: FZTab.home,
     );
   }
@@ -143,30 +171,35 @@ class _VisionScreenState extends State<VisionScreen> {
             PopupMenuButton<int>(
               icon: const Icon(Icons.list),
               onSelected: _scrollToSection,
-              itemBuilder: (context) => sections.asMap().entries.map((entry) {
-                final String heading = (entry.value['heading'] as String?) ?? 'قسم ${entry.key + 1}';
-                return PopupMenuItem<int>(
-                  value: entry.key,
-                  child: Text(
-                    heading,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                );
-              }).toList(),
+              itemBuilder: (context) {
+                return sections.asMap().entries.map((entry) {
+                  final String heading =
+                      castOrNull<String>(entry.value['heading']) ??
+                          'قسم ${entry.key + 1}';
+                  return PopupMenuItem<int>(
+                    value: entry.key,
+                    child: Text(
+                      heading,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  );
+                }).toList();
+              },
             ),
         ],
       ],
     );
   }
 
+// 🔥 تحسين: إزالة معلمة content غير المستخدمة
   Widget _buildReadingMode(
-    Map<String, dynamic> content,
     List<Map<String, dynamic>> sections,
     Brightness brightness,
+    String title,
   ) {
     return Column(
       children: [
-        _buildEnhancedHeader(brightness, (content['title'] as String?) ?? ''),
+        _buildEnhancedHeader(brightness, title),
         Expanded(
           child: SingleChildScrollView(
             controller: _scrollController,
@@ -184,13 +217,13 @@ class _VisionScreenState extends State<VisionScreen> {
   }
 
   Widget _buildPresentationMode(
-    Map<String, dynamic> content,
     List<Map<String, dynamic>> sections,
     Brightness brightness,
+    String title,
   ) {
     return Column(
       children: [
-        _buildPresentationHeader(brightness, (content['title'] as String?) ?? ''),
+        _buildPresentationHeader(brightness, title),
         Expanded(
           child: PageView.builder(
             controller: _pageController,
@@ -323,9 +356,9 @@ class _VisionScreenState extends State<VisionScreen> {
     BuildContext context,
     int index,
   ) {
-    final String? heading = section['heading'] as String?;
-    final String? text = section['text'] as String?;
-    final List<dynamic> bullets = (section['bullets'] as List<dynamic>?) ?? const <dynamic>[];
+    final String? heading = castOrNull<String>(section['heading']);
+    final String? text = castOrNull<String>(section['text']);
+    final List<String> bullets = asListOfString(section['bullets']);
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 400 + (index * 100)),
@@ -357,18 +390,13 @@ class _VisionScreenState extends State<VisionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (heading != null)
-                    _AnimatedSectionTitle(heading, index),
+                  if (heading != null) _AnimatedSectionTitle(heading, index),
                   const SizedBox(height: 12),
-                  if (text != null)
-                    _AnimatedSectionText(text, index),
+                  if (text != null) _AnimatedSectionText(text, index),
                   if (bullets.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    for (final point in bullets)
-                      _AnimatedSectionBullet(
-                        point.toString(),
-                        bullets.indexOf(point),
-                      ),
+                    for (var i = 0; i < bullets.length; i++)
+                      _AnimatedSectionBullet(bullets[i], i), // ← i int مضمون
                   ],
                 ],
               ),
@@ -384,9 +412,9 @@ class _VisionScreenState extends State<VisionScreen> {
     Brightness brightness,
     int index,
   ) {
-    final String? heading = section['heading'] as String?;
-    final String? text = section['text'] as String?;
-    final List<dynamic> bullets = (section['bullets'] as List<dynamic>?) ?? const <dynamic>[];
+    final String? heading = castOrNull<String>(section['heading']);
+    final String? text = castOrNull<String>(section['text']);
+    final List<String> bullets = asListOfString(section['bullets']);
 
     return AnimatedBuilder(
       animation: _pageController,
@@ -440,8 +468,7 @@ class _VisionScreenState extends State<VisionScreen> {
                       ),
                     if (bullets.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      for (final point in bullets)
-                        _SectionBullet(point.toString()),
+                      for (final b in bullets) _SectionBullet(b),
                     ],
                   ],
                 ),

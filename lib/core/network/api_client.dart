@@ -55,7 +55,7 @@ class ApiClient {
   }) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
-        path, 
+        path,
         queryParameters: queryParameters,
       );
       return response;
@@ -70,7 +70,7 @@ class ApiClient {
   }) async {
     try {
       final response = await _dio.get<List<dynamic>>(
-        path, 
+        path,
         queryParameters: queryParameters,
       );
       return response;
@@ -98,7 +98,7 @@ class ApiClient {
   }) async {
     try {
       final response = await _dio.get<dynamic>(
-        path, 
+        path,
         queryParameters: queryParameters,
       );
       return response;

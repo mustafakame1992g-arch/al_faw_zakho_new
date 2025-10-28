@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:async' show StreamSubscription, Timer, unawaited;
 
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
@@ -154,8 +155,16 @@ class ConnectivityProvider with ChangeNotifier {
         '🔄 Retrying in ${retryDelay.inSeconds}s (attempt $_retryCount/$_maxRetryAttempts)',
       );
 
-      _retryTimer = Timer(retryDelay, init);
-      init();
+       // ✅ الإصلاح: استخدام Future.microtask بدلاً من استدعاء init مباشرة
+      _retryTimer?.cancel();
+_retryTimer = Timer(retryDelay, () {
+  unawaited(init()); // ✅ جدولة مع توضيح fire-and-forget
+});
+ // لا تنادِ init() مباشرة
+
+      
+      // ❌ إزالة السطر الذي كان يسبب المشكلة:
+      // init(); // هذا كان السطر 194 المسبب للخطأ
     } else {
       // Fallback إلى وضع الاتصال افتراضي
       _activateFallbackMode(error, elapsedMs);
@@ -189,17 +198,19 @@ class ConnectivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🧹 تنظيف الموارد بشكل آمن
   Future<void> _cleanup() async {
-    _connectivitySubscription?.cancel();
-    _connectivitySubscription = null;
-
-    _retryTimer?.cancel();
-    _retryTimer = null;
-
-    _retryCount = 0;
-    _lastStatusUpdate = null;
+  final sub = _connectivitySubscription;
+  _connectivitySubscription = null;
+  if (sub != null) {
+    await sub.cancel(); // ✅ لا تتركها بدون await
   }
+
+  _retryTimer?.cancel();
+  _retryTimer = null;
+
+  _retryCount = 0;
+  _lastStatusUpdate = null;
+}
 
   /// 🔄 إعادة التعيين للمساعدة في الاسترداد
   Future<void> reset() async {
@@ -249,11 +260,20 @@ class ConnectivityProvider with ChangeNotifier {
     return _isOnline;
   }
 
-  @override
-  void dispose() {
-    _cleanup();
-    super.dispose();
+ @override
+void dispose() {
+  // ✅ ألغِ الاشتراك بشكل صريح في dispose — يرضي lint "cancel_subscriptions"
+  final sub = _connectivitySubscription;
+  _connectivitySubscription = null;
+  if (sub != null) {
+    unawaited(sub.cancel()); // لا نقدر نعمل await داخل dispose، فاستخدم unawaited
   }
+
+  _retryTimer?.cancel();
+  _retryTimer = null;
+
+  super.dispose();
+}
 
   /// 🧪 دعم الاختبارات
   @visibleForTesting

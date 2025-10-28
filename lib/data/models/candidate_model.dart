@@ -112,8 +112,9 @@ class CandidateModel extends Equatable {
   // Validation
   void validate() {
     if (id.isEmpty) throw const FormatException('معرف المرشح مطلوب');
-    if (nameAr.isEmpty && nameEn.isEmpty)
+    if (nameAr.isEmpty && nameEn.isEmpty) {
       throw const FormatException('الاسم مطلوب');
+    }
     if (province.isEmpty) throw const FormatException('المحافظة مطلوبة');
 
     // Phone validation

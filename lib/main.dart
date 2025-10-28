@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+// 🔥 أضف هذا الاستيراد في الأعلى
+import 'dart:async' show unawaited;
 import 'package:al_faw_zakho/core/errors/global_error_handler.dart';
 import 'package:al_faw_zakho/core/live/live_data_updater.dart';
 // 🧩 Core
@@ -18,6 +20,8 @@ import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/data/local/local_database.dart';
 // 🧱 Data
 import 'package:al_faw_zakho/data/models/candidate_model.dart';
+// أضِف
+import 'package:al_faw_zakho/data/models/faq_model.dart';
 import 'package:al_faw_zakho/presentation/screens/about/about_screen.dart';
 import 'package:al_faw_zakho/presentation/screens/donate/donate_screen.dart';
 // 🎨 UI
@@ -26,16 +30,17 @@ import 'package:al_faw_zakho/presentation/screens/offices/offices_main_screen.da
 import 'package:al_faw_zakho/presentation/themes/app_theme.dart';
 import 'package:al_faw_zakho/presentation/widgets/error_screen.dart';
 import 'package:al_faw_zakho/presentation/widgets/loading_screen.dart';
+// flutter:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+// طرف ثالث / مشروعك:
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalDatabase.init();
-  await LocalDatabase.ensureFreshNewsFromAssets();
 
   // ✅ تفعيل النظام العام للأخطاء
   await GlobalErrorHandler.setup(
@@ -81,15 +86,10 @@ Future<void> _initializeCoreServices() async {
     // 🧱 المرحلة 1: تهيئة Hive بأمان — مع كشف مبكر لأي تلف في صناديق البيانات
     // ============================================================
     await _initializeHiveWithRetry();
-    await LocalDatabase.bootstrapOfficesFromAssets(forceReload: true);
 
-    // ✅ تحميل بيانات المكاتب من assets في أول تشغيل فقط
-    //await LocalDatabase.bootstrapOfficesFromAssets();
 
-    // ✅ إصلاح تلقائي لصندوق الأخبار (عند الحاجة فقط)
-    await LocalDatabase.migrateAndRepairNewsBox();
-    await Future.delayed(const Duration(milliseconds: 150));
-
+// NOTE: seeding يحصل داخل LocalDatabase.init() تلقائياً عند الحاجة
+await Future<void>.delayed(const Duration(milliseconds: 150));
     // ============================================================
     // 🧩 المرحلة 2: تحميل النظام الأساسي للبيانات الحقيقية
     // ============================================================
@@ -109,7 +109,7 @@ Future<void> _initializeCoreServices() async {
     ]);
 
     // ✅ فحص مباشر لعدد المكاتب بعد التهيئة
-    final offices = await LocalDatabase.getAllOffices();
+final offices = LocalDatabase.getOffices();
     developer.log(
       '📦 DEBUG: Offices in Hive after init = ${offices.length}',
       name: 'DEBUG',
@@ -131,7 +131,7 @@ Future<void> _initializeCoreServices() async {
     );
 
     // 🚨 fallback احتياطي شامل لتأمين الإقلاع حتى لو فشل Hive
-    await LocalDatabase.emergencyFallbackInitialization(e);
+await LocalDatabase.init(); // LocalDatabase يدير fallback داخلياً
 
     rethrow;
   } finally {
@@ -174,7 +174,7 @@ Future<void> _initializeHiveWithRetry() async {
       }
 
       // ✅ انتظار متزايد بين المحاولات
-      await Future.delayed(Duration(seconds: attempt * 2));
+await Future<void>.delayed(Duration(seconds: attempt * 2));
     }
   }
 }
@@ -361,7 +361,7 @@ class __AppRootState extends State<_AppRoot> {
   // ✅ إضافة الدوال الناقصة
   Future<void> _initializeCoreProviders() async {
     // تهيئة البروفايدرز الأساسية
-    await Future.delayed(Duration.zero);
+await Future<void>.delayed(const Duration(milliseconds: 150));
   }
 
   Future<bool> _executePhaseWithTimeout(
@@ -565,34 +565,33 @@ class __AppRootState extends State<_AppRoot> {
           .loadString('assets/data/default_data.json')
           .timeout(const Duration(seconds: 10));
 
-      final jsonData = jsonDecode(jsonString);
 
-      if (jsonData['candidates'] == null || jsonData['faqs'] == null) {
-        throw Exception('هيكل البيانات الافتراضية غير صحيح');
-      }
 
-      // ✅ حفظ بيانات المرشحين
-      final candidatesList = (jsonData['candidates'] as List)
-          .map((e) => CandidateModel.fromJson(Map<String, dynamic>.from(e)))
-          .toList();
+final Map<String, dynamic> jsonData =
+    jsonDecode(jsonString) as Map<String, dynamic>;
 
-      if (candidatesList.isEmpty) {
-        throw Exception('قائمة المرشحين فارغة في البيانالت الافتراضية');
-      }
+final List<CandidateModel> candidatesList = (jsonData['candidates'] as List)
+    .whereType<Map>()
+    .map((m) => CandidateModel.fromJson(m.cast<String, dynamic>()))
+    .toList(growable: false);
 
-      await LocalDatabase.saveCandidates(candidatesList);
-      developer.log(
-        '[DEFAULT_DATA] Saved ${candidatesList.length} candidates ✅',
-        name: 'DATA',
-      );
+if (candidatesList.isEmpty) {
+  throw Exception('قائمة المرشحين فارغة في البيانات الافتراضية');
+}
+await LocalDatabase.saveCandidates(candidatesList);
 
-      // ✅ حفظ الأسئلة الشائعة
-      final faqsList = jsonData['faqs'] as List;
-      if (faqsList.isEmpty) {
-        throw Exception('قائمة الأسئلة الشائعة فارغة في البيانات الافتراضية');
-      }
+final List<FaqModel> faqsList = (jsonData['faqs'] as List)
+    .whereType<Map>()
+    .map((m) => FaqModel.fromJson(m.cast<String, dynamic>()))
+    .toList(growable: false);
 
-      await LocalDatabase.saveFAQs(faqsList);
+if (faqsList.isEmpty) {
+  throw Exception('قائمة الأسئلة الشائعة فارغة في البيانات الافتراضية');
+}
+await LocalDatabase.saveFAQs(faqsList);
+
+
+
       developer.log(
         '[DEFAULT_DATA] Saved ${faqsList.length} FAQs ✅',
         name: 'DATA',
@@ -665,7 +664,7 @@ class __AppRootState extends State<_AppRoot> {
 
       // ✅ تحسينات إضافية
       try {
-        _optimizePerformance();
+        await _optimizePerformance();
         developer.log(
           '[INIT] Performance optimizations applied ✅',
           name: 'BOOT',
@@ -715,7 +714,7 @@ class __AppRootState extends State<_AppRoot> {
       );
 
       // 🖥️ تكوين واجهة النظام للتحسين
-      _configureSystemUI(isLowEndDevice);
+await _configureSystemUI(isLowEndDevice);
 
       // 🧹 جدولة تنظيف الذاكرة
       _scheduleAdaptiveMemoryCleanup(isLowEndDevice);
@@ -742,14 +741,14 @@ class __AppRootState extends State<_AppRoot> {
   }
 
   /// 🖥️ تكوين واجهة النظام مع تحسينات للأجهزة الضعيفة
-  void _configureSystemUI(bool isLowEndDevice) {
-    try {
-      if (isLowEndDevice) {
-        // إعدادات إضافية للأجهزة الضعيفة
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-      } else {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      }
+  Future<void> _configureSystemUI(bool isLowEndDevice) async {
+  try {
+    if (isLowEndDevice) {
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    } else {
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
+
 
       developer.log(
         '[PERF] System UI configured for ${isLowEndDevice ? 'low-end' : 'high-end'} device',
@@ -830,7 +829,7 @@ class __AppRootState extends State<_AppRoot> {
           ..reset()
           ..start();
       });
-      Future.delayed(const Duration(milliseconds: 50), _initializeApp);
+unawaited(Future<void>.delayed(const Duration(milliseconds: 50), _initializeApp));
     }
   }
 
