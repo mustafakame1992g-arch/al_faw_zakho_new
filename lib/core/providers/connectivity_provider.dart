@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:async' show StreamSubscription, Timer, unawaited;
 
 import 'package:al_faw_zakho/core/services/analytics_service.dart';
 import 'package:al_faw_zakho/core/services/performance_tracker.dart';
