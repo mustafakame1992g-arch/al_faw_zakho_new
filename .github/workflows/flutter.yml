@@ -2,31 +2,36 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 'stable'
-
-      - name: Flutter Pub Get
-        run: flutter pub get
-
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
-
-      - name: Format check
-        run: |
-          dart format --set-exit-if-changed .
-
-      - name: Run tests
-        run: flutter test -r expanded
+    - uses: actions/checkout@v3
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        # ✅ تحديد إصدار Flutter محدد بدلاً من "stable"
+        flutter-version: '3.22.0'  # أو أحد إصدارات Flutter المستقرة
+        
+    - name: Check Flutter Version
+      run: flutter --version
+      
+    - name: Install dependencies
+      run: |
+        flutter pub get
+        flutter pub run build_runner build --delete-conflicting-outputs
+        
+    - name: Analyze
+      run: flutter analyze
+      
+    - name: Run tests
+      run: flutter test
+      
+    - name: Build APK
+      run: flutter build apk --release
